@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:y="clr-namespace:Neminaj.ContentViews"
+             x:Class="Neminaj.Views.ItemPicker"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout>
+                <y:NavigationBarMainPage x:Name="NavigationBarMainPage" MaximumHeightRequest="50" MaximumWidthRequest="50" BackgroundColor="Orange"/>
+                <Grid
+        Padding="5"
+        RowDefinitions="Auto, 0.15*, *"
+        ColumnDefinitions="*, *" >
+                    <VerticalStackLayout Grid.ColumnSpan="2" Spacing="20">
+                        <SearchBar
+            x:Name="SearchBar"
+            IsEnabled="True"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Placeholder="Hľadaj položku"
+            TextChanged="SearchBar_TextChanged"></SearchBar>
+                        <CollectionView 
+            x:Name="listItem"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            BackgroundColor="Transparent"
+            SelectionMode="Single"
+            VerticalScrollBarVisibility="Always"
+            SelectionChanged="listItem_SelectionChanged">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid RowDefinitions="Auto, Auto" RowSpacing="15">
+                                        <HorizontalStackLayout Grid.Row="0">
+                                            <!--<Image Grid.Row="0" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="dotnet_bot.png"/>-->
+                                            <Label Grid.Row="0" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap"></Label>
+                                        </HorizontalStackLayout>
+                                        <Line  Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+
+
+    <!--<Label Grid.Row="2" Grid.ColumnSpan="4" HorizontalOptions="Center" VerticalOptions="Center" Text="Košík" FontAttributes="Bold" FontSize="14"> </Label>
+
+        <Frame Grid.Row="3" Grid.ColumnSpan="4">
+
+        <CollectionView
+            Grid.Row="3"
+            Grid.ColumnSpan="3"
+            x:Name="listItemChoosen"
+            BackgroundColor="Transparent"
+            VerticalScrollBarVisibility="Always">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame>
+                            <Frame.Content>
+                                <Grid ColumnDefinitions="0.5*, *, 0.5*,0.5*" RowDefinitions="Auto">
+                                    <Image Grid.Column="0" HeightRequest="50" WidthRequest="50" HorizontalOptions="Start" VerticalOptions="Center" Source="dotnet_bot.png"/>
+                                    <Label Grid.Column="1" FontSize="14" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" VerticalTextAlignment="End" />
+                                    <Entry Grid.Column="2" x:Name="EntryCntOfItem" Text="{Binding CntOfItems}" VerticalOptions="End" VerticalTextAlignment="End" HorizontalOptions="Start" TextChanged="EntryCntOfItem_TextChanged" ClassId="{Binding IdInList}"></Entry>
+                                    <Label Grid.Column="2" Text="ks" VerticalTextAlignment="End" VerticalOptions="Center" HorizontalOptions="End"/>
+                                    <Button Grid.Column="3" ClassId="{Binding IdInList}" Text="D" Clicked="Delete_Clicked" VerticalOptions="End" HorizontalOptions="End" FontSize="14" />
+                                </Grid>
+                            </Frame.Content>
+                        </Frame>
+                    </DataTemplate>
+            </CollectionView.ItemTemplate>
+           
+        </CollectionView>
+        </Frame>
+
+        <Button x:Name="BtnCompare" Grid.Row="4" Grid.Column="1" Text="Porovnaj ceny"> </Button>-->
+</ContentPage>

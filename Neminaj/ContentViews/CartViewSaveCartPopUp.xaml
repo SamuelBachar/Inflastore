@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+             x:Class="Neminaj.ContentViews.CartViewSaveCartPopUp"
+             CanBeDismissedByTappingOutsideOfPopup="True">
+    <Border BackgroundColor="White" HorizontalOptions="Center">
+        <Grid RowDefinitions="*, *, Auto, *" ColumnDefinitions="0.1*, *,*,*, 0.1*" WidthRequest="300" HeightRequest="250">
+            <!-- Názov -->
+            <Label Grid.Row="0" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center" Text="Názov"/>
+            <Entry x:Name="CartListName" TextChanged="CartListName_TextChanged" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="2" HorizontalOptions="FillAndExpand" VerticalOptions="Center" />
+
+            <!-- Poznámka -->
+            <Label Grid.Row="1" Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="Center"  Text="Poznámka"/>
+            <Entry x:Name="CartListNote" TextChanged="CartListNote_TextChanged" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="2" HorizontalOptions="FillAndExpand" VerticalOptions="Center" />
+            
+            <Button x:Name="BtnCancel" Grid.Row="2" Grid.Column="1" Text="Zrušiť" Clicked="Cancel_Button_Clicked" />
+            <Button x:Name="BtnSave" Grid.Row="2" Grid.Column="3" Text="Uložiť" Clicked="SaveCart_Button_Clicked"/>
+            <Label Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="3" x:Name="LblListSaved" Text="" HorizontalOptions="Center" VerticalOptions="Center" FontSize="Body" />
+        </Grid>
+    </Border>
+</mct:Popup>
+
+<!-- <Border BackgroundColor="White" HorizontalOptions="Center" WidthRequest="300" HeightRequest="600"> TODO based on size of mobile device -->

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neminaj.Views.LoginView"
+             Title=""
+             FlyoutItem.IsVisible="False">
+
+    <VerticalStackLayout Spacing="25" Padding="30,0" VerticalOptions="Center">
+
+        <VerticalStackLayout Spacing="5">
+            <Image Source="inflastoresplashscreen.png" HeightRequest="200" />
+            <Label Text="Vitajte!" FontSize="28" TextColor="Gray" HorizontalTextAlignment="Center" />
+            <Label Text="Prihláste sa do svôjho účtu" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
+                <Image Source="user_login.svg" HeightRequest="20" WidthRequest="20" />
+            </Frame>
+            <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
+                <Entry x:Name="EntryEmail" ToolTipProperties.Text="Zadajte e-mail" Text="{Binding Email}" TextColor="Black" Margin="20,0,0,0" VerticalOptions="Center" Placeholder="E-Mail" Keyboard="Email" TextChanged="EntryEmail_TextChanged"/>
+            </Frame>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
+                <Image Source="lock_login.svg" HeightRequest="20" WidthRequest="20" />
+            </Frame>
+            <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
+                <Entry x:Name="EntryPassword" ToolTipProperties.Text="Zadajte heslo" Text="{Binding Password}" TextColor="Black" Margin="20,0,0,0" VerticalOptions="Center" Placeholder="Heslo" IsPassword="True" TextChanged="EntryPassword_TextChanged"/>
+            </Frame>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <CheckBox IsChecked="False" />
+            <Label Text="Zapamätať prihlásenie" TextColor="DarkGrey" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+            <Label Text="Zabudnuté heslo" TextColor="Orange" FontAttributes="Bold" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+        </StackLayout>
+
+        <Button x:Name="BtnLogIn" Text="Prihlásiť sa HTTP" WidthRequest="100" CornerRadius="20" HorizontalOptions="Center" Command="{Binding LoginCommand}" Clicked="BtnLogIn_Clicked"/>
+
+        <Button x:Name="BtnLogInHttps" Text="Prihlásiť sa HTTPS" WidthRequest="100" CornerRadius="20" HorizontalOptions="Center" Command="{Binding LoginHTTPSCommand}" Clicked="BtnLogInHttps_Clicked"/>
+
+        <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="Center">
+            <Label Text="Nemáte účet?" FontSize="Small" TextColor="DarkGray" />
+            <Label Text=" Registrujte sa tu" TextColor="Orange" FontAttributes="Bold"/>
+        </StackLayout>
+
+    </VerticalStackLayout>
+
+</ContentPage>

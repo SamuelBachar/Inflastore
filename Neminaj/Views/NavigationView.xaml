@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neminaj.Views.NavigationView"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             xmlns:loc="clr-namespace:Microsoft.Maui.Devices.Sensors;assembly=Microsoft.Maui.Essentials"
+             Title="Navigácia">
+
+    <Grid>
+        <maps:Map x:Name="mappy" IsShowingUser="True" IsTrafficEnabled="True">
+            <maps:Map.MapElements>
+                
+            </maps:Map.MapElements>    
+        </maps:Map>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neminaj.Views.CartListView"
+             Title="Zoznamy">
+    <ScrollView>
+        <VerticalStackLayout>
+            <Grid Padding="5" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto, 50, 50">
+                <CollectionView x:Name="listViewSavedCarts"
+                SelectionMode="None"
+                VerticalScrollBarVisibility="Always"
+                Grid.ColumnSpan="5">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Grid.ColumnSpan="5">
+                                <Grid RowDefinitions="Auto" ColumnDefinitions="*,Auto,*,50,50" RowSpacing="5" >
+                                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="WordWrap" Text="{Binding Name}" HorizontalOptions="Start" VerticalOptions="Center"   />
+                                    <Button Grid.Row="0" Grid.Column="1" Text="Náhľad" ClassId="{Binding Id}" HorizontalOptions="Start" VerticalOptions="Center" Clicked="Button_Nahlad_Clicked"/>
+                                    <Label Grid.Row="0" Grid.Column="2" Text="Predvoliť" HorizontalOptions="End"  VerticalOptions="Center" />
+                                    <CheckBox Grid.Row="0" Grid.Column="3" ClassId="{Binding Id}" IsChecked="{Binding IsChecked}" HorizontalOptions="End"  VerticalOptions="Center" CheckedChanged="PredvolitCheckBox_CheckedChanged"/>
+                                    <ImageButton Grid.Row="0" Grid.Column="4" ClassId="{Binding Id}" HeightRequest="30" WidthRequest="30" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.svg" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="Center" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+
+<!--<VerticalStackLayout>
+        <Grid RowDefinitions="*" ColumnDefinitions="*,*,*,*">
+            <Frame Grid.ColumnSpan="4">
+                <Grid>
+                    <Label Grid.Row="0" Grid.Column="0" Text="Raňajky" HorizontalOptions="Start" VerticalOptions="Center"   />
+                    <Button Grid.Row="0" Grid.Column="1" Text="Náhľad" HorizontalOptions="Center"  VerticalOptions="Center" />
+                    <Label Grid.Row="0" Grid.Column="2" Text="Predvoliť" Margin="0,0,50,0" HorizontalOptions="End"  VerticalOptions="Center" />
+                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalOptions="End"  VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+        </Grid>
+        <Grid RowDefinitions="*" ColumnDefinitions="*,*,*,*">
+            <Frame Grid.ColumnSpan="4">
+                <Grid>
+                    <Label Grid.Row="0" Grid.Column="0" Text="Veľký nákup" HorizontalOptions="Start" VerticalOptions="Center"   />
+                    <Button Grid.Row="0" Grid.Column="1" Text="Náhľad" HorizontalOptions="Center"  VerticalOptions="Center" />
+                    <Label Grid.Row="0" Grid.Column="2" Text="Predvoliť" Margin="0,0,50,0" HorizontalOptions="End"  VerticalOptions="Center" />
+                    <CheckBox Grid.Row="0" Grid.Column="2" HorizontalOptions="End"  VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+        </Grid>
+        <Grid RowDefinitions="*" ColumnDefinitions="*,*,*,*">
+            <Frame Grid.ColumnSpan="4">
+                <Grid>
+                    <Label Grid.Row="0" Grid.Column="0" Text="Večera" HorizontalOptions="Start" VerticalOptions="Center"   />
+                    <Button Grid.Row="0" Grid.Column="1" Text="Náhľad" HorizontalOptions="Center"  VerticalOptions="Center" />
+                    <Label Grid.Row="0" Grid.Column="2" Text="Predvoliť" Margin="0,0,50,0" HorizontalOptions="End"  VerticalOptions="Center" />
+                    <CheckBox Grid.Row="0" Grid.Column="3" HorizontalOptions="End"  VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+        </Grid>
+    </VerticalStackLayout>-->

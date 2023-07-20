@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neminaj.Views.CardsView"
+             Title="Klubové karty">
+    <!--<Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*" Padding="30" ColumnSpacing="5">
+        <HorizontalStackLayout>
+            <Image Grid.Row="0" Grid.Column="0" Source="tesco_card.png" HeightRequest="100"/>
+            <Image Grid.Row="0" Grid.Column="1" Source="kaufland_card.png" HeightRequest="100" WidthRequest="200"/>
+        </HorizontalStackLayout>
+        <Image Grid.ColumnSpan="2" Grid.Row="2" Source="add_button.png" HeightRequest="50" WidthRequest="50" Grid.Column="1" />
+    </Grid>-->
+
+    <ContentPage.Content>
+        <ScrollView>
+            <!--<VerticalStackLayout>-->
+                <Grid Padding="5" RowDefinitions="*, 0.15*" ColumnDefinitions="*, *" >
+                    <CollectionView x:Name="listCards" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  BackgroundColor="Transparent" SelectionMode="Single" VerticalScrollBarVisibility="Always" SelectionChanged="listCards_SelectionChanged">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <HorizontalStackLayout Grid.Row="0">
+                                    <Frame Grid.Row="0" Grid.Column="0">
+                                        <Label Text="Test" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap"></Label>
+                                    </Frame>
+                                    <Frame Grid.Row="0" Grid.Column="1">
+                                        <Label Text="Test2" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap"></Label>
+                                    </Frame>
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                <Button Grid.Row="1" Grid.Column="0" x:Name="BtnAddCard" Text="Skenovať" Clicked="BtnAddCardOrPicture_Clicked" VerticalOptions="Center" HorizontalOptions="Center"/>
+                <Button Grid.Row="1" Grid.Column="1" x:Name="BtnAddCardFromPicture" IsEnabled="False" Text="Načítať z obrázku" Clicked="BtnAddCardOrPicture_Clicked" VerticalOptions="Center" HorizontalOptions="Center"/>
+                </Grid>
+                <!--<HorizontalStackLayout>
+                    <Button x:Name="BtnAddCard" Text="Skenovať" Clicked="BtnAddCardOrPicture_Clicked"/>
+                    <Button x:Name="BtnAddCardFromPicture" Text="Načítať z obrázku" Clicked="BtnAddCardOrPicture_Clicked"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>-->
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
