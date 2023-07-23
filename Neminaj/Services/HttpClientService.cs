@@ -15,4 +15,5 @@ public partial class HttpClientService
     }
 
     public partial HttpMessageHandler GetPlatformSpecificHttpMessageHandler();
+    // https://www.youtube.com/watch?v=-Wj1JYkgWNU&ab_channel=AbhayPrince
 }
