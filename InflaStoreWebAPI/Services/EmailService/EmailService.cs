@@ -45,6 +45,10 @@ namespace InflaStoreWebAPI.Services.EmailService
 
                 return response;
             }
+            finally
+            {
+                // todo logger
+            }
 
             return response;
         }

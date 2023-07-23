@@ -1,4 +1,6 @@
-﻿using Azure.Core;
+﻿using Azure;
+using Azure.Core;
+using InflaStoreWebAPI.DTOs;
 using InflaStoreWebAPI.Models.DatabaseModels;
 using InflaStoreWebAPI.Models.ServiceResponseModel;
 using Microsoft.AspNetCore.Http;
@@ -86,80 +88,48 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPassword(string email)
+    public async Task<ActionResult<ServiceResponse<UserForgotPasswordDTO>>> ForgotPassword(string email)
     {
-        User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        ServiceResponse<UserForgotPasswordDTO> responseUserService = await _userService.ForgotPassword(email);
 
-        if (user == null)
+        if (!responseUserService.Success)
         {
-            return BadRequest("Účet pre daný e-mail nebol nájdení");
+            return BadRequest(responseUserService);
         }
 
-        user.PasswordResetToken = CreateRandomToken();
-        user.ResetTokenExpires = DateTime.Now.AddDays(1);
+        EmailDTO emailDTO = new EmailDTO
+        {
+            To = email,
+            Subject = "Infla Store - Potvrdenie obnovenia hesla",
+            Body = "Prosím kliknite na nižšie uvedení link pre potvrdenie obnovenie hesla",
+            EmailType = EEmailType.ResetPassword
+        };
 
-        await _context.SaveChangesAsync();
+        ServiceResponse<EmailDTO> responseEmailService = await _emailService.SendEmail(emailDTO);
 
-        return Ok("Do vášho e-mailu sme odoslali správu pomocou ktorej si môžete obnoviť heslo do 24 hodín.");
+        if (!responseEmailService.Success)
+        {
+            responseUserService.Success = false;
+            responseUserService.Message = responseEmailService.Message;
+            responseUserService.ExceptionMessage = responseEmailService.ExceptionMessage;
+
+            return BadRequest(responseUserService);
+        }
+
+        return Ok(responseUserService);
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+    public async Task<ActionResult<ServiceResponse<UserResetPasswordDTO>>> ResetPassword(ResetPasswordRequest request)
     {
-        User? user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == request.Token);
+        ServiceResponse<UserResetPasswordDTO> response = await _userService.ResetPassword(request);
 
-        if (user == null)
+        if (!response.Success)
         {
-            return BadRequest("Nevalidný token");
+            return BadRequest(response);
         }
 
-        if (user.ResetTokenExpires < DateTime.Now)
-        {
-            return BadRequest("Nevalidný token, platnosť tokena pre obnovu hesla vypršala");
-        }
-
-        string passwordHash = CreatePasswordHashWithSalt(request.Password);
-
-        user.PasswordHashWithSalt = passwordHash;
-        user.PasswordResetToken = null;
-        user.ResetTokenExpires = null;
-
-        await _context.SaveChangesAsync();
-
-        return Ok("Vaše heslo bolo úspešne obnovené");
-    }
-
-    private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-    {
-        using (var hmac = new HMACSHA512())
-        {
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-        }
-    }
-
-    private string CreatePasswordHashWithSalt(string password)
-    {
-        return BCrypt.Net.BCrypt.HashPassword(password);
-    }
-
-    private bool VerifyPasswordHash(string requestPassword, string dbPasswordHashWithSalt)
-    {
-        return BCrypt.Net.BCrypt.Verify(requestPassword, dbPasswordHashWithSalt);
-    }
-
-    private string CreateRandomToken()
-    {
-        string result = string.Empty;
-
-        do
-        {
-            result = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-
-        } while (_context.Users.Any(u => u.VerificationToken == result));
-
-
-        return result;
+        return Ok(response);
     }
 
     //https://youtu.be/2Q9Uh-5O8Sk?t=2038 -- toto video je na vybudovanie API bez JWT

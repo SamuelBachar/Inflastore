@@ -3,6 +3,7 @@ using InflaStoreWebAPI.Models.DatabaseModels;
 using InflaStoreWebAPI.Models.ServiceResponseModel;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -123,12 +124,13 @@ namespace InflaStoreWebAPI.Services.UserService
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Počas registrácie uživateľa do databázy nastala chyba";
                 serviceResponse.ExceptionMessage = ex.Message;
-                return serviceResponse;
             }
             finally
             {
                 // todo logger
             }
+
+            return serviceResponse;
         }
         #endregion
 
@@ -164,54 +166,100 @@ namespace InflaStoreWebAPI.Services.UserService
                 serviceResponse.Message = "Počas verifikácie registrácie uživateľa nastala chyba";
                 serviceResponse.ExceptionMessage = ex.Message;
 
-                return serviceResponse;
             }
             finally
             {
                 // todo logger
             }
+
+            return serviceResponse;
         }
 
-        public async Task<ServiceResponse<User>> ForgotPassword(string email)
+        public async Task<ServiceResponse<UserForgotPasswordDTO>> ForgotPassword(string email)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            ServiceResponse<UserForgotPasswordDTO> serviceResponse = new ServiceResponse<UserForgotPasswordDTO>();
 
-            if (user == null)
+            try
             {
-                return BadRequest("Účet pre daný e-mail nebol nájdení");
+                User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+                if (userDB == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Účet pre daný e-mail nebol nájdení";
+                    return serviceResponse;
+                }
+
+                userDB.PasswordResetToken = CreateRandomToken();
+                userDB.ResetTokenExpires = DateTime.Now.AddDays(1);
+
+                await _context.SaveChangesAsync();
+
+                UserForgotPasswordDTO forgotPasswordDTO = _mapper.Map<UserForgotPasswordDTO>(userDB);
+                serviceResponse.Data = forgotPasswordDTO;
+                serviceResponse.Message = $"Do vášho e-mailu {forgotPasswordDTO.Email} sme odoslali správu pomocou ktorej si môžete obnoviť heslo do 24 hodín.";
+
+                return serviceResponse;
             }
-
-            user.PasswordResetToken = CreateRandomToken();
-            user.ResetTokenExpires = DateTime.Now.AddDays(1);
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Do vášho e-mailu sme odoslali správu pomocou ktorej si môžete obnoviť heslo do 24 hodín.");
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Nastala chyba počas ukladania údajov potrebných pre obnovenú hesla";
+                serviceResponse.ExceptionMessage = ex.Message;
+                return serviceResponse;
+            }
         }
 
-        public async Task<ServiceResponse<User>> ResetPassword(ResetPasswordRequest request)
+        public async Task<ServiceResponse<UserResetPasswordDTO>> ResetPassword(ResetPasswordRequest request)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == request.Token);
+            ServiceResponse<UserResetPasswordDTO> responseService = new ServiceResponse<UserResetPasswordDTO>();
 
-            if (user == null)
+            try
             {
-                return BadRequest("Nevalidný token");
+                User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == request.Token);
+
+                if (userDB == null)
+                {
+                    responseService.Success = false;
+                    responseService.Message = "Nevalidný token";
+                    return responseService;
+                }
+
+                if (userDB.ResetTokenExpires < DateTime.Now)
+                {
+                    responseService.Success = false;
+                    responseService.Message = "Nevalidný token, platnosť tokena pre obnovu hesla vypršala";
+                    return responseService;
+                }
+
+                string passwordHash = CreatePasswordHashWithSalt(request.Password);
+
+                userDB.PasswordHashWithSalt = passwordHash;
+                userDB.PasswordResetToken = null;
+                userDB.ResetTokenExpires = null;
+
+                await _context.SaveChangesAsync();
+
+                UserResetPasswordDTO forgotPasswordDTO = _mapper.Map<UserResetPasswordDTO>(userDB);
+
+                responseService.Message = $"Vaše heslo bolo úspešne obnovené";
+                responseService.Data = forgotPasswordDTO;
+
+                return responseService;
+
+            }
+            catch (Exception ex)
+            {
+                responseService.Success = false;
+                responseService.Message = "Počas ukladania nového hesla nastala chyba";
+                responseService.ExceptionMessage = ex.Message;
+            }
+            finally
+            {
+                // todo logger
             }
 
-            if (user.ResetTokenExpires < DateTime.Now)
-            {
-                return BadRequest("Nevalidný token, platnosť tokena pre obnovu hesla vypršala");
-            }
-
-            string passwordHash = CreatePasswordHashWithSalt(request.Password);
-
-            user.PasswordHashWithSalt = passwordHash;
-            user.PasswordResetToken = null;
-            user.ResetTokenExpires = null;
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Vaše heslo bolo úspešne obnovené");
+            return responseService;
         }
 
         #region Common used
