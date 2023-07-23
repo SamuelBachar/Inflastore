@@ -1,9 +1,12 @@
 ﻿using Azure.Core;
-using InflaStoreWebAPI.Models;
+using InflaStoreWebAPI.Models.DatabaseModels;
+using InflaStoreWebAPI.Models.ServiceResponseModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -15,101 +18,71 @@ namespace InflaStoreWebAPI.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly DataContext _context;
-    private readonly IConfiguration _configuration;
+    private readonly IUserService _userService;
+    private readonly IEmailService _emailService;
 
-    public UserController(DataContext context, IConfiguration configuration)
+    public UserController(IUserService userService, IEmailService emailService)
     {
-        _context = context;
-        _configuration = configuration;
-    }
-
-    [HttpPost("register")]
-    public async Task<IActionResult> Register(UserRegisterRequest request)
-    {
-        if (_context.Users.Any(u => u.Email == request.Email))
-        {
-            return BadRequest("Uživateľ s daným e-mailom už existuje");
-        }
-
-        string passwordHashWithSalt = CreatePasswordHashWithSalt(request.Password);
-
-        User user = new User
-        {
-            Email = request.Email,
-            PasswordHashWithSalt = passwordHashWithSalt,
-            VerificationToken = CreateRandomToken()
-        };
-
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        return Ok("Uživateľ vytvorený, potvrďte registráciu pomocou správy ktorá bola odoslaná na váš e-mail");
+        _userService = userService;
+        _emailService = emailService;
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(UserLoginRequest request)
+    public async Task<ActionResult<ServiceResponse<UserLoginDTO>>> Login(UserLoginRequest request)
     {
-        User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+        ServiceResponse<UserLoginDTO> response = await _userService.Login(request);
 
-        if (user == null)
+        if (!response.Success)
         {
-            return BadRequest("Účet s daným e-mialom neexistuje");
+            return BadRequest(response);
         }
 
-        if (!VerifyPasswordHash(request.Password, user.PasswordHashWithSalt))
-        {
-            return BadRequest("Nesprávne heslo");
-        }
-
-        if (user.VerifiedAt == null)
-        {
-            return BadRequest("Registrácia pre daný účet nebola overená");
-        }
-
-        string jwtToken = CreateToken(user);
-
-        return Ok($"Prihlásenie úspešne @{jwtToken}");
+        return Ok(response);
     }
 
-    private string CreateToken(User user)
+    [HttpPost("register")]
+    public async Task<ActionResult<ServiceResponse<UserRegisterDTO>>> Register(UserRegisterRequest request)
     {
-        List<Claim> claims = new List<Claim>
+        ServiceResponse<UserRegisterDTO> responseUserService = await _userService.Register(request);
+
+        if (!responseUserService.Success)
         {
-            new Claim(ClaimTypes.Name, user.Email)
+            return BadRequest(responseUserService);
+        }
+
+        EmailDTO emailDTO = new EmailDTO
+        {
+            To = request.Email,
+            Subject = "Infla Store - Potvrdenie registrácie",
+            Body = "Prosím kliknite na nižšie uvedení link pre potvrdenie registrácie",
+            EmailType = EEmailType.Registration
         };
 
-        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
-        SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        ServiceResponse<EmailDTO> responseEmailService = await _emailService.SendEmail(emailDTO);
 
-        JwtSecurityToken token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.Now.AddDays(1),
-            signingCredentials: credentials
-        );
+        if (!responseEmailService.Success)
+        {
+            responseUserService.Success = false;
+            responseUserService.Message = responseEmailService.Message;
+            responseUserService.ExceptionMessage = responseEmailService.ExceptionMessage;
 
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return BadRequest(responseUserService);
+        }
 
-        return jwt;
+        return Ok(responseUserService);
     }
 
     [HttpPost("verify")]
-    public async Task<IActionResult> Verify(string token)
+    public async Task<ActionResult<ServiceResponse<UserVerifyDTO>>> Verify(string token)
     {
-        // todo implement sending email to user
-        // todo send aswell user email (les bytes than token)
+        ServiceResponse<UserVerifyDTO> response = await _userService.Verify(token);
 
-        User? user = await _context.Users.FirstOrDefaultAsync(u => u.VerificationToken == token);
-
-        if (user == null)
+        if (!response.Success)
         {
-            return BadRequest("Nevalidný token");
+            return BadRequest(response);
         }
 
-        user.VerifiedAt = DateTime.Now;
-        await _context.SaveChangesAsync();
-
-        return Ok("Uživateľ overený");
+        return Ok(response);
     }
 
     [HttpPost("forgot-password")]

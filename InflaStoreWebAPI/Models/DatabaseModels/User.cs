@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace InflaStoreWebAPI.Models;
+namespace InflaStoreWebAPI.Models.DatabaseModels;
 
 public class User
 {
     public int Id { get; set; }
     public string Email { get; set; } = string.Empty;
-
-    public string PasswordHashJWT { get; set; } = string.Empty;
 
     public string? PasswordHashWithSalt { get; set; } = string.Empty;
 
