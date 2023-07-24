@@ -1,8 +1,5 @@
 ﻿using Azure;
 using Azure.Core;
-using InflaStoreWebAPI.DTOs;
-using InflaStoreWebAPI.Models.DatabaseModels;
-using InflaStoreWebAPI.Models.ServiceResponseModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;

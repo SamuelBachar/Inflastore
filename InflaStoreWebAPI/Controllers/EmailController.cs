@@ -1,6 +1,4 @@
 ﻿using Azure;
-using InflaStoreWebAPI.DTOs;
-using InflaStoreWebAPI.Models.ServiceResponseModel;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +17,7 @@ namespace InflaStoreWebAPI.Controllers
             _emailService = emailService;
         }
 
-        public async Task<ServiceResponse<EmailDTO>> SendEmail(EmailDTO request)
+        private async Task<ServiceResponse<EmailDTO>> SendEmail(EmailDTO request)
         {
             ServiceResponse<EmailDTO> response = await _emailService.SendEmail(request);
 

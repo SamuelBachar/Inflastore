@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InflaStoreWebAPI.Models;
+namespace SharedTypesLibrary.Models.API;
 
 public class UserLoginRequest
 {

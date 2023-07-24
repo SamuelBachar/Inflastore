@@ -1,4 +1,4 @@
-﻿namespace InflaStoreWebAPI.Models.ServiceResponseModel;
+﻿namespace SharedTypesLibrary.Models.API.ServiceResponseModel;
 
 public class ServiceResponse<T>
 {

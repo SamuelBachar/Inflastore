@@ -1,6 +1,4 @@
-﻿using InflaStoreWebAPI.Models.DatabaseModels;
-using InflaStoreWebAPI.Models.ServiceResponseModel;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace InflaStoreWebAPI.Services.UserService
 {

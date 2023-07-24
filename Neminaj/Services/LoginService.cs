@@ -67,9 +67,19 @@ public class LoginService : ILoginService
             ? "https://10.0.2.2:7279"
             : "https://localhost:7279";
 
-        var response = await httpClient.GetAsync($"{baseUrl}/WeatherForecast");
+        UserLoginRequest userLoginRequest = new UserLoginRequest { Email = userName, Password = passWord };
+        var response = await httpClient.PostAsJsonAsync($"{baseUrl}/api/User/login", userLoginRequest);
 
-        var data = await response.Content.ReadAsStringAsync();
+        if (response.IsSuccessStatusCode)
+        {
+            var data = await response.Content.ReadAsStringAsync();
+
+        }
+        else
+        {
+            // todo
+        }
+
 
         return (null, $"Nastala chyba pri komunikácií so serverom. Chyba: \r\n: test");
     }

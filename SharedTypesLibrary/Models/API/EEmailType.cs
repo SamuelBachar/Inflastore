@@ -1,4 +1,4 @@
-﻿namespace InflaStoreWebAPI.Models;
+﻿namespace SharedTypesLibrary.Models.API;
 
 public enum EEmailType
 {

@@ -6,8 +6,10 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<Models.DatabaseModels.User, DTOs.UserLoginDTO>();
-        CreateMap<Models.DatabaseModels.User, DTOs.UserRegisterDTO>();
-        CreateMap<Models.DatabaseModels.User, DTOs.UserVerifyDTO>();
+        CreateMap<User, UserLoginDTO>();
+        CreateMap<User, UserRegisterDTO>();
+        CreateMap<User, UserVerifyDTO>();
+        CreateMap<User, UserForgotPasswordDTO>();
+        CreateMap<User, UserResetPasswordDTO>();
     }
 }

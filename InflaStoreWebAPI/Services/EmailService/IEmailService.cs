@@ -1,5 +1,4 @@
-﻿using InflaStoreWebAPI.DTOs;
-using InflaStoreWebAPI.Models.ServiceResponseModel;
+﻿using SharedTypesLibrary.Models.API.ServiceResponseModel;
 
 namespace InflaStoreWebAPI.Services.EmailService
 {

@@ -1,10 +1,12 @@
 global using Microsoft.EntityFrameworkCore;
-global using InflaStoreWebAPI.Models;
 global using InflaStoreWebAPI.Data;
 global using InflaStoreWebAPI.Services.EmailService;
-global using InflaStoreWebAPI.Models.ServiceResponseModel;
-global using InflaStoreWebAPI.DTOs;
 global using InflaStoreWebAPI.Services.UserService;
+
+global using SharedTypesLibrary.Models.API;
+global using SharedTypesLibrary.Models.API.DatabaseModels;
+global using SharedTypesLibrary.Models.API.ServiceResponseModel;
+global using SharedTypesLibrary.DTOs.API;
 
 var builder = WebApplication.CreateBuilder(args);
 

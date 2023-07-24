@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using InflaStoreWebAPI.Models.DatabaseModels;
-using InflaStoreWebAPI.Models.ServiceResponseModel;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata.Ecma335;
@@ -123,7 +121,7 @@ namespace InflaStoreWebAPI.Services.UserService
             {
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Počas registrácie uživateľa do databázy nastala chyba";
-                serviceResponse.ExceptionMessage = ex.Message;
+                serviceResponse.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
             }
             finally
             {
@@ -164,7 +162,7 @@ namespace InflaStoreWebAPI.Services.UserService
             {
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Počas verifikácie registrácie uživateľa nastala chyba";
-                serviceResponse.ExceptionMessage = ex.Message;
+                serviceResponse.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
 
             }
             finally
@@ -205,7 +203,7 @@ namespace InflaStoreWebAPI.Services.UserService
             {
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Nastala chyba počas ukladania údajov potrebných pre obnovenú hesla";
-                serviceResponse.ExceptionMessage = ex.Message;
+                serviceResponse.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
                 return serviceResponse;
             }
         }
@@ -252,7 +250,7 @@ namespace InflaStoreWebAPI.Services.UserService
             {
                 responseService.Success = false;
                 responseService.Message = "Počas ukladania nového hesla nastala chyba";
-                responseService.ExceptionMessage = ex.Message;
+                serviceResponse.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
             }
             finally
             {

@@ -1,4 +1,6 @@
-﻿namespace InflaStoreWebAPI.DTOs;
+﻿using SharedTypesLibrary.Models.API;
+
+namespace SharedTypesLibrary.DTOs.API;
 
 public class EmailDTO
 {

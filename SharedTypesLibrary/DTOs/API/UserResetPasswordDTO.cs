@@ -1,4 +1,4 @@
-﻿namespace InflaStoreWebAPI.DTOs;
+﻿namespace SharedTypesLibrary.DTOs.API;
 
 public class UserResetPasswordDTO
 {

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InflaStoreWebAPI.Models;
+namespace SharedTypesLibrary.Models.API;
 
-public class ResetPasswordRequest
+public class UserRegisterRequest
 {
-    [Required]
-    public string Token { get; set; } = string.Empty;
+    [Required, EmailAddress]
+    public string Email { get; set; } = string.Empty;
 
     [Required, MinLength(6, ErrorMessage = "Prosím zadaje aspoň 6 znakov")]
     public string Password { get; set; } = string.Empty;

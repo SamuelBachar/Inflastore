@@ -1,5 +1,4 @@
-﻿using InflaStoreWebAPI.Models.DatabaseModels;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace InflaStoreWebAPI.Data;
 

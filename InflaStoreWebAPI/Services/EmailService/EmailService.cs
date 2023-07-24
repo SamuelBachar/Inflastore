@@ -1,5 +1,4 @@
-﻿using InflaStoreWebAPI.Models.ServiceResponseModel;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MimeKit;
 
 namespace InflaStoreWebAPI.Services.EmailService
@@ -41,7 +40,7 @@ namespace InflaStoreWebAPI.Services.EmailService
 
                 response.Success = false;
                 response.Message = $"{baseString} {emailTypeString}\r\n E-mail adresáta {request.To}";
-                response.ExceptionMessage = ex.Message;
+                response.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
 
                 return response;
             }

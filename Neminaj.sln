@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neminaj", "Neminaj\Neminaj.csproj", "{D7A2AD87-8B78-4F4C-B7EB-ADE3DE084CBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InflaStoreWebAPI", "InflaStoreWebAPI\InflaStoreWebAPI.csproj", "{72FF2501-9AB9-4553-9E90-1469A453FCF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InflaStoreWebAPI", "InflaStoreWebAPI\InflaStoreWebAPI.csproj", "{72FF2501-9AB9-4553-9E90-1469A453FCF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedTypesLibrary", "SharedTypesLibrary\SharedTypesLibrary.csproj", "{6BBFCE07-799E-490A-AAE8-D792471A6829}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{72FF2501-9AB9-4553-9E90-1469A453FCF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72FF2501-9AB9-4553-9E90-1469A453FCF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72FF2501-9AB9-4553-9E90-1469A453FCF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BBFCE07-799E-490A-AAE8-D792471A6829}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BBFCE07-799E-490A-AAE8-D792471A6829}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BBFCE07-799E-490A-AAE8-D792471A6829}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BBFCE07-799E-490A-AAE8-D792471A6829}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
