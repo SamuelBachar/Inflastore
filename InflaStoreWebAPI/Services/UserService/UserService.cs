@@ -163,7 +163,6 @@ namespace InflaStoreWebAPI.Services.UserService
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Počas verifikácie registrácie uživateľa nastala chyba";
                 serviceResponse.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
-
             }
             finally
             {
@@ -250,7 +249,7 @@ namespace InflaStoreWebAPI.Services.UserService
             {
                 responseService.Success = false;
                 responseService.Message = "Počas ukladania nového hesla nastala chyba";
-                serviceResponse.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
+                responseService.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
             }
             finally
             {
