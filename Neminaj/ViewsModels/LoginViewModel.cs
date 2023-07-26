@@ -61,7 +61,7 @@ public partial class LoginViewModel : BaseViewModel
             Preferences.Set(nameof(App.UserInfo), userDetails);
             App.UserInfo = userInfo.Item1;
 
-            await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
+            //await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
         }
     }
 }

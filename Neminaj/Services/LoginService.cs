@@ -1,10 +1,14 @@
 ﻿using Neminaj.Interfaces;
 using Neminaj.Models;
+using Neminaj.Utils;
+using SharedTypesLibrary.DTOs.API;
+using SharedTypesLibrary.Models.API.ServiceResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 
@@ -67,20 +71,29 @@ public class LoginService : ILoginService
             ? "https://10.0.2.2:7279"
             : "https://localhost:7279";
 
+        var responseTest = await httpClient.GetAsync($"{baseUrl}/WeatherForecast");
+        var dataTest = await responseTest.Content.ReadAsStringAsync();
+
         UserLoginRequest userLoginRequest = new UserLoginRequest { Email = userName, Password = passWord };
-        var response = await httpClient.PostAsJsonAsync($"{baseUrl}/api/User/login", userLoginRequest);
+        var response = await httpClient.PostAsJsonAsync($"{baseUrl}/api/User/login", userLoginRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
 
         if (response.IsSuccessStatusCode)
         {
-            var data = await response.Content.ReadAsStringAsync();
-
+            // Todo prerobit triedu UserInfo 
+            return (new UserInfo { UserName = serializedResponse.Data.Email }, serializedResponse.Message);
         }
-        else
+        else if ( (response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (serializedResponse.Data != null) )
         {
             // todo
         }
+        else if ( (response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (serializedResponse.Data == null) )
+        {
+            var responseString = await response.Content.ReadAsStringAsync();
+            Dictionary<string, List<string>> dicGenericErrors = GenericHttpErrorReader.ExtractErrorsFromWebAPIResponse(responseString);
+        }
 
 
-        return (null, $"Nastala chyba pri komunikácií so serverom. Chyba: \r\n: test");
+            return (null, $"Nastala chyba pri komunikácií so serverom. Chyba: \r\n: test");
     }
 }
