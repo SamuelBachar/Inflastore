@@ -57,7 +57,7 @@ public class UserController : ControllerBase
             EmailType = EEmailType.Registration
         };
 
-        ServiceResponse<EmailDTO> responseEmailService = await _emailService.SendEmail(emailDTO);
+        ServiceResponse<EmailDTO> responseEmailService = await _emailService.SendEmail(emailDTO, responseUserService.Data);
 
         if (!responseEmailService.Success)
         {
@@ -102,7 +102,7 @@ public class UserController : ControllerBase
             EmailType = EEmailType.ResetPassword
         };
 
-        ServiceResponse<EmailDTO> responseEmailService = await _emailService.SendEmail(emailDTO);
+        ServiceResponse<EmailDTO> responseEmailService = await _emailService.SendEmail(emailDTO, responseUserService.Data);
 
         if (!responseEmailService.Success)
         {

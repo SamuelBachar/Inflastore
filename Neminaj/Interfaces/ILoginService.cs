@@ -1,4 +1,5 @@
 ﻿using Neminaj.Models;
+using SharedTypesLibrary.DTOs.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,5 @@ public interface ILoginService
 {
     Task<(UserInfo UserInfo, string ResultMessage)> Login(string userName, string passWord);
 
-    Task<(UserInfo UserInfo, string ResultMessage)> LoginHTTPS(string userName, string passWord);
+    Task<(UserLoginDTO UserInfo, string ResultMessage)> LoginHTTPS(string email, string passWord);
 }

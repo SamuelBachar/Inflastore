@@ -22,7 +22,7 @@ namespace InflaStoreWebAPI.Services.UserService
         }
 
         #region Login
-        public async Task<ServiceResponse<UserLoginDTO>> Login(UserLoginRequest request) // todo poriesit UserDTO a mozne mapovanie s auto mapperom
+        public async Task<ServiceResponse<UserLoginDTO>> Login(UserLoginRequest request)
         {
             ServiceResponse<UserLoginDTO> serviceResponse = new ServiceResponse<UserLoginDTO>();
             User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
@@ -48,7 +48,7 @@ namespace InflaStoreWebAPI.Services.UserService
                 return serviceResponse;
             }
 
-            string jwtToken = CreateToken(userDB);
+            string jwtToken = CreateJWTToken(userDB);
 
             UserLoginDTO userLoginDTO = _mapper.Map<UserLoginDTO>(userDB);
             userLoginDTO.JWT = jwtToken;
@@ -63,7 +63,7 @@ namespace InflaStoreWebAPI.Services.UserService
             return BCrypt.Net.BCrypt.Verify(requestPassword, dbPasswordHashWithSalt);
         }
 
-        private string CreateToken(User user)
+        private string CreateJWTToken(User user)
         {
             List<Claim> claims = new List<Claim>
         {
@@ -101,17 +101,17 @@ namespace InflaStoreWebAPI.Services.UserService
             {
                 string passwordHashWithSalt = CreatePasswordHashWithSalt(request.Password);
 
-                User user = new User
+                User dbUser = new User
                 {
                     Email = request.Email,
                     PasswordHashWithSalt = passwordHashWithSalt,
                     VerificationToken = CreateRandomToken()
                 };
 
-                _context.Users.Add(user);
+                _context.Users.Add(dbUser);
                 await _context.SaveChangesAsync();
 
-                UserRegisterDTO userRegisterDTO = _mapper.Map<UserRegisterDTO>(user);
+                UserRegisterDTO userRegisterDTO = _mapper.Map<UserRegisterDTO>(dbUser);
                 serviceResponse.Data = userRegisterDTO;
                 serviceResponse.Message = "Uživateľ vytvorený, potvrďte registráciu pomocou správy ktorá bola odoslaná na váš e-mail";
 

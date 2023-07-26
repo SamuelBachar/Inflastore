@@ -63,37 +63,52 @@ public class LoginService : ILoginService
         return (null, $"Nastala chyba pri komunikácií so serverom. Chyba: \r\n: test");
     }
 
-    public async Task<(UserInfo UserInfo, string ResultMessage)> LoginHTTPS(string userName, string passWord)
+    public async Task<(UserLoginDTO UserInfo, string ResultMessage)> LoginHTTPS(string email, string passWord)
     {
         //HTTPS
-        var httpClient = new HttpClientService().GetPlatformSpecificHttpClient();
-        var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-            ? "https://10.0.2.2:7279"
-            : "https://localhost:7279";
-
-        var responseTest = await httpClient.GetAsync($"{baseUrl}/WeatherForecast");
-        var dataTest = await responseTest.Content.ReadAsStringAsync();
-
-        UserLoginRequest userLoginRequest = new UserLoginRequest { Email = userName, Password = passWord };
-        var response = await httpClient.PostAsJsonAsync($"{baseUrl}/api/User/login", userLoginRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-        var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            // Todo prerobit triedu UserInfo 
-            return (new UserInfo { UserName = serializedResponse.Data.Email }, serializedResponse.Message);
-        }
-        else if ( (response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (serializedResponse.Data != null) )
-        {
-            // todo
-        }
-        else if ( (response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (serializedResponse.Data == null) )
-        {
-            var responseString = await response.Content.ReadAsStringAsync();
-            Dictionary<string, List<string>> dicGenericErrors = GenericHttpErrorReader.ExtractErrorsFromWebAPIResponse(responseString);
-        }
+            var httpClient = new HttpClientService().GetPlatformSpecificHttpClient();
+            var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                ? "https://10.0.2.2:7279"
+                : "https://localhost:7279";
 
+            var responseTest = await httpClient.GetAsync($"{baseUrl}/WeatherForecast");
+            var dataTest = await responseTest.Content.ReadAsStringAsync();
 
-            return (null, $"Nastala chyba pri komunikácií so serverom. Chyba: \r\n: test");
+            UserLoginRequest userLoginRequest = new UserLoginRequest { Email = email, Password = passWord };
+            var response = await httpClient.PostAsJsonAsync($"{baseUrl}/api/User/login", userLoginRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
+
+            if (response.IsSuccessStatusCode)
+            {
+                return (new UserLoginDTO { Email = serializedResponse.Data.Email, JWT = serializedResponse.Data.JWT }, serializedResponse.Message);
+            }
+            else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (!serializedResponse.Success))
+            {
+                return (null, serializedResponse.Message);
+            }
+            else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (serializedResponse.Data == null))
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                Dictionary<string, List<string>> dicGenericErrors = GenericHttpErrorReader.ExtractErrorsFromWebAPIResponse(responseString);
+
+                var temp = string.Empty;
+
+                foreach (var error in dicGenericErrors)
+                {
+                    foreach (var errorInfo in error.Value)
+                        temp += errorInfo + "\r\n";
+                }
+
+                return (null, temp);
+            }
+
+            return (null, $"Neočakavaná odpoveď od servera, neznáma chyba");
+        }
+        catch (Exception ex)
+        {
+            return (null, $"Nastala chyba pri komunikácií so serverom. Chyba: {ex.Message}");
+        }
     }
 }

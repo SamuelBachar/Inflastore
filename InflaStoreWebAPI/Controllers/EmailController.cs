@@ -17,9 +17,9 @@ namespace InflaStoreWebAPI.Controllers
             _emailService = emailService;
         }
 
-        private async Task<ServiceResponse<EmailDTO>> SendEmail(EmailDTO request)
+        private async Task<ServiceResponse<EmailDTO>> SendEmail(EmailDTO request, UserRegisterDTO userRegisterDTO)
         {
-            ServiceResponse<EmailDTO> response = await _emailService.SendEmail(request);
+            ServiceResponse<EmailDTO> response = await _emailService.SendEmail(request, userRegisterDTO);
 
             return response;
         }

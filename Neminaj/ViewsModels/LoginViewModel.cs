@@ -12,6 +12,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Neminaj.Views;
+using SharedTypesLibrary.DTOs.API;
 
 namespace Neminaj.ViewsModels;
 
@@ -42,26 +43,6 @@ public partial class LoginViewModel : BaseViewModel
             App.UserInfo = userInfo.Item1;
 
             await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
-        }
-    }
-
-    [RelayCommand]
-    public async void LoginHTTPS()
-    {
-        if (!string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Password))
-        {
-            var userInfo = await loginService.LoginHTTPS(Email, Password);
-
-            if (Preferences.ContainsKey(nameof(App.UserInfo)))
-            {
-                Preferences.Remove(nameof(App.UserInfo));
-            }
-
-            string userDetails = JsonConvert.SerializeObject(userInfo);
-            Preferences.Set(nameof(App.UserInfo), userDetails);
-            App.UserInfo = userInfo.Item1;
-
-            //await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
         }
     }
 }

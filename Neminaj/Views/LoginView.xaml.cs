@@ -1,14 +1,21 @@
+﻿using Neminaj.Interfaces;
+using Neminaj.Models;
 using Neminaj.ViewsModels;
+using Newtonsoft.Json;
+using SharedTypesLibrary.DTOs.API;
 
 namespace Neminaj.Views;
 
 public partial class LoginView : ContentPage
 {
-	public LoginView(LoginViewModel loginViewModel)
+    readonly ILoginService _loginService = null;
+
+    public LoginView(ILoginService loginService)
 	{
 		InitializeComponent();
-		this.BindingContext = loginViewModel;
-	}
+
+        _loginService = loginService;
+    }
 
     private void BtnLogIn_Clicked(object sender, EventArgs e)
     {
@@ -26,12 +33,16 @@ public partial class LoginView : ContentPage
         }
     }
 
-    private void BtnLogInHttps_Clicked(object sender, EventArgs e)
+    private async void BtnLogInHttps_Clicked(object sender, EventArgs e)
     {
+        bool badEnty = false;
+
         if (string.IsNullOrWhiteSpace(EntryEmail.Text))
         {
             EntryEmail.Placeholder = "Zadajte e-mail";
             EntryEmail.PlaceholderColor = Colors.OrangeRed;
+
+            badEnty = true;
         }
 
         if (string.IsNullOrWhiteSpace(EntryPassword.Text))
@@ -39,6 +50,37 @@ public partial class LoginView : ContentPage
             EntryPassword.IsPassword = false;
             EntryPassword.Placeholder = "Zadajte heslo";
             EntryPassword.PlaceholderColor = Colors.OrangeRed;
+
+            badEnty = true;
+        }
+
+        if (badEnty)
+            return;
+
+        if (!string.IsNullOrWhiteSpace(EntryEmail.Text) && !string.IsNullOrWhiteSpace(EntryPassword.Text))
+        {
+            (UserLoginDTO UserLoginDTO, string Message) response = await _loginService.LoginHTTPS(EntryEmail.Text, EntryPassword.Text);
+
+            if (response.UserLoginDTO != null)
+            {
+                if (Preferences.ContainsKey(nameof(App.UserInfo)))
+                {
+                    Preferences.Remove(nameof(App.UserInfo));
+                }
+
+                UserInfo userInfo = new UserInfo { Email = EntryEmail.Text, Password = EntryPassword.Text, JWT = response.UserLoginDTO.JWT };
+                App.UserInfo = userInfo;
+
+                string userInfoSerialized = JsonConvert.SerializeObject(App.UserInfo);
+
+                Preferences.Set(nameof(App.UserInfo), userInfoSerialized);
+
+                //await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
+            }
+            else
+            {
+                await DisplayAlert("Prihlásenie chyba", response.Message, "Zavrieť");
+            }
         }
     }
 

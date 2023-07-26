@@ -4,6 +4,6 @@ namespace InflaStoreWebAPI.Services.EmailService
 {
     public interface IEmailService
     {
-        Task<ServiceResponse<EmailDTO>> SendEmail(EmailDTO request);
+        Task<ServiceResponse<EmailDTO>> SendEmail<T>(EmailDTO request, T userEmailDTO);
     }
 }
