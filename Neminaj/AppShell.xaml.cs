@@ -13,5 +13,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(SavedCartDetail), typeof(SavedCartDetail));
         Routing.RegisterRoute(nameof(NavigationView), typeof(NavigationView));
         Routing.RegisterRoute(nameof(AddCardView), typeof(AddCardView));
+        Routing.RegisterRoute(nameof(RegisterView), typeof(RegisterView));
     }
 }

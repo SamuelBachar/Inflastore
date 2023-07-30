@@ -56,6 +56,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IGeolocation>(Geolocation.Default);
 		builder.Services.AddSingleton<IMap>(Map.Default);
         builder.Services.AddSingleton<ILoginService, LoginService>();
+        builder.Services.AddSingleton<IRegisterService, RegisterService>();
         //builder.Services.AddHttpClient("api", httpsClient => httpsClient.BaseAddress = new Uri("https://localhost:7279/WeatherForecast")); TODO example len mozno nastudovat
 
         // Repositories ( DB queries)
@@ -85,6 +86,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<SavedCardViewModel>();
 
         // Transients
+        builder.Services.AddTransient<RegisterView>();
         builder.Services.AddTransient<CartView>();
         builder.Services.AddTransient<SavedCartDetail>();
         builder.Services.AddTransient<NavigationView>();

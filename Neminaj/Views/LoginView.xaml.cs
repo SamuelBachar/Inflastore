@@ -75,7 +75,7 @@ public partial class LoginView : ContentPage
 
                 Preferences.Set(nameof(App.UserInfo), userInfoSerialized);
 
-                //await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
+                await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
             }
             else
             {
@@ -99,5 +99,15 @@ public partial class LoginView : ContentPage
         {
             EntryEmail.TextColor = Colors.Black;
         }
+    }
+
+    private void txtForgotPassword_Tapped(object sender, TappedEventArgs e)
+    {
+        
+    }
+
+    private async void txtRegister_Tapped(object sender, TappedEventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(RegisterView));
     }
 }

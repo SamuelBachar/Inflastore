@@ -105,7 +105,8 @@ namespace InflaStoreWebAPI.Services.UserService
                 {
                     Email = request.Email,
                     PasswordHashWithSalt = passwordHashWithSalt,
-                    VerificationToken = CreateRandomToken()
+                    VerificationToken = CreateRandomToken(),
+                    Region = request.Region_Id
                 };
 
                 _context.Users.Add(dbUser);
@@ -126,12 +127,17 @@ namespace InflaStoreWebAPI.Services.UserService
             finally
             {
                 // todo logger
+                if (serviceResponse.ExceptionMessage.Length > 0)
+                {
+
+                }
             }
 
             return serviceResponse;
         }
         #endregion
 
+        // todo doplnit aj user Id aby pri vacsom mnozstve uzivatelov dlho neporovnaval tokeny
         public async Task<ServiceResponse<UserVerifyDTO>> Verify(string token)
         {
             ServiceResponse<UserVerifyDTO> serviceResponse = new ServiceResponse<UserVerifyDTO>();

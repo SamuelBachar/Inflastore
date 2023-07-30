@@ -12,4 +12,7 @@ public class UserRegisterRequest
 
     [Required, Compare("Password")]
     public string ConfirmPassword { get; set; } = string.Empty;
+
+    [Required]
+    public int Region_Id { get; set; }
 }

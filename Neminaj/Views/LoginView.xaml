@@ -34,7 +34,11 @@
         <StackLayout Orientation="Horizontal">
             <CheckBox IsChecked="False" />
             <Label Text="Zapamätať prihlásenie" TextColor="DarkGrey" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-            <Label Text="Zabudnuté heslo" TextColor="Orange" FontAttributes="Bold" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+            <Label x:Name="txtForgotPassword" Text="Zabudnuté heslo" TextColor="Orange" FontAttributes="Bold" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="txtForgotPassword_Tapped"/>
+                </Label.GestureRecognizers>
+            </Label>
         </StackLayout>
 
         <Button x:Name="BtnLogIn" Text="Prihlásiť sa HTTP" WidthRequest="100" CornerRadius="20" HorizontalOptions="Center" Command="{Binding LoginCommand}" Clicked="BtnLogIn_Clicked"/>
@@ -43,7 +47,11 @@
 
         <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="Center">
             <Label Text="Nemáte účet?" FontSize="Small" TextColor="DarkGray" />
-            <Label Text=" Registrujte sa tu" TextColor="Orange" FontAttributes="Bold"/>
+            <Label x:Name="txtRegister" Text=" Registrujte sa tu" TextColor="Orange" FontAttributes="Bold">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="txtRegister_Tapped"/>
+                </Label.GestureRecognizers>
+            </Label>
         </StackLayout>
 
     </VerticalStackLayout>

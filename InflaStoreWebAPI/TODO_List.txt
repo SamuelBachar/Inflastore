@@ -1,0 +1,6 @@
+﻿1. Poslat krajsi e-mial v ramci registracie (StaticFile\example.html) a premenovat html dokument
+2. Po zavolani Verify s tokenom treba pouzit aj id z dovodu rychlosti, vratit html page alebo obrazok na zaklade toho ci bolo uspesne overenie alebo nebolo
+   Napr. duplicitne overenie napisat ze uz bol raz overeny alebo v pripade exception ze prebehla chyba a kontaktuje support@inflastore.sk
+3. Logovanie exception na strane api
+4. doriesit Authorization (pridanie do APIny v Program.cs + ten JWT handler) a zaroven spristupnenie volania POST / GET method pomocou [Authorization]
+5. Refresh tokeny

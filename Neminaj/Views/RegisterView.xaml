@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neminaj.Views.RegisterView"
+             Title="Registrácia">
+    <VerticalStackLayout Spacing="25" Padding="30,0" VerticalOptions="Center">
+
+        <VerticalStackLayout Spacing="5">
+            <Image Source="inflastoresplashscreen.png" HeightRequest="200" />
+            <Label Text="Registrácia" FontSize="28" TextColor="Gray" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
+                <Image Source="user_login.svg" HeightRequest="20" WidthRequest="20" />
+            </Frame>
+            <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
+                <Entry x:Name="EntryEmail" ToolTipProperties.Text="Zadajte e-mail" TextColor="Black" Margin="20,0,0,0" VerticalOptions="Center" Placeholder="E-Mail" Keyboard="Email" TextChanged="EntryEmail_TextChanged"/>
+            </Frame>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
+                <Image Source="lock_login.svg" HeightRequest="20" WidthRequest="20" />
+            </Frame>
+            <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
+                <Entry x:Name="EntryPassword" ToolTipProperties.Text="Zadajte heslo" TextColor="Black" Margin="20,0,0,0" VerticalOptions="Center" Placeholder="Heslo" IsPassword="True" TextChanged="EntryPassword_TextChanged"/>
+            </Frame>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
+                <Image Source="lock_login.svg" HeightRequest="20" WidthRequest="20" />
+            </Frame>
+            <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
+                <Entry x:Name="EntryPasswordConfirm" ToolTipProperties.Text="Zadajte heslo" TextColor="Black" Margin="20,0,0,0" VerticalOptions="Center" Placeholder="Potvrdenie hesla" IsPassword="True" TextChanged="EntryPasswordConfirm_TextChanged"/>
+            </Frame>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
+                <Image Source="slovakia_map.svg" HeightRequest="20" WidthRequest="20" />
+            </Frame>
+            <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
+                <Picker x:Name="RegionPicker" Title="Zvoľte región" Margin="20,0,0,0" TextColor="Black" VerticalOptions="Center" SelectedIndexChanged="RegionPicker_SelectedIndexChanged" />
+            </Frame>
+        </StackLayout>
+
+        <Button x:Name="BtnRegisterHttps" Text="Registrovať" WidthRequest="100" CornerRadius="20" HorizontalOptions="Center" Clicked="BtnRegisterHttps_Clicked" />
+
+    </VerticalStackLayout>
+</ContentPage>
