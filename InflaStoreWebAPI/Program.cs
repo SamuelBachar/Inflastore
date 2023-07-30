@@ -7,6 +7,7 @@ global using SharedTypesLibrary.Models.API;
 global using SharedTypesLibrary.Models.API.DatabaseModels;
 global using SharedTypesLibrary.Models.API.ServiceResponseModel;
 global using SharedTypesLibrary.DTOs.API;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseFileServer(new FileServerOptions
+{
+    FileProvider = new PhysicalFileProvider
+    (
+        Path.Combine(Directory.GetCurrentDirectory(), "StaticFile")
+    ),
+
+    RequestPath = "/StaticFile"
+});
 
 #if !DEBUG
 app.UseHttpsRedirection();

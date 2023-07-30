@@ -1,5 +1,7 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Mvc.Routing;
 using MimeKit;
+using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -31,8 +33,13 @@ namespace InflaStoreWebAPI.Services.EmailService
                 if (userEmailDTO is UserRegisterDTO userRegisterDTO)
                 {
                     url = $"https://localhost:7279/api/User/verify?token={userRegisterDTO.VerificationToken}";
-                    email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = $"{request.Body} \r\n {url}" };
-                    // https://youtu.be/euDyxWDgSUU?t=838 tu meni object na url rovno pouzit aj na registraciu lebo to nejde
+                    request.Body += "\r\n <a href=\"#URL#\"> Kliknite tu </a>";
+                    var body = request.Body.Replace("#URL#", WebUtility.UrlEncode(url));
+
+                    TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "StaticFile\\example.html")) };
+                    textPart.Text = textPart.Text.Replace("#URL#", url);
+
+                    email.Body = textPart;
                 }
                 else if (userEmailDTO is UserForgotPasswordDTO userForgotPasswordDTO)
                 {
@@ -44,6 +51,7 @@ namespace InflaStoreWebAPI.Services.EmailService
                 smtp.Connect(_config.GetSection("EmailSettings:EmailHost").Value, 587, MailKit.Security.SecureSocketOptions.StartTlsWhenAvailable);
                 smtp.Authenticate(_config.GetSection("EmailSettings:EmailUserName").Value, _config.GetSection("EmailSettings:EmailPassword").Value);
                 string resp = await smtp.SendAsync(email);
+
                 smtp.Disconnect(true);
 
             }

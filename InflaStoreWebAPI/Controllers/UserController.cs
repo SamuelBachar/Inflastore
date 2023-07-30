@@ -71,7 +71,7 @@ public class UserController : ControllerBase
         return Ok(responseUserService);
     }
 
-    [HttpPost("verify")]
+    [HttpGet("verify")]
     public async Task<ActionResult<ServiceResponse<UserVerifyDTO>>> Verify(string token)
     {
         ServiceResponse<UserVerifyDTO> response = await _userService.Verify(token);
