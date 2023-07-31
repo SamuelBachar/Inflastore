@@ -77,7 +77,7 @@ public partial class RegisterView : ContentPage
         UserRegisterRequest.Email = EntryEmail.Text;
         UserRegisterRequest.Password = EntryPassword.Text;
         UserRegisterRequest.ConfirmPassword = EntryPasswordConfirm.Text;
-        UserRegisterRequest.Region_Id = RegionPicker.SelectedIndex;
+        UserRegisterRequest.Region_Id = ((Models.Region)RegionPicker.ItemsSource[RegionPicker.SelectedIndex]).Id;
 
         (UserRegisterDTO UserRegisterDTO, string Message) response = await _registerService.RegisterHTTPS(UserRegisterRequest);
 
@@ -87,7 +87,7 @@ public partial class RegisterView : ContentPage
         }
         else
         {
-            await DisplayAlert("Prihlásenie chyba", response.Message, "Zavrieť");
+            await DisplayAlert("Registrácia chyba", response.Message, "Zavrieť");
         }
     }
 

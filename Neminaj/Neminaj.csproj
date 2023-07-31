@@ -118,6 +118,9 @@
 	  <MauiXaml Update="Views\CartView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\ForgotPasswordView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ItemPicker.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

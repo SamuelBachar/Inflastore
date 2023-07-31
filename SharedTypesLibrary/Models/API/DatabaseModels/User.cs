@@ -7,6 +7,8 @@ public class User
 
     public string PasswordHashWithSalt { get; set; } = string.Empty;
 
+    public string TempResetPasswordHashWithSalt { get; set; } = string.Empty;
+
     public int Region { get; set; }
 
     public string VerificationToken { get; set; }

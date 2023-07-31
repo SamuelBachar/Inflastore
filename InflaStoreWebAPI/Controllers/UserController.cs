@@ -85,9 +85,9 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("forgot-password")]
-    public async Task<ActionResult<ServiceResponse<UserForgotPasswordDTO>>> ForgotPassword(string email)
+    public async Task<ActionResult<ServiceResponse<UserForgotPasswordDTO>>> ForgotPassword(ForgotPasswordRequest forgotPasswordRequest)
     {
-        ServiceResponse<UserForgotPasswordDTO> responseUserService = await _userService.ForgotPassword(email);
+        ServiceResponse<UserForgotPasswordDTO> responseUserService = await _userService.ForgotPassword(forgotPasswordRequest);
 
         if (!responseUserService.Success)
         {
@@ -96,7 +96,7 @@ public class UserController : ControllerBase
 
         EmailDTO emailDTO = new EmailDTO
         {
-            To = email,
+            To = forgotPasswordRequest.Email,
             Subject = "Infla Store - Potvrdenie obnovenia hesla",
             Body = "Prosím kliknite na nižšie uvedení link pre potvrdenie obnovenie hesla",
             EmailType = EEmailType.ResetPassword
@@ -113,13 +113,19 @@ public class UserController : ControllerBase
             return BadRequest(responseUserService);
         }
 
+        /* Make sure reset token is not sent back to user for safety reasons */
+        if (responseUserService.Data != null)
+        {
+            responseUserService.Data.PasswordResetToken = string.Empty;
+        }
+
         return Ok(responseUserService);
     }
 
-    [HttpPost("reset-password")]
-    public async Task<ActionResult<ServiceResponse<UserResetPasswordDTO>>> ResetPassword(ResetPasswordRequest request)
+    [HttpGet("reset-password")]
+    public async Task<ActionResult<ServiceResponse<UserResetPasswordDTO>>> ResetPassword(string resetToken)
     {
-        ServiceResponse<UserResetPasswordDTO> response = await _userService.ResetPassword(request);
+        ServiceResponse<UserResetPasswordDTO> response = await _userService.ResetPassword(resetToken);
 
         if (!response.Success)
         {

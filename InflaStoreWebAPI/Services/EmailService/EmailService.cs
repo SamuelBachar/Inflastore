@@ -33,18 +33,20 @@ namespace InflaStoreWebAPI.Services.EmailService
                 if (userEmailDTO is UserRegisterDTO userRegisterDTO)
                 {
                     url = $"https://localhost:7279/api/User/verify?token={userRegisterDTO.VerificationToken}";
-                    request.Body += "\r\n <a href=\"#URL#\"> Kliknite tu </a>";
-                    var body = request.Body.Replace("#URL#", WebUtility.UrlEncode(url));
 
-                    TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "StaticFile\\example.html")) };
+                    TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "StaticFile\\EmailRegister.html")) };
                     textPart.Text = textPart.Text.Replace("#URL#", url);
 
                     email.Body = textPart;
                 }
                 else if (userEmailDTO is UserForgotPasswordDTO userForgotPasswordDTO)
                 {
-                    // https://geeklearning.io/serialize-an-object-to-an-url-encoded-string-in-csharp/
-                    // https://youtu.be/euDyxWDgSUU?t=838 tu meni object na url
+                    url = $"https://localhost:7279/api/User/reset-password?resetToken={userForgotPasswordDTO.PasswordResetToken}";
+
+                    TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "StaticFile\\EmailForgotPassword.html")) };
+                    textPart.Text = textPart.Text.Replace("#URL#", url);
+
+                    email.Body = textPart;
                 }
 
                 using SmtpClient smtp = new SmtpClient();
@@ -70,7 +72,10 @@ namespace InflaStoreWebAPI.Services.EmailService
             }
             finally
             {
-                // todo logger
+                if (response.ExceptionMessage.Length > 0)
+                {
+                    // todo logger
+                }
             }
 
             return response;

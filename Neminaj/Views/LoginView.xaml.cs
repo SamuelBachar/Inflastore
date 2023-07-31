@@ -101,9 +101,9 @@ public partial class LoginView : ContentPage
         }
     }
 
-    private void txtForgotPassword_Tapped(object sender, TappedEventArgs e)
+    private async void txtForgotPassword_Tapped(object sender, TappedEventArgs e)
     {
-        
+        await Shell.Current.GoToAsync(nameof(ForgotPasswordView));
     }
 
     private async void txtRegister_Tapped(object sender, TappedEventArgs e)

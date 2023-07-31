@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata.Ecma335;
@@ -66,9 +68,9 @@ namespace InflaStoreWebAPI.Services.UserService
         private string CreateJWTToken(User user)
         {
             List<Claim> claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, user.Email)
-        };
+            {
+                new Claim(ClaimTypes.Name, user.Email)
+            };
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
             SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
@@ -137,7 +139,7 @@ namespace InflaStoreWebAPI.Services.UserService
         }
         #endregion
 
-        // todo doplnit aj user Id aby pri vacsom mnozstve uzivatelov dlho neporovnaval tokeny
+        // todo doplnit aj user Id aby pri vacsom mnozstve uzivatelov dlho neporovnaval tokeny ( ale user_id musi byt encrypted)
         public async Task<ServiceResponse<UserVerifyDTO>> Verify(string token)
         {
             ServiceResponse<UserVerifyDTO> serviceResponse = new ServiceResponse<UserVerifyDTO>();
@@ -178,13 +180,13 @@ namespace InflaStoreWebAPI.Services.UserService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<UserForgotPasswordDTO>> ForgotPassword(string email)
+        public async Task<ServiceResponse<UserForgotPasswordDTO>> ForgotPassword(ForgotPasswordRequest forgotPasswordRequest)
         {
             ServiceResponse<UserForgotPasswordDTO> serviceResponse = new ServiceResponse<UserForgotPasswordDTO>();
 
             try
             {
-                User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.Email == forgotPasswordRequest.Email);
 
                 if (userDB == null)
                 {
@@ -192,6 +194,13 @@ namespace InflaStoreWebAPI.Services.UserService
                     serviceResponse.Message = "Účet pre daný e-mail nebol nájdení";
                     return serviceResponse;
                 }
+
+                /* Temporary storing new password into database
+                   After reset-password is sent and processed without error this password will replace password 
+                   in PasswordHashWithSalt column (means reseting of password will occur)
+                 */
+
+                userDB.TempResetPasswordHashWithSalt = CreatePasswordHashWithSalt(forgotPasswordRequest.Password);
 
                 userDB.PasswordResetToken = CreateRandomToken();
                 userDB.ResetTokenExpires = DateTime.Now.AddDays(1);
@@ -206,20 +215,28 @@ namespace InflaStoreWebAPI.Services.UserService
             }
             catch (Exception ex)
             {
+                serviceResponse.Data = null;
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Nastala chyba počas ukladania údajov potrebných pre obnovenú hesla";
                 serviceResponse.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
                 return serviceResponse;
             }
+            finally // todo
+            {
+                if (serviceResponse.ExceptionMessage.Length > 0)
+                {
+                    // logger
+                }
+            }
         }
 
-        public async Task<ServiceResponse<UserResetPasswordDTO>> ResetPassword(ResetPasswordRequest request)
+        public async Task<ServiceResponse<UserResetPasswordDTO>> ResetPassword(string resetToken)
         {
             ServiceResponse<UserResetPasswordDTO> responseService = new ServiceResponse<UserResetPasswordDTO>();
 
             try
             {
-                User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == request.Token);
+                User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == resetToken);
 
                 if (userDB == null)
                 {
@@ -235,9 +252,20 @@ namespace InflaStoreWebAPI.Services.UserService
                     return responseService;
                 }
 
-                string passwordHash = CreatePasswordHashWithSalt(request.Password);
+                if (userDB.TempResetPasswordHashWithSalt == null)
+                {
+                    responseService.Success = false;
+                    responseService.Message = "Link pre resetovanie hesla už raz bol už použitý";
+                    return responseService;
+                }
 
-                userDB.PasswordHashWithSalt = passwordHash;
+                /* Work around for obsolete below
+                  string tempResetPasswordHashWithSalt = string.Empty;
+                  userDB.TempResetPasswordHashWithSalt.Select(c => c).ToList().ForEach(c => tempResetPasswordHashWithSalt += c);
+                */
+
+                userDB.PasswordHashWithSalt = string.Copy(userDB.TempResetPasswordHashWithSalt);
+                userDB.TempResetPasswordHashWithSalt = null;
                 userDB.PasswordResetToken = null;
                 userDB.ResetTokenExpires = null;
 
@@ -283,8 +311,6 @@ namespace InflaStoreWebAPI.Services.UserService
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
-
-
         #endregion
     }
 }

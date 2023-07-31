@@ -10,8 +10,8 @@ namespace InflaStoreWebAPI.Services.UserService
 
         public Task<ServiceResponse<UserVerifyDTO>> Verify(string token);
 
-        public Task<ServiceResponse<UserForgotPasswordDTO>> ForgotPassword(string email);
+        public Task<ServiceResponse<UserForgotPasswordDTO>> ForgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
-        public Task<ServiceResponse<UserResetPasswordDTO>> ResetPassword(ResetPasswordRequest request);
+        public Task<ServiceResponse<UserResetPasswordDTO>> ResetPassword(string resetToken);
     }
 }
