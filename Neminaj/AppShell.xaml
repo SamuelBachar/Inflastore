@@ -28,7 +28,7 @@
             <ShellContent ContentTemplate="{DataTemplate localViews:SettingsView}" Route="SettingsView"/>
         </Tab>
 
-        <Tab Title="Odhlásenie" Icon="settings.svg">
+        <Tab Title="Odhlásenie" Icon="logout_icon.svg">
             <ShellContent ContentTemplate="{DataTemplate localViews:LoginView}" Route="LoginView"/>
         </Tab>
 

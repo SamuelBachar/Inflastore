@@ -86,7 +86,7 @@ public class CustomCell : ViewCell
     public CustomCell(ViewElements pe, PageLayoutInfo.ViewLayoutInfo pageLayoutInfo)
     {
         GridCellView = new Grid();
-        GridCellView.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+        GridCellView.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Star });
 
         GridCellView.ColumnDefinitions.Add(new ColumnDefinition() { Width = pe.MainGrid.FirstColumnWidth });
 
@@ -98,8 +98,10 @@ public class CustomCell : ViewCell
         StackLayout = new StackLayout();
         LblName = new Label();
         LblName.LineBreakMode = LineBreakMode.WordWrap;
-        LblName.VerticalOptions = LayoutOptions.Center;
+        LblName.VerticalOptions = LayoutOptions.Fill;
         LblName.HorizontalOptions = LayoutOptions.Start;
+        StackLayout.VerticalOptions = LayoutOptions.Fill;
+        StackLayout.HorizontalOptions = LayoutOptions.Start;
         StackLayout.Add(LblName);
 
         GridCellView.Add(StackLayout, column: 0);
@@ -143,6 +145,7 @@ public class CustomCell : ViewCell
         if (BindingContext != null)
         {
             LblName.Text = FinalName;
+            Console.WriteLine(FinalName);
 
             if (LblPrice1 != null && Price1 != null)
                 LblPrice1.Text = (CntOfItems * Math.Round(Price1.Value, 2)).ToString("0.00");
@@ -713,7 +716,8 @@ public partial class PriceComparerView : ContentPage
             SelectionMode = ListViewSelectionMode.None,
             ItemTemplate = customViewCell,
             SeparatorColor = Colors.Black,
-            SeparatorVisibility = SeparatorVisibility.Default
+            SeparatorVisibility = SeparatorVisibility.Default,
+            HasUnevenRows = true
         };
 
         Grid.SetColumnSpan(pe._ListViewRecords.ListView, viewLayoutInfo.GridCntCols + 1);

@@ -13,7 +13,7 @@ using System.Text;
 
 namespace InflaStoreWebAPI.Controllers;
 
-[Route("api/[controller]")] // todo: change it to THIN contollers with services this is fat controller 
+[Route("api/[controller]")]
 [ApiController]
 public class UserController : ControllerBase
 {
