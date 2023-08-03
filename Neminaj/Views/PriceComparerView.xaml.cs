@@ -100,6 +100,8 @@ public class CustomCell : ViewCell
         LblName.LineBreakMode = LineBreakMode.WordWrap;
         LblName.VerticalOptions = LayoutOptions.Fill;
         LblName.HorizontalOptions = LayoutOptions.Start;
+        LblName.VerticalTextAlignment = TextAlignment.Start;
+        LblName.HorizontalTextAlignment = TextAlignment.Start;
         StackLayout.VerticalOptions = LayoutOptions.Fill;
         StackLayout.HorizontalOptions = LayoutOptions.Start;
         StackLayout.Add(LblName);

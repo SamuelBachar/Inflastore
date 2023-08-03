@@ -67,6 +67,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Platforms\Android\Resources\values\strings.xml" />
 	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
 	  <None Remove="Resources\Database\neminaj.db3" />
 	  <None Remove="Resources\Images\billa_logo.png" />
