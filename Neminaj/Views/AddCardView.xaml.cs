@@ -1,8 +1,10 @@
 using Camera.MAUI;
+using Neminaj.Models;
 using Neminaj.Repositoriesô;
 using Neminaj.ViewsModels;
 
 namespace Neminaj.Views;
+
 
 public partial class AddCardView : ContentPage
 {
@@ -35,7 +37,6 @@ public partial class AddCardView : ContentPage
         cameraView.BarCodeDetectionMaxThreads = 5;
         cameraView.ControlBarcodeResultDuplicate = true;
         cameraView.BarCodeDetectionEnabled = true;
-
 
         if (cameraView.MaxZoomFactor >= 2.5f)
             cameraView.ZoomFactor = 2.5f;

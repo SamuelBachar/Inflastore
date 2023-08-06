@@ -5,8 +5,10 @@ namespace Neminaj;
 
 public partial class App : Application
 {
-	public static UserInfo UserInfo;
-	public App()
+	public static UserLoginInfo UserLoginInfo;
+
+    public static UserSessionInfo UserSessionInfo;
+    public App()
 	{
 		InitializeComponent();
 

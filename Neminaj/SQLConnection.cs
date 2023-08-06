@@ -37,6 +37,7 @@ public class SQLConnection
         await m_ConnectionAsync.CreateTableAsync<SavedCart>();
         await m_ConnectionAsync.CreateTableAsync<SavedCartItem>();
         await m_ConnectionAsync.CreateTableAsync<NavigationShopData>();
+        await m_ConnectionAsync.CreateTableAsync<SavedCard>();
     }
 
     public static void Init()

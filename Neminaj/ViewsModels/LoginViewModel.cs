@@ -33,14 +33,14 @@ public partial class LoginViewModel : BaseViewModel
         {
             var userInfo = await loginService.Login(Email, Password);
 
-            if (Preferences.ContainsKey(nameof(App.UserInfo)))
+            if (Preferences.ContainsKey(nameof(App.UserLoginInfo)))
             {
-                Preferences.Remove(nameof(App.UserInfo));
+                Preferences.Remove(nameof(App.UserLoginInfo));
             }
 
             string userDetails = JsonConvert.SerializeObject(userInfo);
-            Preferences.Set(nameof(App.UserInfo), userDetails);
-            App.UserInfo = userInfo.Item1;
+            Preferences.Set(nameof(App.UserLoginInfo), userDetails);
+            App.UserLoginInfo = userInfo.Item1;
 
             await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
         }

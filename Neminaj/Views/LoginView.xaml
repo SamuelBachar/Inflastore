@@ -32,7 +32,7 @@
         </StackLayout>
 
         <StackLayout Orientation="Horizontal">
-            <CheckBox IsChecked="False" />
+            <CheckBox x:Name="chkRememberLogin" IsChecked="False" CheckedChanged="chkRememberLogin_CheckedChanged" />
             <Label Text="Zapamätať prihlásenie" TextColor="DarkGrey" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
             <Label x:Name="txtForgotPassword" Text="Zabudnuté heslo" TextColor="Orange" FontAttributes="Bold" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
                 <Label.GestureRecognizers>

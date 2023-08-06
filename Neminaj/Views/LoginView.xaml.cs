@@ -15,6 +15,24 @@ public partial class LoginView : ContentPage
 		InitializeComponent();
 
         _loginService = loginService;
+
+        if (Preferences.ContainsKey("RememberLogin"))
+        {
+            chkRememberLogin.IsChecked = Preferences.Get("RememberLogin", false);
+
+            if (chkRememberLogin.IsChecked)
+            {
+
+                string userInfoSerialized = Preferences.Get(nameof(App.UserLoginInfo), "");
+
+                if (userInfoSerialized != "")
+                {
+                    UserLoginInfo userLoginInfo = JsonConvert.DeserializeObject<UserLoginInfo>(userInfoSerialized);
+                    EntryEmail.Text = userLoginInfo.Email;
+                    EntryPassword.Text = userLoginInfo.Password;
+                }
+            }
+        }
     }
 
     private void BtnLogIn_Clicked(object sender, EventArgs e)
@@ -63,17 +81,26 @@ public partial class LoginView : ContentPage
 
             if (response.UserLoginDTO != null)
             {
-                if (Preferences.ContainsKey(nameof(App.UserInfo)))
+                UserLoginInfo userLoginInfo = new UserLoginInfo { Email = EntryEmail.Text, Password = EntryPassword.Text };
+                UserSessionInfo userSessionInfo = new UserSessionInfo { Email = EntryEmail.Text, JWT = response.UserLoginDTO.JWT };
+                
+                App.UserLoginInfo = userLoginInfo;
+                App.UserSessionInfo = userSessionInfo;
+
+
+                if (Preferences.ContainsKey(nameof(App.UserLoginInfo)))
                 {
-                    Preferences.Remove(nameof(App.UserInfo));
+                    Preferences.Remove(nameof(App.UserLoginInfo));
                 }
 
-                UserInfo userInfo = new UserInfo { Email = EntryEmail.Text, Password = EntryPassword.Text, JWT = response.UserLoginDTO.JWT };
-                App.UserInfo = userInfo;
-
-                string userInfoSerialized = JsonConvert.SerializeObject(App.UserInfo);
-
-                Preferences.Set(nameof(App.UserInfo), userInfoSerialized);
+                if (Preferences.ContainsKey("RememberLogin"))
+                {
+                    if (Preferences.Get("RememberLogin", false))
+                    {
+                        string userInfoSerialized = JsonConvert.SerializeObject(App.UserLoginInfo);
+                        Preferences.Set(nameof(App.UserLoginInfo), userInfoSerialized);
+                    }
+                }
 
                 await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
             }
@@ -109,5 +136,16 @@ public partial class LoginView : ContentPage
     private async void txtRegister_Tapped(object sender, TappedEventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(RegisterView));
+    }
+    private void chkRememberLogin_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    {
+        if (e.Value)
+        {
+            Preferences.Set("RememberLogin", true);
+        }
+        else
+        {
+            Preferences.Set("RememberLogin", false);
+        }
     }
 }

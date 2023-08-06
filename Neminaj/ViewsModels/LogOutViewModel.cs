@@ -12,9 +12,9 @@ public partial class LogOutViewModel : BaseViewModel
 {
     public async void SignOut()
     {
-        if (Preferences.ContainsKey(nameof(App.UserInfo)))
+        if (Preferences.ContainsKey(nameof(App.UserLoginInfo)))
         {
-            Preferences.Remove(nameof(App.UserInfo));
+            Preferences.Remove(nameof(App.UserLoginInfo));
         }
 
         await Shell.Current.GoToAsync($"//{nameof(LoginView)}");

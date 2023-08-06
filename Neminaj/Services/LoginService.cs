@@ -16,7 +16,7 @@ namespace Neminaj.Services;
 
 public class LoginService : ILoginService
 {
-    public async Task<(UserInfo UserInfo, string ResultMessage)> Login(string userName, string passWord)
+    public async Task<(UserLoginInfo UserInfo, string ResultMessage)> Login(string userName, string passWord)
     {
         //try
         //{
