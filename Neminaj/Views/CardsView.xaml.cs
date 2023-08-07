@@ -16,6 +16,8 @@ class ViewContent
 
     public List<SavedCard> ListCards { get; set; } = null;
 
+    public List<Image> ListImages { get; set; } = null;
+
 }
 
 public partial class CardsView : ContentPage
@@ -108,18 +110,23 @@ public partial class CardsView : ContentPage
 
         // END Create button Scan from picture //
 
+        this.ViewContent.ListImages = new List<Image>();
+
         for (int row = 0, cardCounter = 0; cardCounter < this.ViewContent.ListCards.Count; row++)
         {
             for (int col = 0; ((cardCounter < this.ViewContent.ListCards.Count) && (col < 2)); col++, cardCounter++)
             {
                 var stream = new MemoryStream(this.ViewContent.ListCards[cardCounter].Image);
                 {
-                    Image.Source = ImageSource.FromStream(() => stream);
-                    Image.Aspect = Aspect.AspectFit;
-                    Image.HeightRequest = (this.Window.Height / 5);
-                    Image.WidthRequest = (this.Window.Width / 2);
+                    Image img = new Image();
+                    img.Source = ImageSource.FromStream(() => stream);
+                    img.Aspect = Aspect.AspectFit;
+                    img.HeightRequest = (this.Window.Height / 5);
+                    img.WidthRequest = (this.Window.Width / 2);
 
-                    this.ViewContent.GridCards.Add(Image, col, row);
+                    this.ViewContent.ListImages.Add(img);
+
+                    this.ViewContent.GridCards.Add(img, col, row);
                 }
             }
         }
