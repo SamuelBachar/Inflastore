@@ -18,6 +18,8 @@ class ViewContent
 
     public List<Image> ListImages { get; set; } = null;
 
+    public List<TapGestureRecognizer> ListTapGestureRecognizers {get; set;} = null;
+
 }
 
 public partial class CardsView : ContentPage
@@ -26,29 +28,25 @@ public partial class CardsView : ContentPage
 
     ViewContent ViewContent { get; set; } = null;
 
-    Image Image = new Image();
-    Frame Frame = new Frame();
-
     public CardsView(SavedCardRepository savedCardRepository)
     {
         InitializeComponent();
 
         SavedCardRepo = savedCardRepository;
-        ViewContent = new ViewContent();
-        this.ViewContent.MainGrid = new Grid();
-        this.ViewContent.GridCards = new Grid();
-
         this.Loaded += async (s, e) => { await BuildPage(); };
     }
 
     private async Task BuildPage()
     {
+        ViewContent = new ViewContent();
+
         // Get list of SavedCards for further use
         this.ViewContent.ListCards = await this.SavedCardRepo.GetAllSavedCards();
 
         // START Create Main Grid //
 
-        //this.ViewContent.MainGrid = new Grid();
+        this.ViewContent.MainGrid = new Grid();
+        this.ViewContent.MainGrid.ColumnSpacing = 10;
         this.ViewContent.MainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star)); // Row 0: Grid for cards
         this.ViewContent.MainGrid.RowDefinitions.Add(new RowDefinition(new GridLength(0.10, GridUnitType.Star))); // Row 1: Buttons Scan and Scan from picture
 
@@ -58,7 +56,9 @@ public partial class CardsView : ContentPage
         // END Create Main Grid //
 
         // START Create Cards Grid //
-        //this.ViewContent.GridCards = new Grid();
+        this.ViewContent.GridCards = new Grid();
+        this.ViewContent.GridCards.ColumnSpacing = 10;
+        this.ViewContent.GridCards.RowSpacing = 10;
 
         // Create columns (fixed 2)
         this.ViewContent.GridCards.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
@@ -90,27 +90,24 @@ public partial class CardsView : ContentPage
 
         Button btnScanCard = new Button();
         btnScanCard.Text = "Skenovať";
+        btnScanCard.MaximumHeightRequest = btnScanCard.FontSize;
+        btnScanCard.MaximumWidthRequest = btnScanCard.Text.Length * btnScanCard.FontSize + 10;
         btnScanCard.Clicked += async (s, e) => { await BtnScanCard_Clicked(s, e); };
 
-        HorizontalStackLayout horizCol0 = new HorizontalStackLayout();
-        horizCol0.HorizontalOptions = LayoutOptions.Center;
-        horizCol0.Add(btnScanCard);
-
-        this.ViewContent.MainGrid.Add(horizCol0, column: 0, row: 1);
+        this.ViewContent.MainGrid.Add(btnScanCard, column: 0, row: 1);
 
         Button btnScanCardFromPicture = new Button();
         btnScanCardFromPicture.Text = "Načítať z obrázku";
+        btnScanCardFromPicture.MaximumHeightRequest = btnScanCard.FontSize;
+        btnScanCardFromPicture.MaximumWidthRequest = btnScanCardFromPicture.Text.Length * btnScanCardFromPicture.FontSize + 10;
         btnScanCardFromPicture.Clicked += async (s, e) => { await BtnScanCard_Clicked(s, e); };
 
-        HorizontalStackLayout horizCol1 = new HorizontalStackLayout();
-        horizCol1.HorizontalOptions = LayoutOptions.Center;
-        horizCol1.Add(btnScanCardFromPicture);
-
-        this.ViewContent.MainGrid.Add(horizCol1, column: 1, row: 1);
+        this.ViewContent.MainGrid.Add(btnScanCardFromPicture, column: 1, row: 1);
 
         // END Create button Scan from picture //
 
         this.ViewContent.ListImages = new List<Image>();
+        this.ViewContent.ListTapGestureRecognizers = new List<TapGestureRecognizer>();
 
         for (int row = 0, cardCounter = 0; cardCounter < this.ViewContent.ListCards.Count; row++)
         {
@@ -121,17 +118,31 @@ public partial class CardsView : ContentPage
                     Image img = new Image();
                     img.Source = ImageSource.FromStream(() => stream);
                     img.Aspect = Aspect.AspectFit;
+                    img.VerticalOptions = LayoutOptions.Center;
+                    img.HorizontalOptions = LayoutOptions.Center;
                     img.HeightRequest = (this.Window.Height / 5);
-                    img.WidthRequest = (this.Window.Width / 2);
+                    img.WidthRequest = (this.Window.Width / 2) - 5;
+
+                    TapGestureRecognizer tappedEvent = new TapGestureRecognizer();
+                    tappedEvent.ClassId = this.ViewContent.ListCards[cardCounter].Id.ToString();
+                    tappedEvent.Tapped += CardsView_Tapped;
+                    tappedEvent.CommandParameter = this.ViewContent.ListCards[cardCounter].Id;
+                    img.GestureRecognizers.Add(tappedEvent);
+
+                    this.ViewContent.ListTapGestureRecognizers.Add(tappedEvent);
 
                     this.ViewContent.ListImages.Add(img);
-
                     this.ViewContent.GridCards.Add(img, col, row);
                 }
             }
         }
 
         this.Content = this.ViewContent.MainGrid;
+    }
+
+    private void CardsView_Tapped(object sender, TappedEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 
     private async Task BtnScanCard_Clicked(object sender, EventArgs e)

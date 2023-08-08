@@ -158,6 +158,9 @@
 	  <MauiXaml Update="Views\RegisterView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\SavedCardView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\SavedCartDetail.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

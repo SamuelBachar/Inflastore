@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Neminaj.ViewsModels;
 
-public partial class LogOutViewModel : BaseViewModel
+public partial class LogOutViewModel
 {
-    public async void SignOut()
+    public async void SignOut() // TODO: toto prerobit na zaklade rememberlogin v loginview
     {
         if (Preferences.ContainsKey(nameof(App.UserLoginInfo)))
         {

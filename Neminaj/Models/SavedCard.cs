@@ -16,9 +16,11 @@ public class SavedCard
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
 
-    [Unique]
     public byte[] Image { get; set; }
 
-    [Ignore]
     public string CardInfo { get; set; }
+
+    public bool IsBarCode { get; set; }
+
+    public bool IsQRCode { get; set; }
 }
