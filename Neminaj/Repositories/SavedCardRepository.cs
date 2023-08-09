@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Neminaj.Repositoriesô
+namespace Neminaj.Repositories
 {
     public class SavedCardRepository
     {
@@ -30,6 +30,21 @@ namespace Neminaj.Repositoriesô
             return new List<SavedCard>();
         }
 
+        public async Task<SavedCard> GetSpecificCard(int cardId)
+        {
+            try
+            {
+                await SQLConnection.InitAsync();
+                return await SQLConnection.m_ConnectionAsync.Table<SavedCard>().Where(card => card.Id == cardId).FirstAsync();
+            }
+            catch (Exception ex)
+            {
+                SQLConnection.StatusMessage = $"Failed to retrieve data from table SavedCard. {ex.Message}";
+            }
+
+            return new SavedCard();
+        }
+
         public async Task<bool> InsertNewCard(List<SavedCard> listSavedCards)
         {
             try
@@ -45,7 +60,7 @@ namespace Neminaj.Repositoriesô
             return false;
         }
 
-        public async Task<bool> DeleteSavedCard(List<SavedCard> listSavedCards)
+        public async Task<bool> DeleteSavedCard(int cardId)
         {
             try
             {
@@ -53,8 +68,7 @@ namespace Neminaj.Repositoriesô
 
                 int cntOfDeleted = 0;
 
-                foreach (SavedCard item in listSavedCards)
-                    cntOfDeleted += await SQLConnection.m_ConnectionAsync.DeleteAsync(item);
+                cntOfDeleted += await SQLConnection.m_ConnectionAsync.Table<SavedCard>().DeleteAsync(card => card.Id == cardId);
 
                 return cntOfDeleted > 0;
             }
@@ -65,6 +79,5 @@ namespace Neminaj.Repositoriesô
 
             return false;
         }
-
     }
 }

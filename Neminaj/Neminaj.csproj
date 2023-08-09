@@ -113,6 +113,12 @@
 	  <Compile Update="Views\ItemPicker.xaml.cs">
 	    <DependentUpon>ItemPicker.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\SavedCardDetailView.xaml.cs">
+	    <DependentUpon>SavedCardDetailView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\SavedCartViewDetail.xaml.cs">
+	    <DependentUpon>SavedCartViewDetail.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -158,10 +164,10 @@
 	  <MauiXaml Update="Views\RegisterView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\SavedCardView.xaml">
+	  <MauiXaml Update="Views\SavedCardDetailView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\SavedCartDetail.xaml">
+	  <MauiXaml Update="Views\SavedCartViewDetail.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SettingsView.xaml">

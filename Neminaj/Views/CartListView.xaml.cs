@@ -43,7 +43,7 @@ public partial class CartListView : ContentPage
         int cartId = int.Parse(((Button)(sender)).ClassId);
         ListCartItemChoosen = await GetItemsFromSavedCart(cartId);
 
-        await Shell.Current.GoToAsync(nameof(SavedCartDetail),
+        await Shell.Current.GoToAsync(nameof(SavedCartDetailView),
            new Dictionary<string, object>
            {
                ["ListCartItemChoosen"] = ListCartItemChoosen,

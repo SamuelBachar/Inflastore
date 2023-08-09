@@ -1,6 +1,6 @@
 ﻿using Microsoft.Maui.Controls;
 using Neminaj.Models;
-using Neminaj.Repositoriesô;
+using Neminaj.Repositories;
 
 namespace Neminaj.Views;
 
@@ -124,7 +124,6 @@ public partial class CardsView : ContentPage
                     img.WidthRequest = (this.Window.Width / 2) - 5;
 
                     TapGestureRecognizer tappedEvent = new TapGestureRecognizer();
-                    tappedEvent.ClassId = this.ViewContent.ListCards[cardCounter].Id.ToString();
                     tappedEvent.Tapped += CardsView_Tapped;
                     tappedEvent.CommandParameter = this.ViewContent.ListCards[cardCounter].Id;
                     img.GestureRecognizers.Add(tappedEvent);
@@ -140,9 +139,14 @@ public partial class CardsView : ContentPage
         this.Content = this.ViewContent.MainGrid;
     }
 
-    private void CardsView_Tapped(object sender, TappedEventArgs e)
+    private async void CardsView_Tapped(object sender, TappedEventArgs e)
     {
-        throw new NotImplementedException();
+        await Shell.Current.GoToAsync(nameof(SavedCardDetailView),
+        new Dictionary<string, object>
+        {
+            [nameof(SavedCardRepository)] = this.SavedCardRepo,
+            ["CardID"] = e.Parameter
+        });
     }
 
     private async Task BtnScanCard_Clicked(object sender, EventArgs e)

@@ -1,17 +1,25 @@
-using Camera.MAUI;
+﻿using Camera.MAUI;
 using Neminaj.Models;
-using Neminaj.Repositories�;
+using Neminaj.Repositories;
 using Neminaj.ViewsModels;
 
 namespace Neminaj.Views;
 
 
+public class TempCardData
+{
+    public ZXing.BarcodeFormat Format { get; set; }
+    public string CardInfo { get; set; }
+
+    public byte[] Image { get; set; }
+}
+
 public partial class AddCardView : ContentPage
 {
-    SavedCardViewModel SavedCardViewModel { get; set; } = null;
-    SavedCardRepository SavedCardRepo { get; set; } = null;
+    TempCardData TempCardData { get; set; } = new TempCardData();
+    SavedCardDetailViewModel SavedCardViewModel { get; set; } = null;
 
-    public AddCardView(SavedCardViewModel savedCardViewModel)
+    public AddCardView(SavedCardDetailViewModel savedCardViewModel)
     {
         InitializeComponent();
 
@@ -45,8 +53,7 @@ public partial class AddCardView : ContentPage
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
-        // az tu sa nacitaju hodnoty napr. pre SavedCardRepo
-        SavedCardRepo = SavedCardViewModel.SavedCardRepository;
+        // az tu su nainicializovane hodnoty pre SavedCardViewModel
     }
 
     private void cameraView_CamerasLoaded(object sender, EventArgs e)
@@ -74,7 +81,59 @@ public partial class AddCardView : ContentPage
             string text = $"{args.Result[0].BarcodeFormat}: {args.Result[0].Text}";
             lblCode.Text = text;
 
-            // todo choose card template based on code pattern
+            TempCardData.Format = args.Result[0].BarcodeFormat;
+            TempCardData.CardInfo = args.Result[0].Text;
+
+
+            // todo handle situation when card is scaned but not known
+            // for example show bar-code or qr code and ask for colour and name of card
+            string fileNameResources = GetImageFromResource(TempCardData.CardInfo);
+
+            if (fileNameResources == string.Empty)
+            {
+                // TODO create pop up with entry and color pick
+            }
+
+            if (fileNameResources != string.Empty)
+            {
+                this.CardImage.Source = ImageSource.FromFile(fileNameResources);
+                TempCardData.Image = File.ReadAllBytes(fileNameResources);
+                this.btnAddCard.IsVisible = true;
+            }
+
         });
+    }
+
+    private async void btnAddCard_Clicked(object sender, EventArgs e)
+    {
+        SavedCard savedCard = new SavedCard
+        {
+            CardFormat = (int)TempCardData.Format,
+            CardInfo = TempCardData.CardInfo,
+            Image = TempCardData.Image
+        };
+
+        List<SavedCard> savedCards = new List<SavedCard>() { savedCard };
+
+        if (! await SavedCardViewModel.SavedCardRepository.InsertNewCard(savedCards))
+        {
+            await DisplayAlert("Chyba ukladania karty", "Pri ukladaní karty nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
+        }
+        else
+        {
+            await DisplayAlert("", "Karta uložená", "Zavrieť");
+        }
+    }
+
+    private string GetImageFromResource(string cardInfo)
+    {
+        string imageName = string.Empty;
+
+        if (cardInfo.StartsWith("6340095")) // Tesco
+            imageName = "testo_card.png";
+        else if (cardInfo.StartsWith("600211")) // Kaufland
+            imageName = "kaufland_card.png";
+
+        return imageName;
     }
 }

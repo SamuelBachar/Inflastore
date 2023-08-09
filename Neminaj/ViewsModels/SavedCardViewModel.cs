@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Neminaj.Repositoriesô;
+using Neminaj.Models;
+using Neminaj.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,33 @@ using System.Threading.Tasks;
 namespace Neminaj.ViewsModels;
 
 [QueryProperty(nameof(SavedCardRepository), nameof(SavedCardRepository))]
-public partial class SavedCardViewModel : ObservableObject
+
+[QueryProperty(nameof(CardID), nameof(CardID))]
+public partial class SavedCardDetailViewModel : ObservableObject
 {
     [ObservableProperty]
     public SavedCardRepository savedCardRepository;
 
-    public SavedCardViewModel()
+    [ObservableProperty]
+    public int cardID;
+
+    public SavedCardDetailViewModel()
     {
             
+    }
+
+    public async Task<bool> DeleteSavedCard(int cardId)
+    {
+        return await SavedCardRepository.DeleteSavedCard(cardId);
+    }
+
+    public async Task<SavedCard> GetSpecificCard(int cardId)
+    {
+        return await SavedCardRepository.GetSpecificCard(cardId);
+    }
+
+    async Task<bool> InsertNewCard(List<SavedCard> listSavedCards)
+    {
+        return await SavedCardRepository.InsertNewCard(listSavedCards);
     }
 }

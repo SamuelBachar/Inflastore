@@ -10,10 +10,11 @@ public partial class AppShell : Shell
 		InitializeComponent();
 
 		Routing.RegisterRoute(nameof(CartView), typeof(CartView));
-        Routing.RegisterRoute(nameof(SavedCartDetail), typeof(SavedCartDetail));
+        Routing.RegisterRoute(nameof(SavedCartDetailView), typeof(SavedCartDetailView));
         Routing.RegisterRoute(nameof(NavigationView), typeof(NavigationView));
         Routing.RegisterRoute(nameof(AddCardView), typeof(AddCardView));
         Routing.RegisterRoute(nameof(RegisterView), typeof(RegisterView));
         Routing.RegisterRoute(nameof(ForgotPasswordView), typeof(ForgotPasswordView));
+        Routing.RegisterRoute(nameof(SavedCardDetailView), typeof(SavedCardDetailView));
     }
 }

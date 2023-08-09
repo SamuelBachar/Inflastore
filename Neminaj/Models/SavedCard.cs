@@ -20,7 +20,5 @@ public class SavedCard
 
     public string CardInfo { get; set; }
 
-    public bool IsBarCode { get; set; }
-
-    public bool IsQRCode { get; set; }
+    public int CardFormat { get; set; }
 }

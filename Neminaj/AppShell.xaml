@@ -6,11 +6,16 @@
     xmlns:localViews="clr-namespace:Neminaj.Views"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
+    <!--<ShellContent
         Title=""
         ContentTemplate="{DataTemplate localViews:LoginView}"
-        Route="LoginPage" />
-    
+        Route="LoginPage" />-->
+
+    <ShellContent
+        Title=""
+        ContentTemplate="{DataTemplate localViews:CardsView}"
+        Route="CardsView" />
+
     <TabBar x:Name="MenuTapBar">
         <Tab Title="Košík" Icon="cart.svg">
             <ShellContent ContentTemplate="{DataTemplate localViews:ItemPicker}" Route="ItemPicker"/>

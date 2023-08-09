@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 
 using Neminaj.Interfaces;
 using Neminaj.Repositories;
-using Neminaj.Repositoriesô;
 using Neminaj.Services;
 using Neminaj.Views;
 using Neminaj.ViewsModels;
@@ -85,15 +84,16 @@ public static class MauiProgram
         builder.Services.AddSingleton<CartViewModel>();
         builder.Services.AddSingleton<SavedCartDetailViewModel>();
         builder.Services.AddSingleton<NavigationShopViewModel>();
-        builder.Services.AddSingleton<SavedCardViewModel>();
+        builder.Services.AddSingleton<SavedCardDetailViewModel>();
 
         // Transients
         builder.Services.AddTransient<RegisterView>();
         builder.Services.AddTransient<ForgotPasswordView>();
         builder.Services.AddTransient<CartView>();
-        builder.Services.AddTransient<SavedCartDetail>();
+        builder.Services.AddTransient<SavedCartDetailView>();
         builder.Services.AddTransient<NavigationView>();
         builder.Services.AddTransient<AddCardView>();
+        builder.Services.AddTransient<SavedCardDetailView>();
 
         return builder.Build();
 	}
