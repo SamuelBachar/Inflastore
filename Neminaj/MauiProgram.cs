@@ -9,6 +9,7 @@ using Neminaj.Views;
 using Neminaj.ViewsModels;
 using System.Net;
 using System.Reflection;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace Neminaj;
 
@@ -19,6 +20,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
             .UseMauiMaps()
             .UseMauiCameraView()

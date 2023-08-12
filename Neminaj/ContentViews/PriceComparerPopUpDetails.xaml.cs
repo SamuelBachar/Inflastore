@@ -149,8 +149,8 @@ public partial class PriceComparerPopUpDetails : Popup
         {
             BackgroundColor = Colors.White,
             Content = ScrollViewWithDiscount,
-            MaximumHeightRequest = 600, // TODO treba podla obrazoky telefonu
-            MaximumWidthRequest = 300
+            MaximumHeightRequest = this.Window.Height * 0.75, // TODO treba podla obrazoky telefonu
+            MaximumWidthRequest = this.Window.Width * 0.75
         };
 
         this.Content = Border;

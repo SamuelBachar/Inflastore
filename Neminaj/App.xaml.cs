@@ -10,7 +10,8 @@ public partial class App : Application
     public static UserSessionInfo UserSessionInfo;
     public App()
 	{
-		InitializeComponent();
+        InitializeComponent();
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjYzODI5N0AzMjMyMmUzMDJlMzBHbkM0WlN3MitzaVIyRk96bWQyandrb3EzZmdJSWYyUlVlQ01RbVlINzNVPQ==");
 
 		MainPage = new AppShell();
 	}
