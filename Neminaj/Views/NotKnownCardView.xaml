@@ -40,7 +40,7 @@
         </VerticalStackLayout>
 
         <Frame Grid.Row="5" x:Name="BorderPalleteColor" BackgroundColor="Orange" Margin="20,0,20,0">
-            <Label x:Name="lblCardName" Text="" VerticalOptions="Center" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Body" />
+            <Label x:Name="lblCardName" Text="" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Body" />
         </Frame>
         
         <Button Grid.Row="6" Grid.Column="0" x:Name="btnSaveCard" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnSaveCard_Clicked"/>

@@ -13,8 +13,8 @@
 
     <ShellContent
         Title=""
-        ContentTemplate="{DataTemplate localViews:CardsView}"
-        Route="CardsView" />
+        ContentTemplate="{DataTemplate localViews:LoginView}"
+        Route="LoginView" />
 
     <TabBar x:Name="MenuTapBar">
         <Tab Title="Košík" Icon="cart.svg">

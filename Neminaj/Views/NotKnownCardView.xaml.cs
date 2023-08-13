@@ -24,8 +24,8 @@ public partial class NotKnownCardView : ContentPage
     public NotKnownCardView(NotKnownCardViewModel notKnownCardViewModel)
     {
         InitializeComponent();
-
         NotKnownCardViewModel = notKnownCardViewModel;
+        this.BindingContext = NotKnownCardViewModel;
     }
 
     private async void btnSaveCard_Clicked(object sender, EventArgs e)

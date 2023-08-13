@@ -70,6 +70,7 @@
 	  <None Remove="Platforms\Android\Resources\values\strings.xml" />
 	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
 	  <None Remove="Resources\Database\neminaj.db3" />
+	  <None Remove="Resources\ImagesEmbedded\kaufland_card.png" />
 	  <None Remove="Resources\Images\billa_logo.png" />
 	  <None Remove="Resources\Images\calculator.svg" />
 	  <None Remove="Resources\Images\cart.png" />
@@ -178,6 +179,12 @@
 	  <MauiXaml Update="Views\SettingsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\ImagesEmbedded\kaufland_card.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>

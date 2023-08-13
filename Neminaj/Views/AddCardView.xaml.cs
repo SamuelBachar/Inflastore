@@ -1,10 +1,13 @@
 ﻿using Camera.MAUI;
 using CommunityToolkit.Maui.Views;
+using Microsoft.Maui.Storage;
 using Neminaj.ContentViews;
 using Neminaj.Models;
 using Neminaj.Repositories;
+using Neminaj.Utils;
 using Neminaj.ViewsModels;
 using System.Dynamic;
+using System.Reflection;
 using ZXing;
 
 namespace Neminaj.Views;
@@ -81,7 +84,7 @@ public partial class AddCardView : ContentPage
 
     private void cameraView_BarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
     {
-        MainThread.BeginInvokeOnMainThread(() =>
+        MainThread.BeginInvokeOnMainThread(async () =>
         {
             TempCardData.IsKnownCard = true;
 
@@ -101,8 +104,18 @@ public partial class AddCardView : ContentPage
             if (fileNameResources != string.Empty)
             {
                 this.CardImage.Source = ImageSource.FromFile(fileNameResources);
-                TempCardData.Image = File.ReadAllBytes(fileNameResources);
-                // https://stackoverflow.com/questions/7574307/c-sharp-read-byte-array-from-resource
+                //
+                // assembly.GetManifestResourceStream($"Neminaj.Resources.Images.{fileNameResources}"))
+                using (Stream stream = EmbeddedResource.OpenEmbeddedImageStream(fileNameResources))
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        stream.CopyTo(memoryStream);
+
+                        TempCardData.Image = new byte[stream.Length];
+                        memoryStream.ToArray().CopyTo(TempCardData.Image, 0);
+                    }
+                }
             }
 
             this.btnAddCard.IsVisible = true;
@@ -112,8 +125,8 @@ public partial class AddCardView : ContentPage
     private async void btnAddCard_Clicked(object sender, EventArgs e)
     {
         SavedCard savedCard = new SavedCard();
-        savedCard.CardFormat = (int)TempCardData.Format;
-        savedCard.CardCode = TempCardData.CardCode;
+        //savedCard.CardFormat = (int)TempCardData.Format;
+        //savedCard.CardCode = TempCardData.CardCode;
 
         if (!TempCardData.IsKnownCard)
         {
