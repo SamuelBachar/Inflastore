@@ -46,8 +46,7 @@ public static class MauiProgram
 				using (MemoryStream memoryStream = new MemoryStream())
 				{
 					stream.CopyTo(memoryStream);
-
-					File.WriteAllBytes(ItemRepository._dbPath, memoryStream.ToArray());
+                    File.WriteAllBytes(ItemRepository._dbPath, memoryStream.ToArray());
 				}
 			}
 		//}

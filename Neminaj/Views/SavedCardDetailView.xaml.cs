@@ -30,12 +30,12 @@ public partial class SavedCardDetailView : ContentPage
     {
         SavedCard savedCard = await SavedCardDetailViewModel.GetSpecificCard(SavedCardDetailViewModel.CardID);
         this.CardCode.BarcodeFormat = (BarcodeFormat)savedCard.CardFormat;
-        this.CardCode.Barcode = savedCard.CardInfo;
+        this.CardCode.Barcode = savedCard.CardCode;
 
         // todo otestovat ci potrebne ???
         this.CardCode.Margin = 5;
 
-        this.lblCardCode.Text = savedCard.CardInfo;
+        this.lblCardCode.Text = savedCard.CardCode;
     }
 
      private async void ToolbarItemDelete_Clicked(object sender, EventArgs e)

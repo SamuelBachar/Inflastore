@@ -60,6 +60,21 @@ namespace Neminaj.Repositories
             return false;
         }
 
+        public async Task<bool> InsertNewCard(SavedCard savedCard)
+        {
+            try
+            {
+                await SQLConnection.InitAsync();
+                return await SQLConnection.m_ConnectionAsync.InsertAsync(savedCard) > 0;
+            }
+            catch (Exception ex)
+            {
+                SQLConnection.StatusMessage = $"Failed to insert data into table: SavedCard. {ex.Message}";
+            }
+
+            return false;
+        }
+
         public async Task<bool> DeleteSavedCard(int cardId)
         {
             try

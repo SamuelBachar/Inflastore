@@ -39,4 +39,9 @@ public partial class SavedCardDetailViewModel : ObservableObject
     {
         return await SavedCardRepository.InsertNewCard(listSavedCards);
     }
+
+    async Task<bool> InsertNewCard(SavedCard savedCard)
+    {
+        return await SavedCardRepository.InsertNewCard(savedCard);
+    }
 }

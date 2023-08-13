@@ -12,13 +12,13 @@
         <Label Grid.Row="1" Grid.Column="0" Text="Žial nepoznáme vzhľad karty" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
         <Label Grid.Row="2" Grid.Column="0" Text="Zvoľte prosím názov a vzhľad karty" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
 
-        <VerticalStackLayout Grid.Row="3" Grid.Column="0" Padding="">
-            <Label Text="Zvoľte názov" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
+        <VerticalStackLayout Grid.Row="3" Grid.Column="0">
+            <Label Text="Zvoľte názov" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Padding="0,30,0,0" />
             <Entry x:Name="CardName" Margin="20,0,20,0" ToolTipProperties.Text="Názov karty" TextColor="Black" VerticalOptions="Center" Placeholder="Názov karty" TextChanged="CardNamed_TextChanged" />
         </VerticalStackLayout>
 
         <VerticalStackLayout Grid.Row="4" Grid.Column="0" Spacing="10">
-            <Label Text="Výber farby" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Label Text="Výber farby" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" Padding="0,30,0,0" />
 
             <StackLayout Orientation="Horizontal">
                 <Slider x:Name="SliderR" Minimum="0" Maximum="255" Value="255" HorizontalOptions="FillAndExpand" Margin="20,0,20,0" ValueChanged="SliderR_ValueChanged"/>

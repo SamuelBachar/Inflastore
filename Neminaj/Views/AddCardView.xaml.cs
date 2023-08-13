@@ -13,7 +13,7 @@ namespace Neminaj.Views;
 public class TempCardData
 {
     public ZXing.BarcodeFormat Format { get; set; }
-    public string CardInfo { get; set; }
+    public string CardCode { get; set; }
 
     public byte[] Image { get; set; }
 
@@ -25,12 +25,16 @@ public partial class AddCardView : ContentPage
     TempCardData TempCardData { get; set; } = new TempCardData();
     SavedCardDetailViewModel SavedCardViewModel { get; set; } = null;
 
+    ResultNotKnownCard ResultNotKnownCard { get; set; } = new ResultNotKnownCard();
+
     public AddCardView(SavedCardDetailViewModel savedCardViewModel)
     {
         InitializeComponent();
 
         BindingContext = savedCardViewModel;
         SavedCardViewModel = savedCardViewModel;
+
+        NotKnownCardView.On_NotKnownCardView_BtnAddCard_Clicked += On_NotKnownCardView_BtnAddCard_Clicked;
 
         cameraView.BarCodeOptions = new()
         {
@@ -85,12 +89,9 @@ public partial class AddCardView : ContentPage
             lblCode.Text = $"Skenovanie úspešné:\r\n{text}";
 
             TempCardData.Format = args.Result[0].BarcodeFormat;
-            TempCardData.CardInfo = args.Result[0].Text;
+            TempCardData.CardCode = args.Result[0].Text;
 
-
-            // todo handle situation when card is scaned but not known
-            // for example show bar-code or qr code and ask for colour and name of cardcvvf
-            string fileNameResources = GetImageFromResource(TempCardData.CardInfo);
+            string fileNameResources = GetImageFromResource(TempCardData.CardCode);
 
             if (fileNameResources == string.Empty)
             {
@@ -101,6 +102,7 @@ public partial class AddCardView : ContentPage
             {
                 this.CardImage.Source = ImageSource.FromFile(fileNameResources);
                 TempCardData.Image = File.ReadAllBytes(fileNameResources);
+                // https://stackoverflow.com/questions/7574307/c-sharp-read-byte-array-from-resource
             }
 
             this.btnAddCard.IsVisible = true;
@@ -110,31 +112,37 @@ public partial class AddCardView : ContentPage
     private async void btnAddCard_Clicked(object sender, EventArgs e)
     {
         SavedCard savedCard = new SavedCard();
-        //savedCard.CardFormat = (int)TempCardData.Format;
-        //savedCard.CardInfo = TempCardData.CardInfo;
+        savedCard.CardFormat = (int)TempCardData.Format;
+        savedCard.CardCode = TempCardData.CardCode;
 
         if (!TempCardData.IsKnownCard)
         {
-            ResultNotKnownCard resultNotKnownCard = new ResultNotKnownCard();
-
             await Shell.Current.GoToAsync(nameof(NotKnownCardView),
             new Dictionary<string, object>
             {
-                [nameof(ResultNotKnownCard)] = resultNotKnownCard,
+                [nameof(ResultNotKnownCard)] = ResultNotKnownCard,
             });
-
-            savedCard.IsKnownCard = false;
-            savedCard.UnknownCardName = resultNotKnownCard.CardName;
-            savedCard.UknownCardColor = resultNotKnownCard.Color.ToInt();
         }
         else
         {
             savedCard.Image = TempCardData.Image;
+            await InsertNewCard(savedCard);
         }
+    }
 
-        List<SavedCard> savedCards = new List<SavedCard>() { savedCard };
+    private void On_NotKnownCardView_BtnAddCard_Clicked(object sender, EventArgs e)
+    {
+        SavedCard savedCard = new SavedCard();
+        savedCard.CardFormat = (int)TempCardData.Format;
+        savedCard.CardCode = TempCardData.CardCode;
+        savedCard.IsKnownCard = false;
+        savedCard.UnknownCardName = ResultNotKnownCard.CardName;
+        savedCard.UknownCardColor = ResultNotKnownCard.Color.ToInt();
+    }
 
-        if (!await SavedCardViewModel.SavedCardRepository.InsertNewCard(savedCards))
+    private async Task InsertNewCard(SavedCard savedCard)
+    {
+        if (!await SavedCardViewModel.SavedCardRepository.InsertNewCard(savedCard))
         {
             await DisplayAlert("Chyba ukladania karty", "Pri ukladaní karty nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
         }

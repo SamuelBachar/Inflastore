@@ -13,41 +13,22 @@ public class ColorValue
 
 public partial class NotKnownCardView : ContentPage
 {
-    List<ColorValue> ListColorValues { get; set; } = new List<ColorValue>();
-
     NotKnownCardViewModel NotKnownCardViewModel { get; set; } = null;
+
+    bool FontForCardNameSet { get; set; } = false;
+
+    // Events
+    public delegate void NotKnownCardView_BtnAddCard_Clicked(object sender, EventArgs e);
+    public static event NotKnownCardView_BtnAddCard_Clicked On_NotKnownCardView_BtnAddCard_Clicked;
 
     public NotKnownCardView(NotKnownCardViewModel notKnownCardViewModel)
     {
         InitializeComponent();
 
         NotKnownCardViewModel = notKnownCardViewModel;
-
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.White, Name = "Biela" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.IndianRed, Name = "Červená" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Black, Name = "Čierna" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Blue, Name = "Modrá" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.BlueViolet, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-        ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
-
     }
 
-    //private void ColorPicker_PickedColorChanged(object sender, ColorPicker.Maui.PickedColorChangedEventArgs e)
-    //{
-    //    NotKnownCardViewModel.ResultNotKnownCard.Color = e.NewPickedColorValue;
-    //}
-
-    private void btnSaveCard_Clicked(object sender, EventArgs e)
+    private async void btnSaveCard_Clicked(object sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(CardName.Text))
         {
@@ -58,6 +39,14 @@ public partial class NotKnownCardView : ContentPage
         {
             NotKnownCardViewModel.ResultNotKnownCard.CardName = CardName.Text;
             NotKnownCardViewModel.ResultNotKnownCard.Color = BorderPalleteColor.BackgroundColor;
+
+            // Make sure someone is listening to event
+            if (On_NotKnownCardView_BtnAddCard_Clicked != null)
+            {
+                On_NotKnownCardView_BtnAddCard_Clicked(this, new EventArgs());
+            }
+
+            await Shell.Current.GoToAsync("..");
         }
     }
 
@@ -68,12 +57,14 @@ public partial class NotKnownCardView : ContentPage
             CardName.TextColor = Colors.Black;
         }
 
+        if (!FontForCardNameSet)
+        {
+            lblCardName.FontSize = BorderPalleteColor.Width / 12;
+
+            FontForCardNameSet = true;
+        }
+
         lblCardName.Text = CardName.Text;
-    }
-
-    private void ColorPicker_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
     }
 
     private void SliderR_ValueChanged(object sender, ValueChangedEventArgs e)
