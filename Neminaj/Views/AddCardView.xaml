@@ -10,6 +10,6 @@
                            VerticalOptions="Start" HorizontalOptions="Start"/>
         <Image Grid.Row="2" Grid.Column="1" x:Name="CardImage" VerticalOptions="Center" HorizontalOptions="Center" />
         <Label Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="1" x:Name="lblCode" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
-        <Button Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="1" x:Name="btnAddCard" IsVisible="false" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnAddCard_Clicked" />
+        <Button Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="1" x:Name="btnAddCard" IsVisible="true" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnAddCard_Clicked" />
     </Grid>
 </ContentPage>

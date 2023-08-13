@@ -9,7 +9,7 @@ using Neminaj.Views;
 using Neminaj.ViewsModels;
 using System.Net;
 using System.Reflection;
-using Syncfusion.Maui.Core.Hosting;
+//using Syncfusion.Maui.Core.Hosting;
 
 namespace Neminaj;
 
@@ -20,7 +20,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .ConfigureSyncfusionCore()
+//            .ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
             .UseMauiMaps()
             .UseMauiCameraView()
@@ -87,6 +87,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<SavedCartDetailViewModel>();
         builder.Services.AddSingleton<NavigationShopViewModel>();
         builder.Services.AddSingleton<SavedCardDetailViewModel>();
+        builder.Services.AddSingleton<NotKnownCardViewModel>();
 
         // Transients
         builder.Services.AddTransient<RegisterView>();
@@ -96,6 +97,7 @@ public static class MauiProgram
         builder.Services.AddTransient<NavigationView>();
         builder.Services.AddTransient<AddCardView>();
         builder.Services.AddTransient<SavedCardDetailView>();
+        builder.Services.AddTransient<NotKnownCardView>();
 
         return builder.Build();
 	}

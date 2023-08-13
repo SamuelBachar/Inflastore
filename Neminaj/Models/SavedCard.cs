@@ -23,6 +23,7 @@ public class SavedCard
     public int CardFormat { get; set; }
 
     public bool IsKnownCard { get; set; }
-    public string UknownCardText { get; set; }
+
+    public string UnknownCardName { get; set; }
     public int UknownCardColor { get; set; }
 }

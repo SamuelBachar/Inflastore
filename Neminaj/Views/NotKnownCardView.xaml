@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neminaj.Views.NotKnownCardView"
+             Title="Neznáma karta">
+    <Grid x:Name="MainBorder" 
+          RowDefinitions="Auto, Auto, Auto, Auto, 0.2*, 0.2*, Auto" 
+          ColumnDefinitions="*" 
+          Margin="0,20,0,20"
+          RowSpacing="10">
+        <Label Grid.Row="0" Grid.Column="0" Text="Karta úspešne oskenovaná" FontAttributes="Bold" FontSize="20" VerticalOptions="Center" HorizontalOptions="Center" />
+        <Label Grid.Row="1" Grid.Column="0" Text="Žial nepoznáme vzhľad karty" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
+        <Label Grid.Row="2" Grid.Column="0" Text="Zvoľte prosím názov a vzhľad karty" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
+
+        <VerticalStackLayout Grid.Row="3" Grid.Column="0" Padding="">
+            <Label Text="Zvoľte názov" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Entry x:Name="CardName" Margin="20,0,20,0" ToolTipProperties.Text="Názov karty" TextColor="Black" VerticalOptions="Center" Placeholder="Názov karty" TextChanged="CardNamed_TextChanged" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="4" Grid.Column="0" Spacing="10">
+            <Label Text="Výber farby" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
+
+            <StackLayout Orientation="Horizontal">
+                <Slider x:Name="SliderR" Minimum="0" Maximum="255" Value="255" HorizontalOptions="FillAndExpand" Margin="20,0,20,0" ValueChanged="SliderR_ValueChanged"/>
+                <BoxView Color="Red" BackgroundColor="Red" Margin="0,0,20,0" WidthRequest="15" HeightRequest="15"/>
+                <Label x:Name="txtR" Text="255" IsVisible="False"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Slider x:Name="SliderG" Minimum="0" Maximum="255" Value="165" HorizontalOptions="FillAndExpand" Margin="20,0,20,0" ValueChanged="SliderG_ValueChanged" />
+                <BoxView Color="Green" BackgroundColor="Green" Margin="0,0,20,0" WidthRequest="15" HeightRequest="15"/>
+                <Label x:Name="txtG" Text="165" HorizontalOptions="Start" IsVisible="False"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Slider x:Name="SliderB" Minimum="0" Maximum="255" Value="0" HorizontalOptions="FillAndExpand" Margin="20,0,20,0" ValueChanged="SliderB_ValueChanged"/>
+                <BoxView Color="Blue" BackgroundColor="Blue" Margin="0,0,20,0"  WidthRequest="15" HeightRequest="15"/>
+                <Label x:Name="txtB" IsVisible="False"/>
+            </StackLayout>
+        </VerticalStackLayout>
+
+        <Frame Grid.Row="5" x:Name="BorderPalleteColor" BackgroundColor="Orange" Margin="20,0,20,0">
+            <Label x:Name="lblCardName" Text="" VerticalOptions="Center" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Body" />
+        </Frame>
+        
+        <Button Grid.Row="6" Grid.Column="0" x:Name="btnSaveCard" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnSaveCard_Clicked"/>
+
+    </Grid>
+</ContentPage>

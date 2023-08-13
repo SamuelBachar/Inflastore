@@ -1,29 +1,27 @@
 ﻿using CommunityToolkit.Maui.Views;
-using Neminaj.Views;
 using Neminaj.ViewsModels;
 
-namespace Neminaj.ContentViews;
+namespace Neminaj.Views;
 
 public class ColorValue
 {
     public int Id { get; set; }
-    public Color Color { get;set; }
+    public Color Color { get; set; }
 
     public string Name { get; set; }
 }
 
-public partial class NotKnownCardPopUp : Popup
+public partial class NotKnownCardView : ContentPage
 {
-    ResultNotKnownCard ResultData { get; set; } = new ResultNotKnownCard();
-
     List<ColorValue> ListColorValues { get; set; } = new List<ColorValue>();
-    SavedCardDetailViewModel SavedCardDetailViewModel { get; set; } = null;
 
-    public NotKnownCardPopUp(SavedCardDetailViewModel savedCardDetailViewModel, int windowWidth, int windowHeight, ResultNotKnownCard result)
+    NotKnownCardViewModel NotKnownCardViewModel { get; set; } = null;
+
+    public NotKnownCardView(NotKnownCardViewModel notKnownCardViewModel)
     {
         InitializeComponent();
 
-        SavedCardDetailViewModel = savedCardDetailViewModel;
+        NotKnownCardViewModel = notKnownCardViewModel;
 
         ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.White, Name = "Biela" });
         ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.IndianRed, Name = "Červená" });
@@ -42,16 +40,12 @@ public partial class NotKnownCardPopUp : Popup
         ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
         ListColorValues.Add(new ColorValue { Id = 0, Color = Colors.Orange, Name = "Oranžová" });
 
-        ResultData = result;
-
-        MainBorder.HeightRequest = windowHeight * 0.75;
-        MainBorder.WidthRequest = windowWidth * 0.75;
     }
 
-    private void ColorPicker_PickedColorChanged(object sender, ColorPicker.Maui.PickedColorChangedEventArgs e)
-    {
-        ResultData.Color = e.NewPickedColorValue;
-    }
+    //private void ColorPicker_PickedColorChanged(object sender, ColorPicker.Maui.PickedColorChangedEventArgs e)
+    //{
+    //    NotKnownCardViewModel.ResultNotKnownCard.Color = e.NewPickedColorValue;
+    //}
 
     private void btnSaveCard_Clicked(object sender, EventArgs e)
     {
@@ -62,9 +56,8 @@ public partial class NotKnownCardPopUp : Popup
         }
         else
         {
-            ResultData.CardName = CardName.Text;
-            ResultData.Color = BorderPalleteColor.BackgroundColor;
-            this.Close();
+            NotKnownCardViewModel.ResultNotKnownCard.CardName = CardName.Text;
+            NotKnownCardViewModel.ResultNotKnownCard.Color = BorderPalleteColor.BackgroundColor;
         }
     }
 
@@ -74,6 +67,8 @@ public partial class NotKnownCardPopUp : Popup
         {
             CardName.TextColor = Colors.Black;
         }
+
+        lblCardName.Text = CardName.Text;
     }
 
     private void ColorPicker_SelectedIndexChanged(object sender, EventArgs e)
@@ -86,8 +81,9 @@ public partial class NotKnownCardPopUp : Popup
         int value = (int)e.NewValue;
         txtR.Text = value.ToString();
 
-        BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
-        BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
+        BorderPalleteColor.BackgroundColor = Color.FromRgb((int)SliderR.Value, (int)SliderG.Value, (int)SliderB.Value);
+        //BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
+        //BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
     }
 
     private void SliderG_ValueChanged(object sender, ValueChangedEventArgs e)
@@ -95,8 +91,9 @@ public partial class NotKnownCardPopUp : Popup
         int value = (int)e.NewValue;
         txtG.Text = value.ToString();
 
-        BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
-        BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
+        //BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
+        BorderPalleteColor.BackgroundColor = Color.FromRgb((int)SliderR.Value, (int)SliderG.Value, (int)SliderB.Value);
+        //BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
     }
 
     private void SliderB_ValueChanged(object sender, ValueChangedEventArgs e)
@@ -104,7 +101,8 @@ public partial class NotKnownCardPopUp : Popup
         int value = (int)e.NewValue;
         txtB.Text = value.ToString();
 
-        BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
-        BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
+        //BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
+        BorderPalleteColor.BackgroundColor = Color.FromRgb((int)SliderR.Value, (int)SliderG.Value, (int)SliderB.Value);
+        //BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
     }
 }

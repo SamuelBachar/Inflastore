@@ -10,11 +10,6 @@ using ZXing;
 namespace Neminaj.Views;
 
 
-public class ResultNotKnownCard
-{
-    public Color Color { get; set; } = Colors.Orange;
-    public string CardName { get; set; } = string.Empty;
-}
 public class TempCardData
 {
     public ZXing.BarcodeFormat Format { get; set; }
@@ -22,7 +17,7 @@ public class TempCardData
 
     public byte[] Image { get; set; }
 
-    public bool IsKnownCard { get; set; } = true;
+    public bool IsKnownCard { get; set; } = false;
 }
 
 public partial class AddCardView : ContentPage
@@ -115,16 +110,22 @@ public partial class AddCardView : ContentPage
     private async void btnAddCard_Clicked(object sender, EventArgs e)
     {
         SavedCard savedCard = new SavedCard();
-        savedCard.CardFormat = (int)TempCardData.Format;
-        savedCard.CardInfo = TempCardData.CardInfo;
+        //savedCard.CardFormat = (int)TempCardData.Format;
+        //savedCard.CardInfo = TempCardData.CardInfo;
 
         if (!TempCardData.IsKnownCard)
         {
-            ResultNotKnownCard result = new ResultNotKnownCard();
-            await this.ShowPopupAsync(new NotKnownCardPopUp(SavedCardViewModel, (int)this.Window.Width, (int)this.Window.Height, result));
+            ResultNotKnownCard resultNotKnownCard = new ResultNotKnownCard();
+
+            await Shell.Current.GoToAsync(nameof(NotKnownCardView),
+            new Dictionary<string, object>
+            {
+                [nameof(ResultNotKnownCard)] = resultNotKnownCard,
+            });
+
             savedCard.IsKnownCard = false;
-            savedCard.UknownCardText = result.CardName;
-            savedCard.UknownCardColor = result.Color.ToInt();
+            savedCard.UnknownCardName = resultNotKnownCard.CardName;
+            savedCard.UknownCardColor = resultNotKnownCard.Color.ToInt();
         }
         else
         {
