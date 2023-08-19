@@ -70,7 +70,10 @@
 	  <None Remove="Platforms\Android\Resources\values\strings.xml" />
 	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
 	  <None Remove="Resources\Database\neminaj.db3" />
+	  <None Remove="Resources\ImagesEmbedded\billa_card.png" />
 	  <None Remove="Resources\ImagesEmbedded\kaufland_card.png" />
+	  <None Remove="Resources\ImagesEmbedded\tesco_card.png" />
+	  <None Remove="Resources\Images\billa_card.png" />
 	  <None Remove="Resources\Images\billa_logo.png" />
 	  <None Remove="Resources\Images\calculator.svg" />
 	  <None Remove="Resources\Images\cart.png" />
@@ -185,6 +188,16 @@
 	  <EmbeddedResource Include="Resources\ImagesEmbedded\kaufland_card.png">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\ImagesEmbedded\tesco_card.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\ImagesEmbedded\billa_card.png" />
 	</ItemGroup>
 
 </Project>

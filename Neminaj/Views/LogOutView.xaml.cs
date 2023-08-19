@@ -7,6 +7,6 @@ public partial class LogOutView : ContentPage
 	public LogOutView(LogOutViewModel logOutViewModel)
 	{
 		InitializeComponent();
-        logOutViewModel.SignOut();
+        //logOutViewModel.SignOut();
     }
 }

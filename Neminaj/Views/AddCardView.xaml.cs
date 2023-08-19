@@ -21,10 +21,16 @@ public class TempCardData
     public byte[] Image { get; set; }
 
     public bool IsKnownCard { get; set; } = false;
+
+    public string CardName { get; set; }
 }
 
 public partial class AddCardView : ContentPage
 {
+    // Events
+    public delegate void AddCardView_CardAdded(object sender, EventArgs e);
+    public static event AddCardView_CardAdded On_AddCardView_CardAdded;
+
     TempCardData TempCardData { get; set; } = new TempCardData();
     SavedCardDetailViewModel SavedCardViewModel { get; set; } = null;
 
@@ -94,19 +100,21 @@ public partial class AddCardView : ContentPage
             TempCardData.Format = args.Result[0].BarcodeFormat;
             TempCardData.CardCode = args.Result[0].Text;
 
-            string fileNameResources = GetImageFromResource(TempCardData.CardCode);
+            (string cardName, string pictureName) = GetImageFromResource(TempCardData.CardCode);
 
-            if (fileNameResources == string.Empty)
+            if (cardName == string.Empty)
             {
                 TempCardData.IsKnownCard = false;
             }
 
-            if (fileNameResources != string.Empty)
+            if (cardName != string.Empty)
             {
-                this.CardImage.Source = ImageSource.FromFile(fileNameResources);
+                TempCardData.CardName = cardName;
+
+                this.CardImage.Source = ImageSource.FromFile(pictureName);
                 //
                 // assembly.GetManifestResourceStream($"Neminaj.Resources.Images.{fileNameResources}"))
-                using (Stream stream = EmbeddedResource.OpenEmbeddedImageStream(fileNameResources))
+                using (Stream stream = EmbeddedResource.OpenEmbeddedImageStream(pictureName))
                 {
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
@@ -125,8 +133,8 @@ public partial class AddCardView : ContentPage
     private async void btnAddCard_Clicked(object sender, EventArgs e)
     {
         SavedCard savedCard = new SavedCard();
-        //savedCard.CardFormat = (int)TempCardData.Format;
-        //savedCard.CardCode = TempCardData.CardCode;
+        savedCard.CardFormat = (int)TempCardData.Format;
+        savedCard.CardCode = TempCardData.CardCode;
 
         if (!TempCardData.IsKnownCard)
         {
@@ -139,18 +147,22 @@ public partial class AddCardView : ContentPage
         else
         {
             savedCard.Image = TempCardData.Image;
+            savedCard.IsKnownCard = true;
             await InsertNewCard(savedCard);
         }
     }
 
-    private void On_NotKnownCardView_BtnAddCard_Clicked(object sender, EventArgs e)
+    private async void On_NotKnownCardView_BtnAddCard_Clicked(object sender, EventArgs e)
     {
         SavedCard savedCard = new SavedCard();
         savedCard.CardFormat = (int)TempCardData.Format;
         savedCard.CardCode = TempCardData.CardCode;
+
+        savedCard.CardName = ResultNotKnownCard.CardName;
         savedCard.IsKnownCard = false;
-        savedCard.UnknownCardName = ResultNotKnownCard.CardName;
         savedCard.UknownCardColor = ResultNotKnownCard.Color.ToInt();
+
+        await InsertNewCard(savedCard);
     }
 
     private async Task InsertNewCard(SavedCard savedCard)
@@ -161,23 +173,42 @@ public partial class AddCardView : ContentPage
         }
         else
         {
+            // Make sure someone is listening to event
+            if (On_AddCardView_CardAdded != null)
+            {
+                On_AddCardView_CardAdded(this, new EventArgs());
+            }
+
             await DisplayAlert("", "Karta uložená", "Zavrieť");
         }
     }
 
-    private string GetImageFromResource(string cardInfo)
+    private (string CardName, string PictureName) GetImageFromResource(string cardInfo)
     {
         string imageName = string.Empty;
+        string cardName = string.Empty;
 
         if (cardInfo.StartsWith("6340095")) // Tesco
+        {
             imageName = "testo_card.png";
+            cardName = "Tesco";
+        }
         else if (cardInfo.StartsWith("600211")) // Kaufland
+        {
             imageName = "kaufland_card.png";
+            cardName = "Kaufland";
+        }
         else if (cardInfo.StartsWith("99958")) // Coop-Jednota
+        {
             imageName = "coop_jednota_card.png";
+            cardName = "COOP Jednota";
+        }
         else if (cardInfo.StartsWith("994027")) // Billa
+        {
             imageName = "billa_card.png";
+            cardName = "Billa";
+        }
 
-        return imageName;
+        return (cardName, imageName);
     }
 }

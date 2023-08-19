@@ -34,6 +34,7 @@ public partial class CardsView : ContentPage
 
         SavedCardRepo = savedCardRepository;
         this.Loaded += async (s, e) => { await BuildPage(); };
+        AddCardView.On_AddCardView_CardAdded += async (s, e) => { await FillGridWithCards(); };
     }
 
     private async Task BuildPage()
@@ -64,12 +65,12 @@ public partial class CardsView : ContentPage
         this.ViewContent.GridCards.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
         this.ViewContent.GridCards.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
 
-        // Create rows ( first fixed size of 5)
+        // Create rows ( first fixed size of 5) - this is here due to proportial layout of screen withing grid
         for (int i = 0; i < 10; i += 2)
             this.ViewContent.GridCards.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 
         // Check if 5 rows are enough for already saved cards, if not create additional rows
-        if (this.ViewContent.GridCards.RowDefinitions.Count < this.ViewContent.ListCards.Count)
+        if (this.ViewContent.GridCards.RowDefinitions.Count < (this.ViewContent.ListCards.Count / 2) + (this.ViewContent.ListCards.Count % 2))
         {
             for (int i = 0; i < (this.ViewContent.ListCards.Count - this.ViewContent.GridCards.RowDefinitions.Count); i += 2)
                 this.ViewContent.GridCards.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
@@ -109,34 +110,80 @@ public partial class CardsView : ContentPage
         this.ViewContent.ListImages = new List<Image>();
         this.ViewContent.ListTapGestureRecognizers = new List<TapGestureRecognizer>();
 
-        for (int row = 0, cardCounter = 0; cardCounter < this.ViewContent.ListCards.Count; row++)
-        {
-            for (int col = 0; ((cardCounter < this.ViewContent.ListCards.Count) && (col < 2)); col++, cardCounter++)
-            {
-                var stream = new MemoryStream(this.ViewContent.ListCards[cardCounter].Image);
-                {
-                    Image img = new Image();
-                    img.Source = ImageSource.FromStream(() => stream);
-                    img.Aspect = Aspect.AspectFit;
-                    img.VerticalOptions = LayoutOptions.Center;
-                    img.HorizontalOptions = LayoutOptions.Center;
-                    img.HeightRequest = (this.Window.Height / 5);
-                    img.WidthRequest = (this.Window.Width / 2) - 5;
+        await this.FillGridWithCards();
 
+        this.Content = this.ViewContent.MainGrid;
+    }
+
+    private async Task FillGridWithCards()
+    {
+        await Task.Run(async () =>
+        {
+            this.ViewContent.ListTapGestureRecognizers.Clear();
+            this.ViewContent.ListImages.Clear();
+
+            this.ViewContent.ListCards = await this.SavedCardRepo.GetAllSavedCards();
+
+            // Check if 5 rows are enough for already saved cards, if not create additional rows
+            if (this.ViewContent.GridCards.RowDefinitions.Count < (this.ViewContent.ListCards.Count / 2) + (this.ViewContent.ListCards.Count % 2))
+            {
+                for (int i = 0; i < (this.ViewContent.ListCards.Count - this.ViewContent.GridCards.RowDefinitions.Count); i += 2)
+                    this.ViewContent.GridCards.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            }
+
+            for (int row = 0, cardCounter = 0; cardCounter < this.ViewContent.ListCards.Count; row++)
+            {
+                for (int col = 0; ((cardCounter < this.ViewContent.ListCards.Count) && (col < 2)); col++, cardCounter++)
+                {
                     TapGestureRecognizer tappedEvent = new TapGestureRecognizer();
                     tappedEvent.Tapped += CardsView_Tapped;
                     tappedEvent.CommandParameter = this.ViewContent.ListCards[cardCounter].Id;
-                    img.GestureRecognizers.Add(tappedEvent);
+
+                    if (this.ViewContent.ListCards[cardCounter].IsKnownCard)
+                    {
+                        Image img = new Image();
+
+                        var stream = new MemoryStream(this.ViewContent.ListCards[cardCounter].Image);
+                        {
+                            img.Source = ImageSource.FromStream(() => stream);
+                            img.Aspect = Aspect.AspectFit;
+                            img.VerticalOptions = LayoutOptions.Center;
+                            img.HorizontalOptions = LayoutOptions.Center;
+                            img.HeightRequest = (this.Window.Height / 5);
+                            img.WidthRequest = (this.Window.Width / 2) - 5;
+                            img.GestureRecognizers.Add(tappedEvent);
+                            this.ViewContent.GridCards.Add(img, col, row);
+                            this.ViewContent.ListImages.Add(img);
+                        }
+                    }
+                    else
+                    {
+                        Frame frame = new Frame();
+                        frame.VerticalOptions = LayoutOptions.Center;
+                        frame.HorizontalOptions = LayoutOptions.Center;
+                        frame.HeightRequest = (this.Window.Height / 5);
+                        frame.WidthRequest = (this.Window.Width / 2) - 5;
+                        frame.BackgroundColor = Color.FromInt(this.ViewContent.ListCards[cardCounter].UknownCardColor);
+                        frame.BorderColor = Colors.Black;
+                        frame.GestureRecognizers.Add(tappedEvent);
+
+                        Label lbl = new Label();
+                        lbl.VerticalOptions = LayoutOptions.Center;
+                        lbl.HorizontalOptions = LayoutOptions.Center;
+                        lbl.Text = this.ViewContent.ListCards[cardCounter].CardName;
+                        lbl.LineBreakMode = LineBreakMode.WordWrap;
+                        lbl.FontSize = frame.WidthRequest / 12;
+
+                        frame.Content = lbl;
+
+
+                        this.ViewContent.GridCards.Add(frame, col, row);
+                    }
 
                     this.ViewContent.ListTapGestureRecognizers.Add(tappedEvent);
-
-                    this.ViewContent.ListImages.Add(img);
-                    this.ViewContent.GridCards.Add(img, col, row);
                 }
             }
-        }
-
-        this.Content = this.ViewContent.MainGrid;
+        });
     }
 
     private async void CardsView_Tapped(object sender, TappedEventArgs e)

@@ -53,6 +53,9 @@ public partial class LoginView : ContentPage
 
     private async void BtnLogInHttps_Clicked(object sender, EventArgs e)
     {
+        await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
+
+        /*
         bool badEnty = false;
 
         if (string.IsNullOrWhiteSpace(EntryEmail.Text))
@@ -109,6 +112,7 @@ public partial class LoginView : ContentPage
                 await DisplayAlert("Prihlásenie chyba", response.Message, "Zavrieť");
             }
         }
+        */
     }
 
     private void EntryPassword_TextChanged(object sender, TextChangedEventArgs e)

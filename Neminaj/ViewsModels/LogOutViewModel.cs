@@ -10,7 +10,7 @@ namespace Neminaj.ViewsModels;
 
 public partial class LogOutViewModel
 {
-    public async void SignOut() // TODO: toto prerobit na zaklade rememberlogin v loginview
+    public async void SignOut() // Not used covered during LogIn
     {
         if (Preferences.ContainsKey(nameof(App.UserLoginInfo)))
         {
