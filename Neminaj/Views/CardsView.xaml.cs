@@ -18,6 +18,8 @@ class ViewContent
 
     public List<Image> ListImages { get; set; } = null;
 
+    public List<Frame> ListFrames { get; set; } = null;
+
     public List<TapGestureRecognizer> ListTapGestureRecognizers {get; set;} = null;
 
 }
@@ -31,22 +33,23 @@ public partial class CardsView : ContentPage
     public CardsView(SavedCardRepository savedCardRepository)
     {
         InitializeComponent();
-
         SavedCardRepo = savedCardRepository;
+
+        this.ViewContent = new ViewContent();
+        this.ViewContent.MainGrid = new Grid();
+        this.ViewContent.GridCards = new Grid();
+
         this.Loaded += async (s, e) => { await BuildPage(); };
-        AddCardView.On_AddCardView_CardAdded += async (s, e) => { await FillGridWithCards(); };
+        AddCardView.On_AddCardView_CardAdded += async (s, e) => { await FillGridWithCards(false); };
     }
 
     private async Task BuildPage()
     {
-        ViewContent = new ViewContent();
-
         // Get list of SavedCards for further use
         this.ViewContent.ListCards = await this.SavedCardRepo.GetAllSavedCards();
 
         // START Create Main Grid //
 
-        this.ViewContent.MainGrid = new Grid();
         this.ViewContent.MainGrid.ColumnSpacing = 10;
         this.ViewContent.MainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star)); // Row 0: Grid for cards
         this.ViewContent.MainGrid.RowDefinitions.Add(new RowDefinition(new GridLength(0.10, GridUnitType.Star))); // Row 1: Buttons Scan and Scan from picture
@@ -57,7 +60,6 @@ public partial class CardsView : ContentPage
         // END Create Main Grid //
 
         // START Create Cards Grid //
-        this.ViewContent.GridCards = new Grid();
         this.ViewContent.GridCards.ColumnSpacing = 10;
         this.ViewContent.GridCards.RowSpacing = 10;
 
@@ -108,27 +110,39 @@ public partial class CardsView : ContentPage
         // END Create button Scan from picture //
 
         this.ViewContent.ListImages = new List<Image>();
+        this.ViewContent.ListFrames = new List<Frame>();
         this.ViewContent.ListTapGestureRecognizers = new List<TapGestureRecognizer>();
 
-        await this.FillGridWithCards();
+        await this.FillGridWithCards(true);
 
         this.Content = this.ViewContent.MainGrid;
     }
 
-    private async Task FillGridWithCards()
+    private async Task FillGridWithCards(bool firstBuild = false)
     {
+        this.ViewContent.ListTapGestureRecognizers.Clear();
+
         await Task.Run(async () =>
         {
-            this.ViewContent.ListTapGestureRecognizers.Clear();
-            this.ViewContent.ListImages.Clear();
-
             this.ViewContent.ListCards = await this.SavedCardRepo.GetAllSavedCards();
 
-            // Check if 5 rows are enough for already saved cards, if not create additional rows
-            if (this.ViewContent.GridCards.RowDefinitions.Count < (this.ViewContent.ListCards.Count / 2) + (this.ViewContent.ListCards.Count % 2))
+            if (!firstBuild)
             {
-                for (int i = 0; i < (this.ViewContent.ListCards.Count - this.ViewContent.GridCards.RowDefinitions.Count); i += 2)
-                    this.ViewContent.GridCards.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+                // Check if 5 rows are enough for already saved cards, if not create additional rows
+                if (this.ViewContent.GridCards.RowDefinitions.Count < (this.ViewContent.ListCards.Count / 2) + (this.ViewContent.ListCards.Count % 2))
+                {
+                    for (int i = 0; i < (this.ViewContent.ListCards.Count - this.ViewContent.GridCards.RowDefinitions.Count); i += 2)
+                        this.ViewContent.GridCards.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+                }
+
+                foreach (Image img in this.ViewContent.ListImages)
+                    this.ViewContent.GridCards.Remove(img);
+
+                foreach (Frame frame in this.ViewContent.ListFrames)
+                    this.ViewContent.GridCards.Remove(frame);
+
+                this.ViewContent.ListImages.Clear();
+                this.ViewContent.ListFrames.Clear();
             }
 
             for (int row = 0, cardCounter = 0; cardCounter < this.ViewContent.ListCards.Count; row++)
@@ -175,7 +189,7 @@ public partial class CardsView : ContentPage
                         lbl.FontSize = frame.WidthRequest / 12;
 
                         frame.Content = lbl;
-
+                        this.ViewContent.ListFrames.Add(frame);
 
                         this.ViewContent.GridCards.Add(frame, col, row);
                     }

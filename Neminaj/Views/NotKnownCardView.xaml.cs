@@ -46,6 +46,13 @@ public partial class NotKnownCardView : ContentPage
                 On_NotKnownCardView_BtnAddCard_Clicked(this, new EventArgs());
             }
 
+            this.lblCardName.Text = string.Empty;
+            this.BorderPalleteColor.BackgroundColor = Colors.OrangeRed;
+            this.SliderR.Value = 255;
+            this.SliderG.Value = 165;
+            this.SliderB.Value = 0;
+            this.CardName.Text = string.Empty;
+
             await Shell.Current.GoToAsync("..");
         }
     }

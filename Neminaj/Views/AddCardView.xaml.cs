@@ -90,7 +90,7 @@ public partial class AddCardView : ContentPage
 
     private void cameraView_BarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
     {
-        MainThread.BeginInvokeOnMainThread(async () =>
+        MainThread.BeginInvokeOnMainThread(() =>
         {
             TempCardData.IsKnownCard = true;
 
@@ -176,11 +176,23 @@ public partial class AddCardView : ContentPage
             // Make sure someone is listening to event
             if (On_AddCardView_CardAdded != null)
             {
-                On_AddCardView_CardAdded(this, new EventArgs());
+                On_AddCardView_CardAdded(this, new EventArgs()); // toto bolo vela krat ked view bolo transient
             }
 
             await DisplayAlert("", "Karta uložená", "Zavrieť");
         }
+
+        TempCardData.IsKnownCard = false;
+        TempCardData.CardCode = string.Empty;
+        TempCardData.CardName = string.Empty;
+        TempCardData.Format = 0x00U;
+        TempCardData.Image = null;
+
+        btnAddCard.IsVisible = false;
+        lblCode.Text = string.Empty;
+        this.CardImage.Source = null;
+
+        await Shell.Current.GoToAsync(".."); // todo je to tu z dovodu ze nechce skenovat viacero po sebe kariet
     }
 
     private (string CardName, string PictureName) GetImageFromResource(string cardInfo)

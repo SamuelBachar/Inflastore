@@ -94,9 +94,11 @@ public static class MauiProgram
         builder.Services.AddTransient<CartView>();
         builder.Services.AddTransient<SavedCartDetailView>();
         builder.Services.AddTransient<NavigationView>();
-        builder.Services.AddTransient<AddCardView>();
+
+        builder.Services.AddSingleton<AddCardView>();
+        builder.Services.AddSingleton<NotKnownCardView>();
+
         builder.Services.AddTransient<SavedCardDetailView>();
-        builder.Services.AddTransient<NotKnownCardView>();
 
         return builder.Build();
 	}

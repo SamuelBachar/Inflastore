@@ -29,11 +29,11 @@ public partial class SavedCardDetailView : ContentPage
     private async Task BuildPage()
     {
         SavedCard savedCard = await SavedCardDetailViewModel.GetSpecificCard(SavedCardDetailViewModel.CardID);
-        this.CardCode.BarcodeFormat = (BarcodeFormat)savedCard.CardFormat;
-        this.CardCode.Barcode = savedCard.CardCode;
+        this.BarcodeImage.BarcodeFormat = (BarcodeFormat)savedCard.CardFormat;
+        this.BarcodeImage.Barcode = savedCard.CardCode;
 
         // todo otestovat ci potrebne ???
-        this.CardCode.Margin = 5;
+        this.BarcodeImage.Margin = 5;
 
         this.lblCardCode.Text = savedCard.CardCode;
     }
