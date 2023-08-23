@@ -15,6 +15,10 @@ public partial class CartView : ContentPage
     public delegate void ItemCountOf_Changed_Handler(object sender, ItemCountOf_Changed_EventArgs e);
     public static event ItemCountOf_Changed_Handler OnItemCountOf_Changed;
 
+    // Events
+    public delegate void CartView_ItemRemovedFromList(object sender, EventArgs e);
+    public static event CartView_ItemRemovedFromList On_CartView_ItemRemovedFromList;
+
     private CartViewModel CartViewModel { get; set; } = null;
 
     public CartView(CartViewModel cartViewModel)
@@ -38,6 +42,13 @@ public partial class CartView : ContentPage
     {
         int idInList = int.Parse(((Microsoft.Maui.Controls.ImageButton)(sender)).ClassId);
         CartViewModel.DeleteChoosenItem(idInList);
+
+        // Make sure someone is listening to event
+        if (On_CartView_ItemRemovedFromList != null)
+        {
+            On_CartView_ItemRemovedFromList(this, new EventArgs()); 
+        }
+
         listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens();
     }
 

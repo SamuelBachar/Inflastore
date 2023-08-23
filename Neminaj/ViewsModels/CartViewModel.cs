@@ -12,15 +12,11 @@ using System.Threading.Tasks;
 namespace Neminaj.ViewsModels;
 
 [QueryProperty(nameof(ObservableItemsChoosed), nameof(ObservableItemsChoosed))]
-[QueryProperty(nameof(NavigationBarMainPage), nameof(NavigationBarMainPage))]
 [QueryProperty(nameof(SavedCartRepository), nameof(SavedCartRepository))]
 public partial class CartViewModel : ObservableObject
 {
     [ObservableProperty]
     private ObservableCollection<ItemChoosen> observableItemsChoosed;
-
-    [ObservableProperty]
-    private NavigationBarMainPage navigationBarMainPage;
 
     [ObservableProperty]
     private SavedCartRepository savedCartRepository;
@@ -36,8 +32,6 @@ public partial class CartViewModel : ObservableObject
         {
             ObservableItemsChoosed.Remove(ObservableItemsChoosed.Where(item => item.IdInList == idInList).First());
         }
-
-        NavigationBarMainPage.DecreaseShoppingCartCounter();
     }
 
     public void ChangeFinalNameOfItem(ItemChoosen item)

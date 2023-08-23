@@ -8,13 +8,10 @@
         <ToolbarItem Text="Zmazať" IconImageSource="recycle_bin.svg" Clicked="ToolbarItemDelete_Clicked" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="*,Auto" ColumnDefinitions="*">
-        <!--<Image Grid.ColumnSpan="2" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center" Aspect="AspectFill"/>-->
-        <cv:BarcodeImage x:Name="BarcodeImage" Grid.Row="0" 
-                         HorizontalOptions="Center" VerticalOptions="Center"
-                         Aspect="AspectFill" BarcodeForeground="White" BarcodeBackground="Black" />
-
-        <Label x:Name="lblCardCode" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center" />
-    </Grid>
-
+    <!--<VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+        <cv:BarcodeImage x:Name="BarcodeImage" WidthRequest="400" HeightRequest="400"
+                         Aspect="AspectFit" BarcodeForeground="Black" BarcodeBackground="White" BarcodeMargin="5" />
+        <Label x:Name="lblCardCode" HorizontalOptions="Center" VerticalOptions="Center" />
+    </VerticalStackLayout>-->
+    <!--BarcodeHeight="400" BarcodeWidth="400"-->
 </ContentPage>

@@ -79,6 +79,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<NavigationView>();
         builder.Services.AddSingleton<CardsView>();
 		builder.Services.AddSingleton<SettingsView>();
+        builder.Services.AddSingleton<AddCardView>();
+        builder.Services.AddSingleton<NotKnownCardView>();
+        builder.Services.AddSingleton<SavedCartDetailView>();
 
         // Views models
         builder.Services.AddSingleton<LogOutViewModel>();
@@ -88,16 +91,13 @@ public static class MauiProgram
         builder.Services.AddSingleton<SavedCardDetailViewModel>();
         builder.Services.AddSingleton<NotKnownCardViewModel>();
 
-        // Transients
+        // Transients views
         builder.Services.AddTransient<RegisterView>();
         builder.Services.AddTransient<ForgotPasswordView>();
         builder.Services.AddTransient<CartView>();
-        builder.Services.AddTransient<SavedCartDetailView>();
         builder.Services.AddTransient<NavigationView>();
 
-        builder.Services.AddSingleton<AddCardView>();
-        builder.Services.AddSingleton<NotKnownCardView>();
-
+        // ??? - TODO tu je chyba s tym close stream sakra
         builder.Services.AddTransient<SavedCardDetailView>();
 
         return builder.Build();
