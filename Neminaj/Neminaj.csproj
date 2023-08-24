@@ -51,9 +51,12 @@
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
+    
+              
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\inflastoresplashscreenv2.png" BaseSize="400, 200" Color="White">
+		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</MauiSplashScreen>
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -69,6 +72,7 @@
 	<ItemGroup>
 	  <None Remove="Platforms\Android\Resources\values\strings.xml" />
 	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
+	  <None Remove="Resources\AppIcon\inflastoresplashscreenv2.png" />
 	  <None Remove="Resources\Database\neminaj.db3" />
 	  <None Remove="Resources\ImagesEmbedded\billa_card.png" />
 	  <None Remove="Resources\ImagesEmbedded\kaufland_card.png" />
@@ -85,6 +89,8 @@
 	  <None Remove="Resources\Images\settings.svg" />
 	  <None Remove="Resources\Images\tesco_logo.jpg" />
 	  <None Remove="Resources\Images\user_login.png" />
+	  <None Remove="Resources\Splash\inflastoresplashscreen.png" />
+	  <None Remove="Resources\Splash\inflastoresplashscreen.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -129,9 +135,6 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="ContentViews\CartViewSaveCartPopUp.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="ContentViews\NavigationBarMainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="ContentViews\PriceComparerPopUpDetails.xaml">
@@ -198,6 +201,10 @@
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Resources\ImagesEmbedded\billa_card.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiIcon Include="Resources\AppIcon\inflastoresplashscreenv2.png" Color="White" />
 	</ItemGroup>
 
 </Project>
