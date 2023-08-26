@@ -26,21 +26,20 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
-  <key>NSAppTransportSecurity</key>
-  <dict>
-    <key>NSAllowsLocalNetworking</key>
-    <true/>
-  </dict>
-  
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
-  
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Inflastore vie nájsť obchody vo vašej blízkosti. Povolíte inflastoru prístup k funkcii GPS ?</string>
-  
-  <key>NSCameraUsageDescription</key>
-  <string>Inflastore umožnuje skenovať klubové karty a obrázky obsahujúce čiarový kód alebo QR kód. Povolíte inflastoru prístup ku kamere ?</string>
-  
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Inflastore vie nájsť obchody vo vašej blízkosti. Povolíte inflastoru prístup k funkcii GPS ?</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Inflastore umožnuje skenovať klubové karty a obrázky obsahujúce čiarový kód alebo QR kód. Povolíte inflastoru prístup ku kamere ?</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleDisplayName</key>
+	<string>Inflastore</string>
 </dict>
 </plist>
