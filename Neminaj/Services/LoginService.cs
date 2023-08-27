@@ -1,4 +1,5 @@
-﻿using Neminaj.Interfaces;
+﻿using Neminaj.Constants;
+using Neminaj.Interfaces;
 using Neminaj.Models;
 using Neminaj.Utils;
 using SharedTypesLibrary.DTOs.API;
@@ -16,6 +17,12 @@ namespace Neminaj.Services;
 
 public class LoginService : ILoginService
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+    public LoginService(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public async Task<(UserLoginInfo UserInfo, string ResultMessage)> Login(string userName, string passWord)
     {
         //try
@@ -68,16 +75,13 @@ public class LoginService : ILoginService
         //HTTPS
         try
         {
-            var httpClient = new HttpClientService().GetPlatformSpecificHttpClient();
-            var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                ? "https://10.0.2.2:7279"
-                : "https://localhost:7279";
+            var httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
 
-            var responseTest = await httpClient.GetAsync($"{baseUrl}/WeatherForecast");
+            var responseTest = await httpClient.GetAsync($"/WeatherForecast");
             var dataTest = await responseTest.Content.ReadAsStringAsync();
 
             UserLoginRequest userLoginRequest = new UserLoginRequest { Email = email, Password = passWord };
-            var response = await httpClient.PostAsJsonAsync($"{baseUrl}/api/User/login", userLoginRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            var response = await httpClient.PostAsJsonAsync($"/api/User/login", userLoginRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
 
             if (response.IsSuccessStatusCode)

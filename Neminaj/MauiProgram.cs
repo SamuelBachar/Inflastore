@@ -9,6 +9,7 @@ using Neminaj.Views;
 using Neminaj.ViewsModels;
 using System.Net;
 using System.Reflection;
+using Syncfusion.Maui.Graphics.Internals;
 //using Syncfusion.Maui.Core.Hosting;
 
 namespace Neminaj;
@@ -49,7 +50,31 @@ public static class MauiProgram
                     File.WriteAllBytes(ItemRepository._dbPath, memoryStream.ToArray());
 				}
 			}
-		//}
+        //}
+
+        // Https client
+        builder.Services.AddSingleton<IPlatformHttpMessageHandler>(sp =>
+        {
+//#if ANDROID
+//            return new Neminaj.Services.HttpClientService();
+//#elif IOS
+//            return new Neminaj.Services.HttpClientService(); // obidve maju tie iste classy zrejme zbytocne to tu nechat takto
+//#endif
+            return new Neminaj.Services.HttpClientService();
+        });
+
+        builder.Services.AddHttpClient(Constants.AppConstants.HttpsClientName, httpClient =>
+        {
+            var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                ? "https://10.0.2.2:7279"
+                : "https://localhost:7279";
+
+            httpClient.BaseAddress = new Uri(baseUrl);
+        }).ConfigureHttpMessageHandlerBuilder(configBuilder =>
+        {
+            var platformHttMessageHandler = configBuilder.Services.GetRequiredService<IPlatformHttpMessageHandler>();
+            configBuilder.PrimaryHandler = platformHttMessageHandler.GetPlatformSpecificHttpMessageHandler();
+        });
 
 		// Services
 		builder.Services.AddSingleton<ISettingsService, SettingsService>();

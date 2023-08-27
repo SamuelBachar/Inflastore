@@ -1,5 +1,6 @@
 ﻿using Java.Interop;
 using Javax.Net.Ssl;
+using Neminaj.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Neminaj.Services;
 */
 using Object = Java.Lang.Object;
 
-public partial class HttpClientService
+public partial class HttpClientService : IPlatformHttpMessageHandler
 {
     public partial HttpMessageHandler GetPlatformSpecificHttpMessageHandler()
     {

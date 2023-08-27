@@ -1,4 +1,5 @@
-﻿using Security;
+﻿using Neminaj.Interfaces;
+using Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Neminaj.Services;
 
-public partial class HttpClientService // TODO: to be tested
+public partial class HttpClientService : IPlatformHttpMessageHandler // TODO: to be tested
 {
     public partial HttpMessageHandler GetPlatformSpecificHttpMessageHandler()
     {

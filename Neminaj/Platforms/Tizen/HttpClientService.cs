@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Neminaj.Services;
 
-public partial class HttpClientService
+public partial class HttpClientService : IPlatformHttpMessageHandler
 {
     public partial HttpMessageHandler GetPlatformSpecificHttpMessageHandler()
     {
