@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Java.Util;
 using Neminaj.Constants;
 using Neminaj.Models;
 using Org.Apache.Http.Client;
@@ -26,25 +27,6 @@ public class ItemRepository
         _httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
     }
 
-    public async Task AddNewItemAsync(string name)
-    {
-        ArgumentNullException.ThrowIfNull(name, nameof(name));
-
-        int result = 0;
-
-        try
-        {
-            await SQLConnection.InitAsync();
-            result = await SQLConnection.m_ConnectionAsync.InsertAsync(new Item { Name = name });
-
-            SQLConnection.StatusMessage = string.Format("{0} record(s) added (Name: {1})", result, name);
-        }
-        catch (Exception ex)
-        {
-            SQLConnection.StatusMessage = string.Format("Failed to add {0}. Error: {1})", name, ex.Message);
-        }
-    }
-
     public async Task<List<Item>> GetAllItemsAsync()
     {
         try
@@ -57,7 +39,10 @@ public class ItemRepository
 
                 if(!string.IsNullOrEmpty(content))
                 {
-                    return JsonSerializer.Deserialize<List<Item>>(content);
+                    return JsonSerializer.Deserialize<List<Item>>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
                 }
             }
 
@@ -74,15 +59,65 @@ public class ItemRepository
     {
         try
         {
-            await SQLConnection.InitAsync();
-            return await SQLConnection.m_ConnectionAsync.Table<Item>().Where(item => listItemIds.Contains(item.Id)).ToListAsync();
+            string strListIds = string.Join(",", listItemIds.Select(x => x.ToString()).ToArray());
+
+            var response = await _httpClient.GetAsync($"api/Items/GetSpecificItems?strListIds={strListIds}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                return JsonSerializer.Deserialize<List<Item>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+
         }
         catch (Exception ex)
         {
-            SQLConnection.StatusMessage = $"Failed to retrieve data. {ex.Message}";
+            SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
         }
 
         return new List<Item>();
+    }
+
+    public async Task<List<Item>> SearchItems(string filterText)
+    {
+        List<Item> listItem = null;
+
+        try
+        {
+            var response = await _httpClient.GetAsync("api/Items/GetAllItems");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (!string.IsNullOrEmpty(content))
+                {
+                    listItem = JsonSerializer.Deserialize<List<Item>>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
+        }
+
+        listItem.ForEach(async (item) =>
+        {
+            string strWithoutDiac = await removeDiacritics(item.Name);
+
+            if (strWithoutDiac.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))
+                FilteredItems.Add(item);
+        });
+
+        return FilteredItems;
     }
 
     public async Task<string> removeDiacritics(string text)
@@ -109,23 +144,27 @@ public class ItemRepository
         return result;
     }
 
-    public async Task<List<Item>> SearchItems(string filterText)
-    {
-        var listItem = await SQLConnection.m_ConnectionAsync.Table<Item>().Where(item => !string.IsNullOrEmpty(item.Name)).ToListAsync();
-
-        listItem.ForEach(async (item) =>
-        {
-            string strWithoutDiac = await removeDiacritics(item.Name);
-
-            if (strWithoutDiac.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))
-                FilteredItems.Add(item);
-        });
-
-        return FilteredItems;
-    }
-
     public void ClearFilteredList()
     {
         FilteredItems.Clear();
+    }
+
+    public async Task AddNewItemAsync(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name, nameof(name));
+
+        int result = 0;
+
+        try
+        {
+            await SQLConnection.InitAsync();
+            result = await SQLConnection.m_ConnectionAsync.InsertAsync(new Item { Name = name });
+
+            SQLConnection.StatusMessage = string.Format("{0} record(s) added (Name: {1})", result, name);
+        }
+        catch (Exception ex)
+        {
+            SQLConnection.StatusMessage = string.Format("Failed to add {0}. Error: {1})", name, ex.Message);
+        }
     }
 }

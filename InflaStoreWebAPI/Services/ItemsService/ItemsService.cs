@@ -15,5 +15,10 @@ namespace InflaStoreWebAPI.Services.ItemsService
         {
             return await _context.Items.ToListAsync();
         }
+
+        public async Task<List<Item>> GetSpecificItemsAsync(List<int> listIds)
+        {
+            return await _context.Items.ToListAsync();
+        }
     }
 }

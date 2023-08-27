@@ -15,10 +15,19 @@ namespace InflaStoreWebAPI.Controllers
             _itemsService = itemsService;
         }
 
-        [HttpPost("GetAllItems")]
-        private async Task<List<Item>> GetAllItemsAsync()
+        [HttpGet("GetAllItems")]
+        public async Task<List<Item>> GetAllItemsAsync()
         {
             return await _itemsService.GetAllItemsAsync();
+        }
+
+        [HttpGet("GetSpecificItems")]
+        public async Task<List<Item>> GetSpecificItemsAsync(string strListIds)
+        {
+            var separated = strListIds.Split(new char[] { ',' });
+            List<int> listIds = separated.Select(s => int.Parse(s)).ToList();
+
+            return await _itemsService.GetSpecificItemsAsync(listIds);
         }
     }
 }

@@ -14,5 +14,5 @@ public class Company
 
     public byte[] Image { get; set; }
 
-
+    List<Region> Region_ { get; set; }
 }

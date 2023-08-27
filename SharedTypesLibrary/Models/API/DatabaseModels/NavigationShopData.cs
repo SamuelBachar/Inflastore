@@ -13,8 +13,6 @@ public class NavigationShopData
 
     public List<Company> Company_ { get; set; }
 
-    public List<Company> Region_ { get; set; }
-
     public string FullAddress { get; set; }
 
     public float Latitude { get; set; }
