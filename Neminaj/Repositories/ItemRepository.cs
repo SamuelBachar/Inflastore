@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Neminaj.Constants;
 using Neminaj.Models;
+using Org.Apache.Http.Client;
 using SQLite;
-using Item = Neminaj.Models.Item;
+using Item = SharedTypesLibrary.Models.API.DatabaseModels.Item;
 
 namespace Neminaj.Repositories;
 
@@ -15,9 +18,12 @@ public class ItemRepository
     List<Item> FilteredItems = new List<Item>();
     public static string _dbPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "neminaj.db3");
 
-    public ItemRepository()
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly HttpClient _httpClient;
+    public ItemRepository(IHttpClientFactory httpClientFactory)
     {
-
+        _httpClientFactory = httpClientFactory;
+        _httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
     }
 
     public async Task AddNewItemAsync(string name)
@@ -43,12 +49,22 @@ public class ItemRepository
     {
         try
         {
-            await SQLConnection.InitAsync();
-            return await SQLConnection.m_ConnectionAsync.Table<Item>().ToListAsync();
+            var response = await _httpClient.GetAsync("api/Items/GetAllItems");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                if(!string.IsNullOrEmpty(content))
+                {
+                    return JsonSerializer.Deserialize<List<Item>>(content);
+                }
+            }
+
         }
         catch (Exception ex)
         {
-            SQLConnection.StatusMessage = $"Failed to retrieve data. {ex.Message}";
+            SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
         }
 
         return new List<Item>();

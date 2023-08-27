@@ -1,4 +1,5 @@
-﻿using Neminaj.Interfaces;
+﻿using Neminaj.Constants;
+using Neminaj.Interfaces;
 using Neminaj.Utils;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API;
@@ -15,20 +16,20 @@ namespace Neminaj.Services
 {
     public class ForgotPasswordService : IForgotPasswordService
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+        public ForgotPasswordService(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
         public async Task<(UserForgotPasswordDTO UserForgotPasswordDTO, string ResultMessage)> UserForgotPasswordHTTPS(ForgotPasswordRequest userForgotPasswordDTO)
         {
             //HTTPS
             try
             {
-                var httpClient = new HttpClientService().GetPlatformSpecificHttpClient();
-                var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                    ? "https://10.0.2.2:7279"
-                    : "https://localhost:7279";
+                var httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
 
-                var responseTest = await httpClient.GetAsync($"{baseUrl}/WeatherForecast");
-                var dataTest = await responseTest.Content.ReadAsStringAsync();
-
-                var response = await httpClient.PostAsJsonAsync($"{baseUrl}/api/User/forgot-password", userForgotPasswordDTO, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                var response = await httpClient.PostAsJsonAsync($"/api/User/forgot-password", userForgotPasswordDTO, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
                 var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserForgotPasswordDTO>>();
 
                 if (response.IsSuccessStatusCode)

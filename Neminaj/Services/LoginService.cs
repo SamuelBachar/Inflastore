@@ -75,40 +75,44 @@ public class LoginService : ILoginService
         //HTTPS
         try
         {
-            var httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
-
-            var responseTest = await httpClient.GetAsync($"/WeatherForecast");
-            var dataTest = await responseTest.Content.ReadAsStringAsync();
-
-            UserLoginRequest userLoginRequest = new UserLoginRequest { Email = email, Password = passWord };
-            var response = await httpClient.PostAsJsonAsync($"/api/User/login", userLoginRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
-
-            if (response.IsSuccessStatusCode)
+            if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
             {
-                return (new UserLoginDTO { Email = serializedResponse.Data.Email, JWT = serializedResponse.Data.JWT }, serializedResponse.Message);
-            }
-            else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (!serializedResponse.Success))
-            {
-                return (null, serializedResponse.Message);
-            }
-            else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (serializedResponse.Data == null))
-            {
-                var responseString = await response.Content.ReadAsStringAsync();
-                Dictionary<string, List<string>> dicGenericErrors = GenericHttpErrorReader.ExtractErrorsFromWebAPIResponse(responseString);
+                var httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
 
-                var temp = string.Empty;
+                UserLoginRequest userLoginRequest = new UserLoginRequest { Email = email, Password = passWord };
+                var response = await httpClient.PostAsJsonAsync($"/api/User/login", userLoginRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
 
-                foreach (var error in dicGenericErrors)
+                if (response.IsSuccessStatusCode)
                 {
-                    foreach (var errorInfo in error.Value)
-                        temp += errorInfo + "\r\n";
+                    return (new UserLoginDTO { Email = serializedResponse.Data.Email, JWT = serializedResponse.Data.JWT }, serializedResponse.Message);
+                }
+                else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (!serializedResponse.Success))
+                {
+                    return (null, serializedResponse.Message);
+                }
+                else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (serializedResponse.Data == null))
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    Dictionary<string, List<string>> dicGenericErrors = GenericHttpErrorReader.ExtractErrorsFromWebAPIResponse(responseString);
+
+                    var temp = string.Empty;
+
+                    foreach (var error in dicGenericErrors)
+                    {
+                        foreach (var errorInfo in error.Value)
+                            temp += errorInfo + "\r\n";
+                    }
+
+                    return (null, temp);
                 }
 
-                return (null, temp);
+                return (null, ResultMessage: $"Neočakavaná odpoveď od servera, neznáma chyba");
             }
-
-            return (null, $"Neočakavaná odpoveď od servera, neznáma chyba");
+            else
+            {
+                return (null, ResultMessage: "Nie je možné sa prihlásiť\r\n. Zariadenie nemá pripojenie k internetu");
+            }
         }
         catch (Exception ex)
         {

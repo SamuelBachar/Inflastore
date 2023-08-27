@@ -1,4 +1,5 @@
-﻿using Neminaj.Interfaces;
+﻿using Neminaj.Constants;
+using Neminaj.Interfaces;
 using Neminaj.Models;
 using Neminaj.Utils;
 using SharedTypesLibrary.DTOs.API;
@@ -17,20 +18,20 @@ namespace Neminaj.Services;
 
 public class RegisterService : IRegisterService
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+    public RegisterService(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public async Task<(UserRegisterDTO UserRegisterDTO, string ResultMessage)> RegisterHTTPS(UserRegisterRequest userRegisterRequest)
     {
         //HTTPS
         try
         {
-            var httpClient = new HttpClientService().GetPlatformSpecificHttpClient();
-            var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                ? "https://10.0.2.2:7279"
-                : "https://localhost:7279";
+            var httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
 
-            var responseTest = await httpClient.GetAsync($"{baseUrl}/WeatherForecast");
-            var dataTest = await responseTest.Content.ReadAsStringAsync();
-
-            var response = await httpClient.PostAsJsonAsync($"{baseUrl}/api/User/register", userRegisterRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            var response = await httpClient.PostAsJsonAsync($"/api/User/register", userRegisterRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserRegisterDTO>>();
 
             if (response.IsSuccessStatusCode)
