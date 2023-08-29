@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Services\CompanyService\" />
+    <Folder Include="Services\ItemPriceService\" />
   </ItemGroup>
 
   <ItemGroup>
