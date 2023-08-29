@@ -1,4 +1,5 @@
 ﻿using Neminaj.Models;
+using SharedTypesLibrary.Models.API.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

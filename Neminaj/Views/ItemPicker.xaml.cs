@@ -2,6 +2,7 @@ using Neminaj.Events;
 using Neminaj.Interfaces;
 using Neminaj.Models;
 using Neminaj.Repositories;
+using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Globalization;

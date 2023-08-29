@@ -13,6 +13,4 @@ public class Company
     public string Name { get; set; }
 
     public byte[] Image { get; set; }
-
-    List<Region> Region_ { get; set; }
 }

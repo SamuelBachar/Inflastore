@@ -21,4 +21,5 @@ public class DataContext : DbContext
     public DbSet<ItemPrice> ItemsPrices => Set<ItemPrice>();
     public DbSet<Unit> Units => Set<Unit>();
     public DbSet<NavigationShopData> NavigationShopDatas => Set<NavigationShopData>();
+    public DbSet<Region> Regions => Set<Region>();
 }

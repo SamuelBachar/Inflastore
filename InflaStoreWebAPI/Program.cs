@@ -60,3 +60,9 @@ app.Run();
 
 // ak nebude stacit horne video tak tu je: vytvorenie repository/service inject a registracia repository/service
 //https://www.youtube.com/watch?v=Wiy54682d1w&ab_channel=PatrickGod
+
+// 1:n 1:1 n:n ... na prikaz pre build a vyhodnotenie ci je to co to chcem alebo idem starou cestou
+// https://www.youtube.com/watch?v=V0UF4vEMlhQ&ab_channel=PatrickGod
+
+// 1. dotnet ef migrations add NewDatabaseLayout_v3
+// 2. dotnet ef database update

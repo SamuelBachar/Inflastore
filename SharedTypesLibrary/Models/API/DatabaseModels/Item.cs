@@ -13,5 +13,5 @@ public class Item
 
     public string Name { get; set; }
 
-    public List<Unit> Unit_ { get; set; }
+    public int Unit_Id { get; set; }
 }

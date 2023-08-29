@@ -4,6 +4,7 @@ using InflaStoreWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InflaStoreWebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230829002550_NewDatabaseLayout")]
+    partial class NewDatabaseLayout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,10 +36,23 @@ namespace InflaStoreWebAPI.Migrations
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<int?>("ItemPriceId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("NavigationShopDataId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Region_Id")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ItemPriceId");
+
+                    b.HasIndex("NavigationShopDataId");
 
                     b.ToTable("Companies");
                 });
@@ -49,6 +65,9 @@ namespace InflaStoreWebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ItemPriceId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -56,6 +75,8 @@ namespace InflaStoreWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ItemPriceId");
 
                     b.ToTable("Items");
                 });
@@ -110,25 +131,6 @@ namespace InflaStoreWebAPI.Migrations
                     b.ToTable("NavigationShopDatas");
                 });
 
-            modelBuilder.Entity("SharedTypesLibrary.Models.API.DatabaseModels.Region", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Company_Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Regions");
-                });
-
             modelBuilder.Entity("SharedTypesLibrary.Models.API.DatabaseModels.Unit", b =>
                 {
                     b.Property<int>("Id")
@@ -137,6 +139,9 @@ namespace InflaStoreWebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -144,6 +149,8 @@ namespace InflaStoreWebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
 
                     b.ToTable("Units");
                 });
@@ -183,6 +190,48 @@ namespace InflaStoreWebAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SharedTypesLibrary.Models.API.DatabaseModels.Company", b =>
+                {
+                    b.HasOne("SharedTypesLibrary.Models.API.DatabaseModels.ItemPrice", null)
+                        .WithMany("CompaniesLiest")
+                        .HasForeignKey("ItemPriceId");
+
+                    b.HasOne("SharedTypesLibrary.Models.API.DatabaseModels.NavigationShopData", null)
+                        .WithMany("CompaniesList")
+                        .HasForeignKey("NavigationShopDataId");
+                });
+
+            modelBuilder.Entity("SharedTypesLibrary.Models.API.DatabaseModels.Item", b =>
+                {
+                    b.HasOne("SharedTypesLibrary.Models.API.DatabaseModels.ItemPrice", null)
+                        .WithMany("ItemList")
+                        .HasForeignKey("ItemPriceId");
+                });
+
+            modelBuilder.Entity("SharedTypesLibrary.Models.API.DatabaseModels.Unit", b =>
+                {
+                    b.HasOne("SharedTypesLibrary.Models.API.DatabaseModels.Item", null)
+                        .WithMany("UnitList")
+                        .HasForeignKey("ItemId");
+                });
+
+            modelBuilder.Entity("SharedTypesLibrary.Models.API.DatabaseModels.Item", b =>
+                {
+                    b.Navigation("UnitList");
+                });
+
+            modelBuilder.Entity("SharedTypesLibrary.Models.API.DatabaseModels.ItemPrice", b =>
+                {
+                    b.Navigation("CompaniesLiest");
+
+                    b.Navigation("ItemList");
+                });
+
+            modelBuilder.Entity("SharedTypesLibrary.Models.API.DatabaseModels.NavigationShopData", b =>
+                {
+                    b.Navigation("CompaniesList");
                 });
 #pragma warning restore 612, 618
         }

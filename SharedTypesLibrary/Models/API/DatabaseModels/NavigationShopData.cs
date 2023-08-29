@@ -11,7 +11,7 @@ public class NavigationShopData
 {
     public int Id { get; set; }
 
-    public List<Company> Company_ { get; set; }
+    public int Company_Id { get; set; }
 
     public string FullAddress { get; set; }
 
