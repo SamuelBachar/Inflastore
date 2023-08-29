@@ -1,5 +1,6 @@
 ﻿using Neminaj.Models;
 using Neminaj.Repositories;
+using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 

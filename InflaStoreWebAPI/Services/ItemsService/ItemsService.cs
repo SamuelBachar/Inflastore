@@ -18,7 +18,7 @@ namespace InflaStoreWebAPI.Services.ItemsService
 
         public async Task<List<Item>> GetSpecificItemsAsync(List<int> listIds)
         {
-            return await _context.Items.ToListAsync();
+            return await _context.Items.Where(item => listIds.Contains(item.Id)).ToListAsync();
         }
     }
 }

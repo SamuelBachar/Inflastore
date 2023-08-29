@@ -5,6 +5,7 @@ using Neminaj.Models;
 using Neminaj.Repositories;
 using Neminaj.Services;
 using Neminaj.Views;
+using SharedTypesLibrary.Models.API.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

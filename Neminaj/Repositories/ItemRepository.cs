@@ -21,6 +21,9 @@ public class ItemRepository
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
+
+    private List<Item> _listItem { get; set; } = null;
+
     public ItemRepository(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
@@ -29,27 +32,36 @@ public class ItemRepository
 
     public async Task<List<Item>> GetAllItemsAsync()
     {
-        try
+        if (_listItem != null)
         {
-            var response = await _httpClient.GetAsync("api/Items/GetAllItems");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-
-                if(!string.IsNullOrEmpty(content))
-                {
-                    return JsonSerializer.Deserialize<List<Item>>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-                }
-            }
-
+            return _listItem;
         }
-        catch (Exception ex)
+        else
         {
-            SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
+            try
+            {
+                var response = await _httpClient.GetAsync("api/Items/GetAllItems");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        _listItem = JsonSerializer.Deserialize<List<Item>>(content, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        return _listItem;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
+            }
         }
 
         return new List<Item>();
@@ -57,26 +69,33 @@ public class ItemRepository
 
     public async Task<List<Item>> GetSpecificItemsAsync(List<int> listItemIds)
     {
-        try
+        if (_listItem != null)
         {
-            string strListIds = string.Join(",", listItemIds.Select(x => x.ToString()).ToArray());
-
-            var response = await _httpClient.GetAsync($"api/Items/GetSpecificItems?strListIds={strListIds}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return JsonSerializer.Deserialize<List<Item>>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-            }
-
+            return _listItem.Where(item => listItemIds.Contains(item.Id)).ToList();
         }
-        catch (Exception ex)
+        else
         {
-            SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
+            try
+            {
+                string strListIds = string.Join(",", listItemIds.Select(x => x.ToString()).ToArray());
+
+                var response = await _httpClient.GetAsync($"api/Items/GetSpecificItems?strListIds={strListIds}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    return JsonSerializer.Deserialize<List<Item>>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
+            }
         }
 
         return new List<Item>();

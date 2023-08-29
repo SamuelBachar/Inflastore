@@ -3,6 +3,7 @@ using Microsoft.Maui.Maps;
 using Neminaj.Models;
 using Neminaj.Repositories;
 using Neminaj.ViewsModels;
+using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Diagnostics;
 
 namespace Neminaj.Views;
