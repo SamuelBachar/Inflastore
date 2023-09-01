@@ -35,6 +35,24 @@ public partial class CartListView : ContentPage
     {
         ListSavedCarts = await SavedCartRepo.GetAllSavedCartsAsync();
         
+        if (ListSavedCarts.Count == 0)
+        {
+            this.Content = new Label
+            {
+                Text = "Nemáte vytvorení žiaden nákupny zoznam\r\nZoznam si môžte vytvoriť vo výbere položiek pomocou nákupného košíka",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                FontAttributes = FontAttributes.Bold,
+                LineBreakMode = LineBreakMode.WordWrap,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center
+            };
+        }
+        else
+        {
+            this.Content = MainScrollView;
+        }
+        
         this.BindingContext = this;
         this.listViewSavedCarts.ItemsSource = ListSavedCarts.OrderBy(n => n.Name);
     }
@@ -151,7 +169,6 @@ public partial class CartListView : ContentPage
 
             // Get unit Tag
             List<Unit> listUnits = await UnitRepo.GetSpecificUnits(listItemsFromCard.Select(item => item.Unit_Id).ToList());
-
 
             int idInListHelp = 0;
 

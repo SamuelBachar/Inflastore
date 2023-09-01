@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Views;
 using Neminaj.GlobalText;
 using Neminaj.Views;
+using Neminaj.ViewsModels;
 using System.Collections.ObjectModel;
 
 namespace Neminaj.ContentViews;

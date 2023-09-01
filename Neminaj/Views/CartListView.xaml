@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Neminaj.Views.CartListView"
              Title="Zoznamy">
-    <ScrollView>
+    <ScrollView x:Name="MainScrollView">
         <VerticalStackLayout>
             <Grid Padding="5" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto, 50, 50">
                 <CollectionView x:Name="listViewSavedCarts"

@@ -167,7 +167,7 @@ public partial class AddCardView : ContentPage
 
     private async Task InsertNewCard(SavedCard savedCard)
     {
-        if (!await SavedCardViewModel.SavedCardRepository.InsertNewCard(savedCard))
+        if (!await SavedCardViewModel.InsertNewCard(savedCard))
         {
             await DisplayAlert("Chyba ukladania karty", "Pri ukladaní karty nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
         }

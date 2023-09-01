@@ -35,12 +35,12 @@ public partial class SavedCardDetailViewModel : ObservableObject
         return await SavedCardRepository.GetSpecificCard(cardId);
     }
 
-    async Task<bool> InsertNewCard(List<SavedCard> listSavedCards)
+    public async Task<bool> InsertNewCard(List<SavedCard> listSavedCards)
     {
         return await SavedCardRepository.InsertNewCard(listSavedCards);
     }
 
-    async Task<bool> InsertNewCard(SavedCard savedCard)
+    public async Task<bool> InsertNewCard(SavedCard savedCard)
     {
         return await SavedCardRepository.InsertNewCard(savedCard);
     }

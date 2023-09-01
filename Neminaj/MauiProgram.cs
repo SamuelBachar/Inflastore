@@ -106,7 +106,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<SettingsView>();
         builder.Services.AddSingleton<AddCardView>();
         builder.Services.AddSingleton<NotKnownCardView>();
-        builder.Services.AddSingleton<SavedCartDetailView>();
+        builder.Services.AddSingleton<SavedCardDetailView>();
 
         // Views models
         builder.Services.AddSingleton<LogOutViewModel>();
@@ -115,15 +115,17 @@ public static class MauiProgram
         builder.Services.AddSingleton<NavigationShopViewModel>();
         builder.Services.AddSingleton<SavedCardDetailViewModel>();
         builder.Services.AddSingleton<NotKnownCardViewModel>();
+        builder.Services.AddSingleton<PriceComparerDetailViewModel>();
 
         // Transients views
         builder.Services.AddTransient<RegisterView>();
         builder.Services.AddTransient<ForgotPasswordView>();
         builder.Services.AddTransient<CartView>();
         builder.Services.AddTransient<NavigationView>();
+        builder.Services.AddTransient<PriceComparerDetailView>();
 
-        // ??? - TODO tu je chyba s tym close stream sakra
-        builder.Services.AddTransient<SavedCardDetailView>();
+        // ?? tood riesi problem s close stream
+        builder.Services.AddTransient<SavedCartDetailView>();
 
         return builder.Build();
 	}

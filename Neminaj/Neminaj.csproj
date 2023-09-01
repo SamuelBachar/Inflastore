@@ -173,6 +173,9 @@
 	  <MauiXaml Update="Views\NotKnownCardView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\PriceComparerDetailView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\PriceComparerView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
