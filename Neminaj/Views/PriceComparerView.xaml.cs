@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using Neminaj.Interfaces;
 using CommunityToolkit.Maui.Views;
 using Neminaj.ContentViews;
+using SharedTypesLibrary.Models.API.DatabaseModels;
 
 namespace Neminaj.Views;
 
@@ -995,18 +996,15 @@ public partial class PriceComparerView : ContentPage
     {
         if (itemsChoosen.Count > 0)
         {
-            List<string> listItemIds = new List<string>();
-            List<string> listCompIds = viewLayoutInfo.ListCompaniesInView.Select(comp => comp.Id.ToString()).ToList();
+            List<int> listItemIds = new List<int>();
+            List<int> listCompIds = viewLayoutInfo.ListCompaniesInView.Select(comp => comp.Id).ToList();
 
             if (newItemsStartIndex != null)
-                listItemIds = itemsChoosen.GetRange(newItemsStartIndex.Value, itemsChoosen.Count - newItemsStartIndex.Value).Select(item => item.Id.ToString()).ToList();
+                listItemIds = itemsChoosen.GetRange(newItemsStartIndex.Value, itemsChoosen.Count - newItemsStartIndex.Value).Select(item => item.Id).ToList();
             else
-                listItemIds = itemsChoosen.Select(item => item.Id.ToString()).ToList();
+                listItemIds = itemsChoosen.Select(item => item.Id).ToList();
 
-            string filter = $"Company_Id IN ({String.Join(",", listCompIds.ToArray())})";
-            filter += $" AND Item_Id IN ({String.Join(",", listItemIds.ToArray())})";
-
-            List<ItemPrice> listItemPrice = await ItemPriceRepo.GetPriceItemsFilteredAsync(filter);
+            List<ItemPrice> listItemPrice = await ItemPriceRepo.GetPriceItemsFilteredAsync(listCompIds, listItemIds);
 
             if (listItemPrice.Count > 0)
             {

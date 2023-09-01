@@ -4,6 +4,7 @@ using Neminaj.GlobalText;
 using Neminaj.Interfaces;
 using Neminaj.Models;
 using Neminaj.Repositories;
+using SharedTypesLibrary.Models.API.DatabaseModels;
 
 namespace Neminaj.Views;
 

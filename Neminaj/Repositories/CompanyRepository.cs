@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Neminaj.Constants;
 using Neminaj.Models;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 
@@ -10,36 +12,48 @@ namespace Neminaj.Repositories;
 
 public class CompanyRepository
 {
-    public CompanyRepository()
-    {
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly HttpClient _httpClient;
+    private List<Company> _listCompanies { get; set; } = null;
 
+    public CompanyRepository(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+        _httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
     }
 
     public async Task<List<Company>> GetAllCompaniesAsync()
     {
-        try
+        if (_listCompanies != null)
         {
-            await SQLConnection.InitAsync();
-            return await SQLConnection.m_ConnectionAsync.Table<Company>().ToListAsync();
+            return _listCompanies;
         }
-        catch (Exception ex)
+        else
         {
-            SQLConnection.StatusMessage = $"Failed to retrieve data. {ex.Message}";
-        }
+            try
+            {
+                var response = await _httpClient.GetAsync("api/Company/GetAllCompanies");
 
-        return new List<Company>();
-    }
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
 
-    public List<Company> GetAllCompanies()
-    {
-        try
-        {
-            SQLConnection.Init();
-            return SQLConnection.m_ConnectionSync.Table<Company>().ToList();
-        }
-        catch (Exception ex)
-        {
-            SQLConnection.StatusMessage = $"Failed to retrieve data. {ex.Message}";
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        _listCompanies = JsonSerializer.Deserialize<List<Company>>(content, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        return _listCompanies;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
+            }
         }
 
         return new List<Company>();
@@ -47,14 +61,33 @@ public class CompanyRepository
 
     public async Task<List<Company>> GetSpecificCompaniesAsync(List<int> listCompaniesIds)
     {
-        try
+        if (_listCompanies != null)
         {
-            await SQLConnection.InitAsync();
-            return await SQLConnection.m_ConnectionAsync.Table<Company>().Where(comp => listCompaniesIds.Contains(comp.Id)).ToListAsync();
+            return _listCompanies.Where(item => listCompaniesIds.Contains(item.Id)).ToList();
         }
-        catch (Exception ex)
+        else
         {
-            SQLConnection.StatusMessage = $"Failed to retrieve data. {ex.Message}";
+            try
+            {
+                string strListIds = string.Join(",", listCompaniesIds.Select(x => x.ToString()).ToArray());
+
+                var response = await _httpClient.GetAsync($"api/Company/GetSpecificCompanies?strListIds={strListIds}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    return JsonSerializer.Deserialize<List<Company>>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                SQLConnection.StatusMessage = $"Chyba pri načítaní položiek zo servera. {ex.Message}";
+            }
         }
 
         return new List<Company>();

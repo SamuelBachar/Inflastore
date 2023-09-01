@@ -1,5 +1,4 @@
-﻿using InflaStoreWebAPI.Services.ItemsService;
-using InflaStoreWebAPI.Services.UnitsService;
+﻿using InflaStoreWebAPI.Services.UnitsService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InflaStoreWebAPI.Controllers

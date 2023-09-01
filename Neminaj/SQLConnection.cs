@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 
 using Neminaj.Models;
+using SharedTypesLibrary.Models.API.DatabaseModels;
 
 namespace Neminaj;
 

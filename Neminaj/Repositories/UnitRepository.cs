@@ -34,7 +34,7 @@ public class UnitRepository
 
             try
             {
-                var response = await _httpClient.GetAsync("api/Items/GetAllUnits");
+                var response = await _httpClient.GetAsync("api/Units/GetAllUnits");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -73,7 +73,7 @@ public class UnitRepository
             {
                 string strListIds = string.Join(",", listUnitIds.Select(x => x.ToString()).ToArray());
 
-                var response = await _httpClient.GetAsync($"api/Items/GetSpecificUnits?strListIds={strListIds}");
+                var response = await _httpClient.GetAsync($"api/Units/GetSpecificUnits?strListIds={strListIds}");
 
                 if (response.IsSuccessStatusCode)
                 {

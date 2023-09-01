@@ -1,9 +1,9 @@
 ﻿namespace InflaStoreWebAPI.Services.UnitsService;
-public class NavigationShopData : IUnitsService
+public class UnitService : IUnitsService
 {
     private readonly DataContext _context;
 
-    public NavigationShopData(DataContext context)
+    public UnitService(DataContext context)
     {
         _context = context;
     }

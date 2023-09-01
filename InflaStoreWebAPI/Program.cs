@@ -8,6 +8,11 @@ global using SharedTypesLibrary.Models.API.DatabaseModels;
 global using SharedTypesLibrary.Models.API.ServiceResponseModel;
 global using SharedTypesLibrary.DTOs.API;
 using Microsoft.Extensions.FileProviders;
+using InflaStoreWebAPI.Services.ItemPriceService;
+using InflaStoreWebAPI.Services.ItemsService;
+using InflaStoreWebAPI.Services.NavigationShopDatasService;
+using InflaStoreWebAPI.Services.UnitsService;
+using InflaStoreWebAPI.Services.CompanyService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +27,11 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IItemPriceService, ItemPriceService>();
+builder.Services.AddScoped<IItemsService, ItemsService>();
+builder.Services.AddScoped<INavigationShopDatas, NavigationShopDatas>();
+builder.Services.AddScoped<IUnitsService, UnitService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 var app = builder.Build();
 

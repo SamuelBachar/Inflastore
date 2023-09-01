@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Java.Util;
 using Neminaj.Constants;
-using Neminaj.Models;
-using Org.Apache.Http.Client;
-using SQLite;
 using Item = SharedTypesLibrary.Models.API.DatabaseModels.Item;
 
 namespace Neminaj.Repositories;
@@ -17,7 +9,6 @@ namespace Neminaj.Repositories;
 public class ItemRepository
 {
     List<Item> FilteredItems = new List<Item>();
-    public static string _dbPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "neminaj.db3");
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;

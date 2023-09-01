@@ -8,7 +8,7 @@ public partial class RegisterView : ContentPage
 {
     readonly IRegisterService _registerService = null;
 
-    List<Models.Region> ListRegions { get; set; } = null;
+    List<SharedTypesLibrary.Models.API.DatabaseModels.Region> ListRegions { get; set; } = null;
 
     UserRegisterRequest UserRegisterRequest { get; set; } = null;
 
@@ -18,15 +18,15 @@ public partial class RegisterView : ContentPage
 
         _registerService = registerService;
 
-        ListRegions = new List<Models.Region>();
-        ListRegions.Add(new Models.Region { Id = 1, Name = "Bratislavský"});
-        ListRegions.Add(new Models.Region { Id = 2, Name = "Trnavský" });
-        ListRegions.Add(new Models.Region { Id = 3, Name = "Trenčianský" });
-        ListRegions.Add(new Models.Region { Id = 4, Name = "Nitrianský" });
-        ListRegions.Add(new Models.Region { Id = 5, Name = "Žilinský" });
-        ListRegions.Add(new Models.Region { Id = 6, Name = "Banskobystrický" });
-        ListRegions.Add(new Models.Region { Id = 7, Name = "Prešovský" });
-        ListRegions.Add(new Models.Region { Id = 8, Name = "Košický" });
+        ListRegions = new List<SharedTypesLibrary.Models.API.DatabaseModels.Region>();
+        ListRegions.Add(new SharedTypesLibrary.Models.API.DatabaseModels.Region { Id = 1, Name = "Bratislavský"});
+        ListRegions.Add(new SharedTypesLibrary.Models.API.DatabaseModels.Region { Id = 2, Name = "Trnavský" });
+        ListRegions.Add(new SharedTypesLibrary.Models.API.DatabaseModels.Region { Id = 3, Name = "Trenčianský" });
+        ListRegions.Add(new SharedTypesLibrary.Models.API.DatabaseModels.Region { Id = 4, Name = "Nitrianský" });
+        ListRegions.Add(new SharedTypesLibrary.Models.API.DatabaseModels.Region { Id = 5, Name = "Žilinský" });
+        ListRegions.Add(new SharedTypesLibrary.Models.API.DatabaseModels.Region { Id = 6, Name = "Banskobystrický" });
+        ListRegions.Add(new SharedTypesLibrary.Models.API.DatabaseModels.Region { Id = 7, Name = "Prešovský" });
+        ListRegions.Add(new SharedTypesLibrary.Models.API.DatabaseModels.Region { Id = 8, Name = "Košický" });
 
         RegionPicker.ItemsSource = ListRegions;
         RegionPicker.ItemDisplayBinding = new Binding("Name");
@@ -77,7 +77,7 @@ public partial class RegisterView : ContentPage
         UserRegisterRequest.Email = EntryEmail.Text;
         UserRegisterRequest.Password = EntryPassword.Text;
         UserRegisterRequest.ConfirmPassword = EntryPasswordConfirm.Text;
-        UserRegisterRequest.Region_Id = ((Models.Region)RegionPicker.ItemsSource[RegionPicker.SelectedIndex]).Id;
+        UserRegisterRequest.Region_Id = ((SharedTypesLibrary.Models.API.DatabaseModels.Region)RegionPicker.ItemsSource[RegionPicker.SelectedIndex]).Id;
 
         (UserRegisterDTO UserRegisterDTO, string Message) response = await _registerService.RegisterHTTPS(UserRegisterRequest);
 
@@ -126,7 +126,7 @@ public partial class RegisterView : ContentPage
 
         if (selectedIndex != -1)
         {
-            UserRegisterRequest.Region_Id = ((Models.Region)picker.ItemsSource[selectedIndex]).Id;
+            UserRegisterRequest.Region_Id = ((SharedTypesLibrary.Models.API.DatabaseModels.Region)picker.ItemsSource[selectedIndex]).Id;
         }
     }
 }
