@@ -10,6 +10,7 @@ using CommunityToolkit.Maui.Views;
 using Neminaj.ContentViews;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using Neminaj.ViewsModels;
+using SharedTypesLibrary.DTOs.API;
 
 namespace Neminaj.Views;
 
@@ -164,7 +165,7 @@ public class PageLayoutInfo
         public int GridCntCols { get; set; }
         public int GridCntRows { get; set; }
 
-        public List<Company> ListCompaniesInView { get; set; }
+        public List<CompanyDTO> ListCompaniesInView { get; set; }
     }
 
     public List<ViewLayoutInfo> ListViewLayoutInfo { get; set; }
@@ -254,7 +255,7 @@ public partial class PriceComparerView : ContentPage
 
     private List<ItemChoosen> ItemsChoosedModified { get; set; } = new List<ItemChoosen>();
 
-    private List<Company> ListComp = new List<Company>();
+    private List<CompanyDTO> ListComp = new List<CompanyDTO>();
 
     ActivityIndicator ActivityIndicator { get; set; } = null;
 
@@ -578,7 +579,7 @@ public partial class PriceComparerView : ContentPage
                 {
                     GridCntCols = 3,
                     GridCntRows = ViewElements.ViewMainGrid.CountRows,
-                    ListCompaniesInView = new List<Company>(ListComp.GetRange(i * 3, 3))
+                    ListCompaniesInView = new List<CompanyDTO>(ListComp.GetRange(i * 3, 3))
                 });
             }
             else
@@ -587,7 +588,7 @@ public partial class PriceComparerView : ContentPage
                 {
                     GridCntCols = (tempCount % 3),
                     GridCntRows = ViewElements.ViewMainGrid.CountRows,
-                    ListCompaniesInView = new List<Company>(ListComp.GetRange(i * 3, (tempCount % 3)))
+                    ListCompaniesInView = new List<CompanyDTO>(ListComp.GetRange(i * 3, (tempCount % 3)))
                 });
             }
 
@@ -661,24 +662,29 @@ public partial class PriceComparerView : ContentPage
 
         for (int i = 0; i < viewLayoutInfo.GridCntCols; i++)
         {
-            Image temp = new Image
+            if (i == viewLayoutInfo.ListCompaniesInView.Count)
             {
-                // workaround for not working commented code below
-                Source = this.GetCorrectCompanyLogoFileName(ListComp.Where(com => com.Id == viewLayoutInfo.ListCompaniesInView[i].Id).First().Name),
-                //Source = ImageSource.FromStream(() => new MemoryStream(listComp[helpCounter].Image)),
+                break;
+            }
 
-                WidthRequest = 50,
-                HeightRequest = 50,
-                Aspect = Aspect.AspectFit,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
-            };
+            var stream = new MemoryStream(ListComp.Where(com => com.Id == viewLayoutInfo.ListCompaniesInView[i].Id).First().Image);
+            {
+                Image img = new Image
+                {
+                    Source = ImageSource.FromStream(() => stream),
+                    WidthRequest = 50,
+                    HeightRequest = 50,
+                    Aspect = Aspect.AspectFit,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center
+                };
 
-            //pe.MainGrid.ViewGrid.Add(temp, colOffset, 0);
-            tempGrid.Add(temp, column: colOffset, row: 0);
+                //pe.MainGrid.ViewGrid.Add(temp, colOffset, 0);
+                tempGrid.Add(img, column: colOffset, row: 0);
+                pe.ListCompaniesImages.Add(img);
 
-            pe.ListCompaniesImages.Add(temp); // todo probably not needed
-            colOffset++;
+                colOffset++;
+            }
         }
 
         pe.MainGrid.ViewGrid.Add(tempGrid, 0, 0);
@@ -1003,7 +1009,7 @@ public partial class PriceComparerView : ContentPage
                 int startIndex = (newItemsStartIndex == null ? 0 : newItemsStartIndex.Value);
                 int count = newItemsStartIndex == null ? itemsChoosen.Count : itemsChoosen.Count - newItemsStartIndex.Value;
 
-                foreach (Company comp in viewLayoutInfo.ListCompaniesInView)
+                foreach (CompanyDTO comp in viewLayoutInfo.ListCompaniesInView)
                 {
                     List<ItemPrice> listItemPricePerCompany = listItemPrice.Where(itemPrice => itemPrice.Company_Id == comp.Id).ToList();
 

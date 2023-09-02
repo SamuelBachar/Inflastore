@@ -53,7 +53,7 @@ public partial class LoginView : ContentPage
 
     private async void BtnLogInHttps_Clicked(object sender, EventArgs e)
     {
-        //await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
+        await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
         
         bool badEnty = false;
 

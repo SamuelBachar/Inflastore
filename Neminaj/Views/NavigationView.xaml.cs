@@ -3,6 +3,7 @@ using Microsoft.Maui.Maps;
 using Neminaj.Models;
 using Neminaj.Repositories;
 using Neminaj.ViewsModels;
+using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Diagnostics;
 
@@ -102,7 +103,7 @@ public partial class NavigationView : ContentPage
     private async Task FindClosestShops()
     {
         List<NavigationShopData> listNavShopData = await this.NavigationShopViewModel.GetChoosenCompaniesNavigShopsDataAsync();
-        List<Company> listCompanies = await this.NavigationShopViewModel.GetChoosenCompaniesData();
+        List<CompanyDTO> listCompanies = await this.NavigationShopViewModel.GetChoosenCompaniesData();
 
         double distanceWithin = await this.NavigationShopViewModel.SettingsService.Get<double>("slider", 10.0d);
 

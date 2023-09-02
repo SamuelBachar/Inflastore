@@ -5,6 +5,7 @@ using Neminaj.Models;
 using Neminaj.Repositories;
 using Neminaj.Services;
 using Neminaj.Views;
+using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ public partial class NavigationShopViewModel : ObservableObject
         return await NavigationShopRepository.GetSpecificCompaniesNavigShopsDataAsync(ListCompaniesIds);
     }
 
-    public async Task<List<Company>> GetChoosenCompaniesData()
+    public async Task<List<CompanyDTO>> GetChoosenCompaniesData()
     {
         return await CompanyRepository.GetSpecificCompaniesAsync(ListCompaniesIds);
     }

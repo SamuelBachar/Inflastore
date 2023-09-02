@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Neminaj.Views.SavedCardDetailView"
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Barcode;assembly=Syncfusion.Maui.Barcode"
              Title="Klubová karta">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Zmazať" IconImageSource="recycle_bin.svg" Clicked="ToolbarItemDelete_Clicked" />
@@ -14,4 +15,16 @@
         <Label x:Name="lblCardCode" HorizontalOptions="Center" VerticalOptions="Center" />
     </VerticalStackLayout>-->
     <!--BarcodeHeight="400" BarcodeWidth="400"-->
+
+    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+        <sf:SfBarcodeGenerator x:Name="sfBarcodeGen" HeightRequest="200" WidthRequest="300" BackgroundColor="White" ForegroundColor="Black">
+
+            <sf:SfBarcodeGenerator.TextStyle>
+                <sf:BarcodeTextStyle TextColor="Black"/>
+            </sf:SfBarcodeGenerator.TextStyle>
+
+        </sf:SfBarcodeGenerator>
+    </VerticalStackLayout>
+
+
 </ContentPage>

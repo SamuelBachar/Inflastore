@@ -34,7 +34,7 @@ namespace InflaStoreWebAPI.Services.EmailService
                 {
                     url = $"https://localhost:7279/api/User/verify?token={userRegisterDTO.VerificationToken}";
 
-                    TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "StaticFile\\EmailRegister.html")) };
+                    TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\EmailRegister\\EmailRegister.html")) };
                     textPart.Text = textPart.Text.Replace("#URL#", url);
 
                     email.Body = textPart;
@@ -43,7 +43,7 @@ namespace InflaStoreWebAPI.Services.EmailService
                 {
                     url = $"https://localhost:7279/api/User/reset-password?resetToken={userForgotPasswordDTO.PasswordResetToken}";
 
-                    TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "StaticFile\\EmailForgotPassword.html")) };
+                    TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\EmailForgotPassword\\EmailForgotPassword.html")) };
                     textPart.Text = textPart.Text.Replace("#URL#", url);
 
                     email.Body = textPart;

@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedTypesLibrary.Models.API.DatabaseModels;
+namespace SharedTypesLibrary.DTOs.API;
 
-public class Company
+public class CompanyDTO
 {
     public int Id { get; set; }
 
     public string Name { get; set; }
 
-    public string Path { get; set; }
+    public byte[] Image { get; set; }
+
+    public string Url { get; set; }
 }

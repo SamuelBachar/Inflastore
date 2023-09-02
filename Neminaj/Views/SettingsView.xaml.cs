@@ -4,6 +4,7 @@ using Neminaj.GlobalText;
 using Neminaj.Interfaces;
 using Neminaj.Models;
 using Neminaj.Repositories;
+using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 
 namespace Neminaj.Views;
@@ -34,8 +35,9 @@ public partial class SettingsView : ContentPage
     private CompanyRepository CompanyRepo { get; set; } = null;
     private ISettingsService SettingsService { get; set; } = null;
 
-    private List<Company> ListComp { get; set; } = null;
+    private List<CompanyDTO> ListComp { get; set; } = null;
     private List<CompanyCheckboxesState> ListCompanyCheckboxesState = new();
+    private List<Image> ListImage = new List<Image>();
 
     private Slider slider = null;
     private Label LabelKm = null;
@@ -68,11 +70,11 @@ public partial class SettingsView : ContentPage
             await SettingsService.Save("SettingsAtLeastOnceSaved", true);
     }
 
-    public static List<int> GetCheckedAndSavedCompaniesFromSettings(List<Company> listCompanies)
+    public static List<int> GetCheckedAndSavedCompaniesFromSettings(List<CompanyDTO> listCompanies)
     {
         List<int> listCompaniesIdsChoosed = new List<int>();
 
-        foreach (Company com in listCompanies)
+        foreach (CompanyDTO com in listCompanies)
         {
             if (ISettingsService.GetStatic($"{com.Name}_SettingsChkBox_Id_{com.Id}", true).Result)
                 listCompaniesIdsChoosed.Add(com.Id);
@@ -178,6 +180,13 @@ public partial class SettingsView : ContentPage
             // One row == max 3 companies (combination chkBox and picture)
             for (int col = 0; col < numberOfColumns; col += 2)
             {
+                // Check if all companieos were already processed
+                if (helpCounter == ListComp.Count)
+                {
+                    breakLoop = true;
+                    break;
+                }
+
                 CheckBox chkBox = new CheckBox
                 {
                     AutomationId = ListComp[helpCounter].Id.ToString(), // Used to distinguish companies (selected and unselected companies)
@@ -196,26 +205,25 @@ public partial class SettingsView : ContentPage
 
                 gridCustomers.Add(chkBox, col, row);
 
-                gridCustomers.Add(new Image
+                var stream = new MemoryStream(ListComp[helpCounter].Image);
                 {
-                    // workaround for not working commented code below
-                    Source = this.GetCorrectCompanyLogoFileName(ListComp[helpCounter].Name),
-                    //Source = ImageSource.FromStream(() => new MemoryStream(listComp[helpCounter].Image)),
+                    Image image = new Image
+                    {
+                        // workaround for not working commented code below
+                        //Source = this.GetCorrectCompanyLogoFileName(ListComp[helpCounter].Name),
+                        Source = ImageSource.FromStream(() => stream),
 
-                    WidthRequest = 50,
-                    HeightRequest = 50,
-                    //Aspect = Aspect.AspectFit,
-                    HorizontalOptions = LayoutOptions.EndAndExpand
+                        WidthRequest = 50,
+                        HeightRequest = 50,
+                        //Aspect = Aspect.AspectFit,
+                        HorizontalOptions = LayoutOptions.EndAndExpand
+                    };
 
-                }, col + 1, row);
-
-                // Check if all companieos were already processed
-                helpCounter++;
-                if (helpCounter == ListComp.Count)
-                {
-                    breakLoop = true;
-                    break;
+                    ListImage.Add(image);
+                    gridCustomers.Add(image, col + 1, row);
                 }
+
+                helpCounter++;
             }
 
             if (breakLoop)

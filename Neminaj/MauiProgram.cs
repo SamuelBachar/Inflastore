@@ -7,10 +7,8 @@ using Neminaj.Repositories;
 using Neminaj.Services;
 using Neminaj.Views;
 using Neminaj.ViewsModels;
-using System.Net;
 using System.Reflection;
-using Syncfusion.Maui.Graphics.Internals;
-//using Syncfusion.Maui.Core.Hosting;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace Neminaj;
 
@@ -21,7 +19,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-//            .ConfigureSyncfusionCore()
+            .ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
             .UseMauiMaps()
             .UseMauiCameraView()
@@ -84,8 +82,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<IRegisterService, RegisterService>();
         builder.Services.AddSingleton<IForgotPasswordService, ForgotPasswordService>();
 
-        //builder.Services.AddHttpClient("api", httpsClient => httpsClient.BaseAddress = new Uri("https://localhost:7279/WeatherForecast")); TODO example len mozno nastudovat
-
         // Repositories ( DB queries)
         builder.Services.AddSingleton<ItemRepository>();
 		builder.Services.AddSingleton<ItemPriceRepository>();
@@ -106,7 +102,6 @@ public static class MauiProgram
 		builder.Services.AddSingleton<SettingsView>();
         builder.Services.AddSingleton<AddCardView>();
         builder.Services.AddSingleton<NotKnownCardView>();
-        builder.Services.AddSingleton<SavedCardDetailView>();
 
         // Views models
         builder.Services.AddSingleton<LogOutViewModel>();
@@ -126,6 +121,7 @@ public static class MauiProgram
 
         // ?? tood riesi problem s close stream
         builder.Services.AddTransient<SavedCartDetailView>();
+        builder.Services.AddTransient<SavedCardDetailView>();
 
         return builder.Build();
 	}

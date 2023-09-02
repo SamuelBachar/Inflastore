@@ -15,13 +15,13 @@ namespace InflaStoreWebAPI.Controllers
         }
 
         [HttpGet("GetAllCompanies")]
-        public async Task<List<Company>> GetAllCompaniesAsync()
+        public async Task<List<CompanyDTO>> GetAllCompaniesAsync()
         {
             return await _companyService.GetAllCompaniesAsync();
         }
 
         [HttpGet("GetSpecificCompanies")]
-        public async Task<List<Company>> GetSpecificCompaniesAsync(string strListIds)
+        public async Task<List<CompanyDTO>> GetSpecificCompaniesAsync(string strListIds)
         {
             var separated = strListIds.Split(new char[] { ',' });
             List<int> listIds = separated.Select(s => int.Parse(s)).ToList();

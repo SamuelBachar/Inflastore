@@ -42,6 +42,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+//app.UseStaticFiles(); // ked chcem aj cez url ziskat obsah vo wwwroot priecinku
+
 app.UseFileServer(new FileServerOptions
 {
     FileProvider = new PhysicalFileProvider

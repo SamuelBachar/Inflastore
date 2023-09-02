@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Neminaj.Models;
+using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Neminaj.ViewsModels;
 
 public class CheapestItemPerCompany
 {
-    public Company Company { get; set; }
+    public CompanyDTO Company { get; set; }
     public ItemChoosen ItemChoosen { get; set; }
     public bool Discount { get; set; }
 }

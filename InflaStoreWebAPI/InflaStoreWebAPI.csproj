@@ -7,6 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot_Companies_logo\**" />
+    <Content Remove="wwwroot_Companies_logo\**" />
+    <EmbeddedResource Remove="wwwroot_Companies_logo\**" />
+    <None Remove="wwwroot_Companies_logo\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="StaticFile\Companies\Logo\billa_logo.png" />
+    <Content Include="StaticFile\Companies\Logo\kaufland_logo.png" />
+    <Content Include="StaticFile\Companies\Logo\lidl_logo.png" />
+    <Content Include="StaticFile\Companies\Logo\tesco_logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="MailKit" Version="4.1.0" />
@@ -22,6 +36,11 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\EmailForgotPassword\EmailForgotPassword.html" />
+    <None Include="wwwroot\EmailRegister\EmailRegister.html" />
   </ItemGroup>
 
   <ItemGroup>
