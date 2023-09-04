@@ -11,6 +11,10 @@ public class ColorValue
     public string Name { get; set; }
 }
 
+
+// Todo take drawned image and store it as byte arrya into saved card  mct:DrawinView ??
+// https://youtu.be/OB65n17bR98?t=164
+// https://youtu.be/OB65n17bR98
 public partial class NotKnownCardView : ContentPage
 {
     NotKnownCardViewModel NotKnownCardViewModel { get; set; } = null;
