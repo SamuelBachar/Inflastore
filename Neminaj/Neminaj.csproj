@@ -74,6 +74,7 @@
 	  <None Remove="Resources\AppIcon\inflastore_appicon.png" />
 	  <None Remove="Resources\Database\neminaj.db3" />
 	  <None Remove="Resources\ImagesEmbedded\billa_card.png" />
+	  <None Remove="Resources\ImagesEmbedded\club_cards.png" />
 	  <None Remove="Resources\ImagesEmbedded\kaufland_card.png" />
 	  <None Remove="Resources\ImagesEmbedded\tesco_card.png" />
 	  <None Remove="Resources\Images\billa_card.png" />
@@ -155,6 +156,9 @@
 	  <MauiXaml Update="Views\CartView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\ChooseCardView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ForgotPasswordView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -207,6 +211,10 @@
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Resources\ImagesEmbedded\billa_card.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\ImagesEmbedded\club_cards.png" />
 	</ItemGroup>
 
 </Project>

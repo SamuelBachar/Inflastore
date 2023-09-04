@@ -1,6 +1,7 @@
 ﻿using Neminaj.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace Neminaj.Repositories
 {
     public class SavedCardRepository
     {
-
+        List<SavedCard> FilteredItems = new List<SavedCard>();
         public SavedCardRepository()
         {
                 
@@ -93,6 +94,60 @@ namespace Neminaj.Repositories
             }
 
             return false;
+        }
+
+        public async Task<List<SavedCard>> SearchItems(string filterText)
+        {
+            List<SavedCard> listItem = null;
+
+            try
+            {
+                listItem = await GetAllSavedCards();
+
+            }
+            catch (Exception ex)
+            {
+                SQLConnection.StatusMessage = $"Chyba pri načítaní položiek z lokálnej databázy. {ex.Message}";
+            }
+
+            listItem.ForEach(async (card) =>
+            {
+                string strWithoutDiac = await removeDiacritics(card.CardName);
+
+                if (strWithoutDiac.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))
+                    FilteredItems.Add(card);
+            });
+
+            return FilteredItems;
+        }
+
+        public async Task<string> removeDiacritics(string text)
+        {
+            string result = string.Empty;
+
+            await Task.Run(() =>
+            {
+                string formD = text.Normalize(NormalizationForm.FormD);
+                StringBuilder sb = new StringBuilder();
+
+                foreach (char ch in formD)
+                {
+                    UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(ch);
+                    if (uc != UnicodeCategory.NonSpacingMark)
+                    {
+                        sb.Append(ch);
+                    }
+                }
+
+                result = sb.ToString().Normalize(NormalizationForm.FormC);
+            });
+
+            return result;
+        }
+
+        public void ClearFilteredList()
+        {
+            FilteredItems.Clear();
         }
     }
 }

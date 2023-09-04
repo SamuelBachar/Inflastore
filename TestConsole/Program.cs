@@ -69,8 +69,6 @@ using (var httpClient = new HttpClient())
             Console.WriteLine($"{error}");
         }
     }
-
-    int a = 0;
 }
 
 class UserLoginRequestTest

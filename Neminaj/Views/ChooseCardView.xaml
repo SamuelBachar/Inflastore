@@ -2,21 +2,18 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="Neminaj.Views.CardsView"
-             Title="Klubové karty">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Pridať" IconImageSource="add_symbol.svg" Clicked="ToolbarCardAdd_Clicked" />
-    </ContentPage.ToolbarItems>
+             x:Class="Neminaj.Views.ChooseCardView"
+             Title="Výber karty">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <mct:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"></mct:ByteArrayToImageSourceConverter>
         </ResourceDictionary>
     </ContentPage.Resources>
-
-    <ScrollView x:Name="MainScrollView">
+    
+    <ScrollView>
         <Grid  Padding="5" RowDefinitions="Auto, *" ColumnDefinitions="*">
-            <SearchBar  x:Name="SearchBar" IsEnabled="True" Grid.Row="1" Grid.Column="0" Placeholder="Hľadaj kartu" TextChanged="SearchBar_TextChanged"/>
+            <SearchBar  x:Name="SearchBar" IsEnabled="True" Grid.Row="1" Grid.Column="0" Placeholder="Hľadaj kartu" TextChanged="SearchBar_TextChanged" />
             <CollectionView x:Name="listCards" Grid.Row="1" Grid.Column="0" BackgroundColor="Transparent" SelectionMode="Single" VerticalScrollBarVisibility="Always" SelectionChanged="listCards_SelectionChanged">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -24,7 +21,7 @@
                             <Frame>
                                 <HorizontalStackLayout Grid.Row="0" Spacing="50">
                                     <Image Grid.Row="0" Source="{Binding CardImage, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
-                                    <Label Grid.Row="0" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap" FontAttributes="Bold" FontSize="Body"></Label>
+                                    <Label Grid.Row="0" Text="{Binding Name}" VerticalOptions="Center" LineBreakMode="WordWrap" FontAttributes="Bold" FontSize="Body" ></Label>
                                 </HorizontalStackLayout>
                             </Frame>
                             <!--<Line  Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>-->

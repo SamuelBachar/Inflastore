@@ -92,39 +92,41 @@ public partial class AddCardView : ContentPage
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            TempCardData.IsKnownCard = true;
 
             string text = $"{args.Result[0].BarcodeFormat}: {args.Result[0].Text}";
             lblCode.Text = $"Skenovanie úspešné:\r\n{text}";
 
             TempCardData.Format = args.Result[0].BarcodeFormat;
             TempCardData.CardCode = args.Result[0].Text;
+            TempCardData.Image = SavedCardViewModel.CardData.CardImage;
+            TempCardData.CardName = SavedCardViewModel.CardData.Name;
+            TempCardData.IsKnownCard = SavedCardViewModel.CardData.IsKnownCard;
 
-            (string cardName, string pictureName) = GetImageFromResource(TempCardData.CardCode);
+            //(string cardName, string pictureName) = GetImageFromResource(TempCardData.CardCode);
 
-            if (cardName == string.Empty)
-            {
-                TempCardData.IsKnownCard = false;
-            }
+            //if (cardName == string.Empty)
+            //{
+            //    TempCardData.IsKnownCard = false;
+            //}
 
-            if (cardName != string.Empty)
-            {
-                TempCardData.CardName = cardName;
+            //if (cardName != string.Empty)
+            //{
+            //    TempCardData.CardName = cardName;
 
-                this.CardImage.Source = ImageSource.FromFile(pictureName);
-                //
-                // assembly.GetManifestResourceStream($"Neminaj.Resources.Images.{fileNameResources}"))
-                using (Stream stream = EmbeddedResource.OpenEmbeddedImageStream(pictureName))
-                {
-                    using (MemoryStream memoryStream = new MemoryStream())
-                    {
-                        stream.CopyTo(memoryStream);
+            //    this.CardImage.Source = ImageSource.FromFile(pictureName);
+            //    //
+            //    // assembly.GetManifestResourceStream($"Neminaj.Resources.Images.{fileNameResources}"))
+            //    using (Stream stream = EmbeddedResource.OpenEmbeddedImageStream(pictureName))
+            //    {
+            //        using (MemoryStream memoryStream = new MemoryStream())
+            //        {
+            //            stream.CopyTo(memoryStream);
 
-                        TempCardData.Image = new byte[stream.Length];
-                        memoryStream.ToArray().CopyTo(TempCardData.Image, 0);
-                    }
-                }
-            }
+            //            TempCardData.Image = new byte[stream.Length];
+            //            memoryStream.ToArray().CopyTo(TempCardData.Image, 0);
+            //        }
+            //    }
+            //}
 
             this.btnAddCard.IsVisible = true;
         });
@@ -135,6 +137,7 @@ public partial class AddCardView : ContentPage
         SavedCard savedCard = new SavedCard();
         savedCard.CardFormat = (int)TempCardData.Format;
         savedCard.CardCode = TempCardData.CardCode;
+        savedCard.IsKnownCard = TempCardData.IsKnownCard;
 
         if (!TempCardData.IsKnownCard)
         {
@@ -146,8 +149,7 @@ public partial class AddCardView : ContentPage
         }
         else
         {
-            savedCard.Image = TempCardData.Image;
-            savedCard.IsKnownCard = true;
+            savedCard.CardName = TempCardData.CardName;
             await InsertNewCard(savedCard);
         }
     }

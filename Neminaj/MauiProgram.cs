@@ -102,6 +102,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<SettingsView>();
         builder.Services.AddSingleton<AddCardView>();
         builder.Services.AddSingleton<NotKnownCardView>();
+        builder.Services.AddSingleton<ChooseCardView>();
 
         // Views models
         builder.Services.AddSingleton<LogOutViewModel>();

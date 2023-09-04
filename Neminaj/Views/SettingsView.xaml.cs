@@ -335,30 +335,6 @@ public partial class SettingsView : ContentPage
         }
     }
 
-    private string GetCorrectCompanyLogoFileName(string arg_Name)
-    {
-        string retVal = "";
-
-        if (arg_Name == "Billa")
-            retVal = "billa_logo.png";
-        else if (arg_Name == "Lidl")
-            retVal = "lidl_logo.png";
-        else if (arg_Name == "Tesco")
-            retVal = "tesco_logo1.png";
-        else if (arg_Name == "Kaufland")
-            retVal = "kaufland_logo.png";
-        else if (arg_Name == "Test")
-            retVal = "dotnet_bot.svg";
-        else if (arg_Name == "Test1")
-            retVal = "dotnet_bot.svg";
-        else if (arg_Name == "Test2")
-            retVal = "dotnet_bot.svg";
-        else if (arg_Name == "Test3")
-            retVal = "dotnet_bot.svg";
-
-        return retVal;
-    }
-
     public List<int> GetListIdsCheckedCompanies()
     {
         return ListCompanyCheckboxesState.Where(state => state.IsChecked).Select(state => int.Parse(state.Id)).ToList();

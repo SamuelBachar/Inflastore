@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Neminaj.Models;
 using Neminaj.Repositories;
+using Neminaj.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,19 @@ using System.Threading.Tasks;
 
 namespace Neminaj.ViewsModels;
 
-[QueryProperty(nameof(SavedCardRepository), nameof(SavedCardRepository))]
+[QueryProperty(nameof(SavedCardRepository), nameof(SavedCardRepository))] // potrebne pri SavedCardDetailView, AddCardView
 
-[QueryProperty(nameof(CardID), nameof(CardID))]
+[QueryProperty(nameof(CardID), nameof(CardID))] // potrebne pri SavedCardDetailView
+
+[QueryProperty(nameof(CardData), nameof(CardData))]
+
 public partial class SavedCardDetailViewModel : ObservableObject
 {
     [ObservableProperty]
     public SavedCardRepository savedCardRepository;
+
+    [ObservableProperty]
+    public CardData cardData;
 
     [ObservableProperty]
     public int cardID;

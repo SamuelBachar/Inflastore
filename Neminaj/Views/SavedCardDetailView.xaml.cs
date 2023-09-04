@@ -11,58 +11,26 @@ namespace Neminaj.Views;
 // and do it based on SavedCard
 public partial class SavedCardDetailView : ContentPage
 {
-    SavedCardDetailViewModel SavedCardDetailViewModel { get; set; } = null;
+    SavedCardDetailViewModel _savedCardDetailViewModel { get; set; } = null;
     SavedCard SavedCard { get; set; } = null;
 
     public SavedCardDetailView(SavedCardDetailViewModel savedCardDetailViewModel)
     {
         InitializeComponent();
         BindingContext = savedCardDetailViewModel;
-        SavedCardDetailViewModel = savedCardDetailViewModel;
+        _savedCardDetailViewModel = savedCardDetailViewModel;
         this.Appearing += async (s, e) => { await BuildPage(); };
-        this.Disappearing += async (s, e) => { await CleanWhenDisappearing(); };
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
-
         // here SavedCardDetailViewModel and its properties are initialized
-    }
-
-    private async Task CleanWhenDisappearing()
-    {
-        await Shell.Current.GoToAsync("..");
     }
 
     private async Task BuildPage()
     {
-        SavedCard = await SavedCardDetailViewModel.GetSpecificCard(SavedCardDetailViewModel.CardID);
-
-        //        < VerticalStackLayout HorizontalOptions = "Center" VerticalOptions = "Center" >
-        //    < cv:BarcodeImage x:Name = "BarcodeImage" WidthRequest = "400" HeightRequest = "400"
-        //                     Aspect = "AspectFit" BarcodeForeground = "Black" BarcodeBackground = "White" BarcodeMargin = "5" />
-        //    < Label x: Name = "lblCardCode" HorizontalOptions = "Center" VerticalOptions = "Center" />
-        //</ VerticalStackLayout >
-
-        //VerticalStackLayout vertStack = new();
-
-        //BarcodeImage barCodeImage = new BarcodeImage();
-        //barCodeImage.WidthRequest = 400;
-        //barCodeImage.HeightRequest = 400;
-        //barCodeImage.Aspect = Aspect.AspectFit;
-        //barCodeImage.BarcodeBackground = Colors.White;
-        //barCodeImage.BarcodeForeground = Colors.Black;
-        //barCodeImage.BarcodeMargin = 5;
-
-        //barCodeImage.BarcodeFormat = (BarcodeFormat)SavedCard.CardFormat;
-        //barCodeImage.Barcode = SavedCard.CardCode;
-
-        //Label cardCodeTxt = new Label();
-        //cardCodeTxt.Text = SavedCard.CardCode;
-
-        //vertStack.Add(barCodeImage);
-        //vertStack.Add(cardCodeTxt);
+        SavedCard = await _savedCardDetailViewModel.GetSpecificCard(_savedCardDetailViewModel.CardID);
 
         if (SavedCard.CardFormat == (int)ZXing.BarcodeFormat.CODE_128)
             sfBarcodeGen.Symbology = new Code128();
@@ -102,7 +70,7 @@ public partial class SavedCardDetailView : ContentPage
 
         if (answer)
         {
-            if (!await SavedCardDetailViewModel.DeleteSavedCard(SavedCardDetailViewModel.CardID))
+            if (!await _savedCardDetailViewModel.DeleteSavedCard(_savedCardDetailViewModel.CardID))
             {
                 await DisplayAlert("Chyba pri mazaní", "Pri mazaní nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
             }
