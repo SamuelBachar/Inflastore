@@ -9,7 +9,7 @@ namespace Neminaj.ViewsModels;
 
 public class ResultNotKnownCard
 {
-    public Color Color { get; set; } = Colors.Orange;
+    public byte[] Image { get; set; } = null;
     public string CardName { get; set; } = string.Empty;
 }
 

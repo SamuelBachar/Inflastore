@@ -162,7 +162,7 @@ public partial class AddCardView : ContentPage
 
         savedCard.CardName = ResultNotKnownCard.CardName;
         savedCard.IsKnownCard = false;
-        savedCard.UknownCardColor = ResultNotKnownCard.Color.ToInt();
+        savedCard.Image = ResultNotKnownCard.Image;
 
         await InsertNewCard(savedCard);
     }

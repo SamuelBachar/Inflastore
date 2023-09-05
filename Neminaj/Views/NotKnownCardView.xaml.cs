@@ -42,7 +42,16 @@ public partial class NotKnownCardView : ContentPage
         else
         {
             NotKnownCardViewModel.ResultNotKnownCard.CardName = CardName.Text;
-            NotKnownCardViewModel.ResultNotKnownCard.Color = BorderPalleteColor.BackgroundColor;
+
+            using (Stream stream = await BorderPalleteColor.GetImageStream(1024, 1024))
+            {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    NotKnownCardViewModel.ResultNotKnownCard.Image = new byte[stream.Length];
+                    stream.CopyTo(memoryStream);
+                    memoryStream.ToArray().CopyTo(NotKnownCardViewModel.ResultNotKnownCard.Image, 0);
+                }
+            }
 
             // Make sure someone is listening to event
             if (On_NotKnownCardView_BtnAddCard_Clicked != null)
@@ -50,13 +59,11 @@ public partial class NotKnownCardView : ContentPage
                 On_NotKnownCardView_BtnAddCard_Clicked(this, new EventArgs());
             }
 
-            this.lblCardName.Text = string.Empty;
             this.BorderPalleteColor.BackgroundColor = Colors.OrangeRed;
             this.SliderR.Value = 255;
             this.SliderG.Value = 165;
             this.SliderB.Value = 0;
             this.CardName.Text = string.Empty;
-
             await Shell.Current.GoToAsync("..");
         }
     }
@@ -67,15 +74,6 @@ public partial class NotKnownCardView : ContentPage
         {
             CardName.TextColor = Colors.Black;
         }
-
-        if (!FontForCardNameSet)
-        {
-            lblCardName.FontSize = BorderPalleteColor.Width / 12;
-
-            FontForCardNameSet = true;
-        }
-
-        lblCardName.Text = CardName.Text;
     }
 
     private void SliderR_ValueChanged(object sender, ValueChangedEventArgs e)

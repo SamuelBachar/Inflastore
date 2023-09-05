@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
              x:Class="Neminaj.Views.NotKnownCardView"
              Title="Neznáma karta">
     <Grid x:Name="MainBorder" 
@@ -39,9 +40,19 @@
             </StackLayout>
         </VerticalStackLayout>
 
-        <Frame Grid.Row="5" x:Name="BorderPalleteColor" BackgroundColor="Orange" Margin="20,0,20,0">
+        <!--<Frame Grid.Row="5" x:Name="BorderPalleteColor" BackgroundColor="Orange" Margin="20,0,20,0">
             <Label x:Name="lblCardName" Text="" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Body" />
-        </Frame>
+        </Frame>-->
+
+        <mct:DrawingView
+            x:Name="BorderPalleteColor"
+            BackgroundColor="Orange"
+            Grid.Row="5"
+            IsMultiLineModeEnabled="False"
+            LineColor="Green"
+            LineWidth="1"
+            DrawingLineCompleted="DrawView_DrawingLineCompleted"
+            HorizontalOptions="Center" />
         
         <Button Grid.Row="6" Grid.Column="0" x:Name="btnSaveCard" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnSaveCard_Clicked"/>
 

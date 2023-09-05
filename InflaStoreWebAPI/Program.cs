@@ -64,17 +64,5 @@ app.MapControllers();
 
 app.Run();
 
-// Email verification / confirmation, Password reset, user login, user register .net 6 Patrick God
-// https://www.youtube.com/watch?v=2Q9Uh-5O8Sk&ab_channel=PatrickGod
-
-// .net 7 Web Api course: Web API Structure (Clien -> Controller -> Service -> Database), DTO, GET, POST, PUT, DELETE
-// https://www.youtube.com/watch?v=9zJn3a7L1uE&ab_channel=PatrickGod
-
-// ak nebude stacit horne video tak tu je: vytvorenie repository/service inject a registracia repository/service
-//https://www.youtube.com/watch?v=Wiy54682d1w&ab_channel=PatrickGod
-
-// 1:n 1:1 n:n ... na prikaz pre build a vyhodnotenie ci je to co to chcem alebo idem starou cestou
-// https://www.youtube.com/watch?v=V0UF4vEMlhQ&ab_channel=PatrickGod
-
-// 1. dotnet ef migrations add NewDatabaseLayout_v3
-// 2. dotnet ef database update
+// JWT Authentication a hovori ze Azure Key Vault existuje a ma video s nejakym inym riesenim
+//https://youtu.be/mgeuh8k3I4g?t=249
