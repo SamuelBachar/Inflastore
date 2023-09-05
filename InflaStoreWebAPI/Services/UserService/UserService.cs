@@ -72,7 +72,7 @@ namespace InflaStoreWebAPI.Services.UserService
                 new Claim(ClaimTypes.Name, user.Email)
             };
 
-            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JwtConfig:Secret").Value!));
             SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             JwtSecurityToken token = new JwtSecurityToken(
