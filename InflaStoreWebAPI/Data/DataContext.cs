@@ -4,15 +4,17 @@ namespace InflaStoreWebAPI.Data;
 
 public class DataContext : DbContext
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options)
+    private readonly IConfiguration _config;
+    public DataContext(DbContextOptions<DataContext> options, IConfiguration config) : base(options)
     {
-
+        _config = config;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseSqlServer("Server=.\\INFLASTORE;Database=userdb;Trusted_Connection=true;TrustServerCertificate=True;");
+        //optionsBuilder.UseSqlServer("Server=.\\INFLASTORE;Database=userdb;Trusted_Connection=true;TrustServerCertificate=True;");
+        optionsBuilder.UseSqlServer(_config.GetSection("ConnectionStrings:InflastoreDBConnection").Value);
     }
 
     public DbSet<User> Users => Set<User>();
