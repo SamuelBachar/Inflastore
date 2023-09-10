@@ -31,6 +31,7 @@ public class ItemRepository
         {
             try
             {
+                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {App.UserSessionInfo.JWT}");
                 var response = await _httpClient.GetAsync("api/Items/GetAllItems");
 
                 if (response.IsSuccessStatusCode)
@@ -46,6 +47,10 @@ public class ItemRepository
 
                         return _listItem;
                     }
+                }
+                else
+                {
+                    // todo display allertt
                 }
 
             }

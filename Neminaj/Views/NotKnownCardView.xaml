@@ -51,7 +51,6 @@
             IsMultiLineModeEnabled="False"
             LineColor="Green"
             LineWidth="1"
-            DrawingLineCompleted="DrawView_DrawingLineCompleted"
             HorizontalOptions="Center" />
         
         <Button Grid.Row="6" Grid.Column="0" x:Name="btnSaveCard" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnSaveCard_Clicked"/>

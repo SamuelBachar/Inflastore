@@ -32,7 +32,7 @@ namespace InflaStoreWebAPI.Services.EmailService
 
                 if (userEmailDTO is UserRegisterDTO userRegisterDTO)
                 {
-                    url = $"https://localhost:7279/api/User/verify?token={userRegisterDTO.VerificationToken}";
+                    url = $"https://inflastoreapi.azurewebsites.net/api/User/verify?token={userRegisterDTO.VerificationToken}";
 
                     TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\EmailRegister\\EmailRegister.html")) };
                     textPart.Text = textPart.Text.Replace("#URL#", url);
@@ -41,7 +41,7 @@ namespace InflaStoreWebAPI.Services.EmailService
                 }
                 else if (userEmailDTO is UserForgotPasswordDTO userForgotPasswordDTO)
                 {
-                    url = $"https://localhost:7279/api/User/reset-password?resetToken={userForgotPasswordDTO.PasswordResetToken}";
+                    url = $"https://inflastoreapi.azurewebsites.net/api/User/reset-password?resetToken={userForgotPasswordDTO.PasswordResetToken}";
 
                     TextPart textPart = new TextPart(MimeKit.Text.TextFormat.Html) { Text = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\EmailForgotPassword\\EmailForgotPassword.html")) };
                     textPart.Text = textPart.Text.Replace("#URL#", url);

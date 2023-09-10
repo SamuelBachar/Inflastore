@@ -31,6 +31,14 @@ public partial class HttpClientService : IPlatformHttpMessageHandler
                     return true;
                 }
 
+                if (certificate != null)
+                {
+                    if (certificate.Issuer.Contains("azure"))
+                    {
+                        return true;
+                    }
+                }
+
                 return false;
             }
         };

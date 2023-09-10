@@ -67,6 +67,8 @@ public static class MauiProgram
                 ? "https://10.0.2.2:7279"
                 : "https://localhost:7279";
 
+            baseUrl = "https://inflastoreapi.azurewebsites.net/";
+
             httpClient.BaseAddress = new Uri(baseUrl);
         }).ConfigureHttpMessageHandlerBuilder(configBuilder =>
         {

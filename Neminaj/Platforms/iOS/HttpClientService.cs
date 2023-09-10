@@ -23,6 +23,11 @@ public partial class HttpClientService : IPlatformHttpMessageHandler // TODO: to
                     return true;
                 }
 
+                if (url.Contains("azure"))
+                {
+                    return true;
+                }
+
                 return false;
             }
         };

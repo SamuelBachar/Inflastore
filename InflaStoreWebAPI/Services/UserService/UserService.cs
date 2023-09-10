@@ -92,12 +92,12 @@ namespace InflaStoreWebAPI.Services.UserService
         {
             ServiceResponse<UserRegisterDTO> serviceResponse = new ServiceResponse<UserRegisterDTO>();
 
-            /*if (_context.Users.Any(u => u.Email == request.Email))
+            if (_context.Users.Any(u => u.Email == request.Email))
             {
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Uživateľ s daným e-mailom už existuje";
                 return serviceResponse;
-            }*/
+            }
 
             try
             {

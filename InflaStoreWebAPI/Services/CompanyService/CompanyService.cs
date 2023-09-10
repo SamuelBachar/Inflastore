@@ -18,14 +18,14 @@ public class CompanyService : ICompanyService
 
         foreach (Company company in listCompany)
         {
-            string imgPath = Path.Combine(Directory.GetCurrentDirectory(), $"StaticFile\\Companies\\Logo\\{company.Path}");
+            string imgPath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot\\StaticFile\\Companies\\Logo\\{company.Path}");
 
             listCompanyDTOs.Add( new CompanyDTO
             {
                 Id = company.Id,
                 Name = company.Name,
-                Url = @$"https://localhost:7279/StaticFile/Companies/Logo/{company.Path}",
-                Image = System.IO.File.ReadAllBytes(imgPath)
+                Url = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Companies/Logo/{company.Path}",
+                Image = await System.IO.File.ReadAllBytesAsync(imgPath)
             });
         }
 
@@ -39,14 +39,14 @@ public class CompanyService : ICompanyService
 
         foreach (Company company in listCompany)
         {
-            string imgPath = Path.Combine(Directory.GetCurrentDirectory(), $"StaticFile\\Companies\\Logo\\{company.Path}");
+            string imgPath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot\\StaticFile\\Companies\\Logo\\{company.Path}");
 
             listCompanyDTOs.Add(new CompanyDTO
             {
                 Id = company.Id,
                 Name = company.Name,
-                Url = @$"https://localhost:7279/StaticFile/Companies/Logo/{company.Path}",
-                Image = System.IO.File.ReadAllBytes(imgPath)
+                Url = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Companies/Logo/{company.Path}",
+                Image = await System.IO.File.ReadAllBytesAsync(imgPath)
             });
         }
 

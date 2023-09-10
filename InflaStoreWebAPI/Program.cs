@@ -84,17 +84,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseStaticFiles(); // ked chcem aj cez url ziskat obsah vo wwwroot priecinku
+app.UseStaticFiles(); // ked chcem aj cez url ziskat obsah vo wwwroot priecinku
 
-app.UseFileServer(new FileServerOptions
-{
-    FileProvider = new PhysicalFileProvider
-    (
-        Path.Combine(Directory.GetCurrentDirectory(), "StaticFile")
-    ),
+// problem s 
+//app.UseFileServer(new FileServerOptions
+//{
+//    FileProvider = new PhysicalFileProvider
+//    (
+//        Path.Combine(Directory.GetCurrentDirectory(), "StaticFile")
+//    ),
 
-    RequestPath = "/StaticFile"
-});
+//    RequestPath = "/StaticFile"
+//});
 
 #if !DEBUG
 app.UseHttpsRedirection();
