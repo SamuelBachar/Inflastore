@@ -24,13 +24,14 @@ public partial class CardsView : ContentPage
     public delegate void PageBuilded(object sender, EventArgs e);
     public static event PageBuilded OnPageBuilded;
 
+    public List<TapGestureRecognizer> ListTapGestureRecognizers { get; set; } = new List<TapGestureRecognizer>();
+
     public CardsView(SavedCardRepository savedCardRepository)
     {
         InitializeComponent();
         _savedCardRepo = savedCardRepository;
 
         this.Loaded += async (s, e) => { await BuildPage(); };
-        OnPageBuilded += AssignList;
         AddCardView.On_AddCardView_CardAdded += async (s, e) => { await ChangeListOfCards(); };
     }
 
@@ -54,29 +55,17 @@ public partial class CardsView : ContentPage
         else
         {
             listSavedCards = listSavedCards.OrderBy(card => card.CardName).ToList();
+            listSavedCards.ForEach(card => card.UknownCardColor = Color.FromInt(card.UknownCardColorDB));
 
             this.BindingContext = this;
             this.listCards.ItemsSource = listSavedCards;
             this.Content = this.MainScrollView;
         }
-        // Make sure someone is listening to event
-        if (OnPageBuilded != null)
-        {
-            OnPageBuilded(this, new EventArgs()); // toto bolo vela krat ked view bolo transient
-        }
     }
 
     private async Task ChangeListOfCards()
     {
-        await Task.Run(async () =>
-        {
-            await BuildPage();
-        });
-    }
-
-    private void AssignList(object sender, EventArgs e)
-    {
-
+        await BuildPage();
     }
 
     private async void listCards_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -113,6 +102,16 @@ public partial class CardsView : ContentPage
             List<SavedCard> savedCardList = await _savedCardRepo.GetAllSavedCards();
             listCards.ItemsSource = new ObservableCollection<SavedCard>(savedCardList);
         }
+    }
+
+    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(SavedCardDetailView),
+        new Dictionary<string, object>
+        {
+            [nameof(SavedCardRepository)] = this._savedCardRepo,
+            ["CardID"] = e.Parameter
+        });
     }
 }
 

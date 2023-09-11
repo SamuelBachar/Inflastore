@@ -10,7 +10,5 @@ namespace Neminaj.Interfaces;
 
 public interface ILoginService
 {
-    Task<(UserLoginInfo UserInfo, string ResultMessage)> Login(string userName, string passWord);
-
     Task<(UserLoginDTO UserInfo, string ResultMessage)> LoginHTTPS(string email, string passWord);
 }

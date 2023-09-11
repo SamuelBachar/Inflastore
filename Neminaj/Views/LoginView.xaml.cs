@@ -35,22 +35,6 @@ public partial class LoginView : ContentPage
         }
     }
 
-    private void BtnLogIn_Clicked(object sender, EventArgs e)
-    {
-        if (string.IsNullOrWhiteSpace(EntryEmail.Text))
-        {
-            EntryEmail.Placeholder = "Zadajte e-mail";
-            EntryEmail.PlaceholderColor = Colors.OrangeRed;
-        }
-
-        if (string.IsNullOrWhiteSpace(EntryPassword.Text))
-        {
-            EntryPassword.IsPassword = false;
-            EntryPassword.Placeholder = "Zadajte heslo";
-            EntryPassword.PlaceholderColor = Colors.OrangeRed;
-        }
-    }
-
     private async void BtnLogInHttps_Clicked(object sender, EventArgs e)
     {
         //await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");

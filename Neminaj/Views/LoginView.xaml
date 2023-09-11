@@ -41,9 +41,7 @@
             </Label>
         </StackLayout>
 
-        <Button x:Name="BtnLogIn" Text="Prihlásiť sa HTTP" CornerRadius="20" HorizontalOptions="Center" Command="{Binding LoginCommand}" Clicked="BtnLogIn_Clicked"/>
-
-        <Button x:Name="BtnLogInHttps" Text="Prihlásiť sa HTTPS" CornerRadius="20" HorizontalOptions="Center" Clicked="BtnLogInHttps_Clicked"/>
+        <Button x:Name="BtnLogInHttps" Text="Prihlásiť" CornerRadius="20" HorizontalOptions="Center" Clicked="BtnLogInHttps_Clicked"/>
 
         <StackLayout Orientation="Horizontal" Spacing="5" HorizontalOptions="Center">
             <Label Text="Nemáte účet?" FontSize="Small" TextColor="DarkGray" />

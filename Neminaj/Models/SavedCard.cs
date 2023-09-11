@@ -26,5 +26,8 @@ public class SavedCard
 
     public bool IsKnownCard { get; set; }
 
-    public int UknownCardColor { get; set; }
+    public int UknownCardColorDB { get; set; }
+
+    [Ignore]
+    public Color UknownCardColor { get; set; }
 }

@@ -1,5 +1,10 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Core.Views;
+using CommunityToolkit.Maui.Views;
+using Microsoft.Maui.Graphics;
 using Neminaj.ViewsModels;
+using System.IO;
 
 namespace Neminaj.Views;
 
@@ -11,15 +16,9 @@ public class ColorValue
     public string Name { get; set; }
 }
 
-
-// Todo take drawned image and store it as byte arrya into saved card  mct:DrawinView ??
-// https://youtu.be/OB65n17bR98?t=164
-// https://youtu.be/OB65n17bR98
 public partial class NotKnownCardView : ContentPage
 {
     NotKnownCardViewModel NotKnownCardViewModel { get; set; } = null;
-
-    bool FontForCardNameSet { get; set; } = false;
 
     // Events
     public delegate void NotKnownCardView_BtnAddCard_Clicked(object sender, EventArgs e);
@@ -42,16 +41,7 @@ public partial class NotKnownCardView : ContentPage
         else
         {
             NotKnownCardViewModel.ResultNotKnownCard.CardName = CardName.Text;
-
-            using (Stream stream = await BorderPalleteColor.GetImageStream(1024, 1024))
-            {
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    NotKnownCardViewModel.ResultNotKnownCard.Image = new byte[stream.Length];
-                    stream.CopyTo(memoryStream);
-                    memoryStream.ToArray().CopyTo(NotKnownCardViewModel.ResultNotKnownCard.Image, 0);
-                }
-            }
+            NotKnownCardViewModel.ResultNotKnownCard.NotKnownCardColor = BorderPalleteColor.BackgroundColor.ToInt();
 
             // Make sure someone is listening to event
             if (On_NotKnownCardView_BtnAddCard_Clicked != null)
@@ -82,8 +72,6 @@ public partial class NotKnownCardView : ContentPage
         txtR.Text = value.ToString();
 
         BorderPalleteColor.BackgroundColor = Color.FromRgb((int)SliderR.Value, (int)SliderG.Value, (int)SliderB.Value);
-        //BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
-        //BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
     }
 
     private void SliderG_ValueChanged(object sender, ValueChangedEventArgs e)
@@ -91,9 +79,7 @@ public partial class NotKnownCardView : ContentPage
         int value = (int)e.NewValue;
         txtG.Text = value.ToString();
 
-        //BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
         BorderPalleteColor.BackgroundColor = Color.FromRgb((int)SliderR.Value, (int)SliderG.Value, (int)SliderB.Value);
-        //BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
     }
 
     private void SliderB_ValueChanged(object sender, ValueChangedEventArgs e)
@@ -101,8 +87,6 @@ public partial class NotKnownCardView : ContentPage
         int value = (int)e.NewValue;
         txtB.Text = value.ToString();
 
-        //BorderPalleteColor.BackgroundColor = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
         BorderPalleteColor.BackgroundColor = Color.FromRgb((int)SliderR.Value, (int)SliderG.Value, (int)SliderB.Value);
-        //BorderPalleteColor.Color = Color.FromRgb(int.Parse(txtR.Text), int.Parse(txtG.Text), int.Parse(txtB.Text));
     }
 }

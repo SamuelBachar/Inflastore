@@ -10,6 +10,7 @@ namespace Neminaj.ViewsModels;
 public class ResultNotKnownCard
 {
     public byte[] Image { get; set; } = null;
+    public int NotKnownCardColor { get; set; }
     public string CardName { get; set; } = string.Empty;
 }
 

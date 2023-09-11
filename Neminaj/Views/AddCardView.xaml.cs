@@ -60,14 +60,22 @@ public partial class AddCardView : ContentPage
             ReadMultipleCodes = false
         };
 
-        cameraView.BarCodeDetectionFrameRate = 5;
-        cameraView.BarCodeDetectionMaxThreads = 5;
+        cameraView.BarCodeDetectionFrameRate = 20;
+        cameraView.BarCodeDetectionMaxThreads = 10;
         cameraView.ControlBarcodeResultDuplicate = true;
         cameraView.BarCodeDetectionEnabled = true;
         cameraView.FlashMode = FlashMode.Auto;
 
         if (cameraView.MaxZoomFactor >= 2.5f)
             cameraView.ZoomFactor = 2.5f;
+
+        this.Appearing += AddCardView_Appearing;
+    }
+
+    private void AddCardView_Appearing(object sender, EventArgs e)
+    {
+        this.btnAddCard.IsVisible = false;
+        this.lblCode.Text = string.Empty;
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
@@ -92,7 +100,6 @@ public partial class AddCardView : ContentPage
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
-
             string text = $"{args.Result[0].BarcodeFormat}: {args.Result[0].Text}";
             lblCode.Text = $"Skenovanie úspešné:\r\n{text}";
 
@@ -101,32 +108,6 @@ public partial class AddCardView : ContentPage
             TempCardData.Image = SavedCardViewModel.CardData.CardImage;
             TempCardData.CardName = SavedCardViewModel.CardData.Name;
             TempCardData.IsKnownCard = SavedCardViewModel.CardData.IsKnownCard;
-
-            //(string cardName, string pictureName) = GetImageFromResource(TempCardData.CardCode);
-
-            //if (cardName == string.Empty)
-            //{
-            //    TempCardData.IsKnownCard = false;
-            //}
-
-            //if (cardName != string.Empty)
-            //{
-            //    TempCardData.CardName = cardName;
-
-            //    this.CardImage.Source = ImageSource.FromFile(pictureName);
-            //    //
-            //    // assembly.GetManifestResourceStream($"Neminaj.Resources.Images.{fileNameResources}"))
-            //    using (Stream stream = EmbeddedResource.OpenEmbeddedImageStream(pictureName))
-            //    {
-            //        using (MemoryStream memoryStream = new MemoryStream())
-            //        {
-            //            stream.CopyTo(memoryStream);
-
-            //            TempCardData.Image = new byte[stream.Length];
-            //            memoryStream.ToArray().CopyTo(TempCardData.Image, 0);
-            //        }
-            //    }
-            //}
 
             this.btnAddCard.IsVisible = true;
         });
@@ -149,6 +130,7 @@ public partial class AddCardView : ContentPage
         }
         else
         {
+            savedCard.Image = TempCardData.Image;
             savedCard.CardName = TempCardData.CardName;
             await InsertNewCard(savedCard);
         }
@@ -162,7 +144,7 @@ public partial class AddCardView : ContentPage
 
         savedCard.CardName = ResultNotKnownCard.CardName;
         savedCard.IsKnownCard = false;
-        savedCard.Image = ResultNotKnownCard.Image;
+        savedCard.UknownCardColorDB = ResultNotKnownCard.NotKnownCardColor;
 
         await InsertNewCard(savedCard);
     }
@@ -192,9 +174,9 @@ public partial class AddCardView : ContentPage
 
         btnAddCard.IsVisible = false;
         lblCode.Text = string.Empty;
-        this.CardImage.Source = null;
+        //this.CardImage.Source = null;
 
-        await Shell.Current.GoToAsync(".."); // todo je to tu z dovodu ze nechce skenovat viacero po sebe kariet
+        await Shell.Current.GoToAsync("..");
     }
 
     private (string CardName, string PictureName) GetImageFromResource(string cardInfo)
