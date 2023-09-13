@@ -40,7 +40,7 @@ public partial class NotKnownCardView : ContentPage
         }
         else
         {
-            NotKnownCardViewModel.ResultNotKnownCard.CardName = CardName.Text;
+            NotKnownCardViewModel.ResultNotKnownCard.CardName = String.Copy(CardName.Text);
             NotKnownCardViewModel.ResultNotKnownCard.NotKnownCardColor = BorderPalleteColor.BackgroundColor.ToInt();
 
             // Make sure someone is listening to event

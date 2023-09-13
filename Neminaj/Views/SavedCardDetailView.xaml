@@ -6,7 +6,7 @@
              xmlns:sf="clr-namespace:Syncfusion.Maui.Barcode;assembly=Syncfusion.Maui.Barcode"
              Title="Klubová karta">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Zmazať" IconImageSource="recycle_bin.svg" Clicked="ToolbarItemDelete_Clicked" />
+        <ToolbarItem Text="Zmazať" IconImageSource="recycle_bin.png" Clicked="ToolbarItemDelete_Clicked" />
     </ContentPage.ToolbarItems>
 
     <!--<VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">

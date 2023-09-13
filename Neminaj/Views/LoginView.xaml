@@ -15,7 +15,7 @@
 
         <StackLayout Orientation="Horizontal">
             <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
-                <Image Source="user_login.svg" HeightRequest="20" WidthRequest="20" />
+                <Image Source="user_login.png" HeightRequest="20" WidthRequest="20" />
             </Frame>
             <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
                 <Entry x:Name="EntryEmail" ToolTipProperties.Text="Zadajte e-mail" Text="{Binding Email}" TextColor="Black" Margin="20,0,0,0" VerticalOptions="Center" Placeholder="E-Mail" Keyboard="Email" TextChanged="EntryEmail_TextChanged"/>
@@ -24,7 +24,7 @@
 
         <StackLayout Orientation="Horizontal">
             <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
-                <Image Source="lock_login.svg" HeightRequest="20" WidthRequest="20" />
+                <Image Source="lock_login.png" HeightRequest="20" WidthRequest="20" />
             </Frame>
             <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
                 <Entry x:Name="EntryPassword" ToolTipProperties.Text="Zadajte heslo" Text="{Binding Password}" TextColor="Black" Margin="20,0,0,0" VerticalOptions="Center" Placeholder="Heslo" IsPassword="True" TextChanged="EntryPassword_TextChanged"/>

@@ -100,11 +100,11 @@ public partial class SettingsView : ContentPage
             ColumnDefinitions =
             {
                 new ColumnDefinition(GridLength.Star),
-                new ColumnDefinition(GridLength.Star),
-                new ColumnDefinition(GridLength.Star),
-                new ColumnDefinition(GridLength.Star),
-                new ColumnDefinition(GridLength.Star),
-                new ColumnDefinition(GridLength.Star),
+                //new ColumnDefinition(GridLength.Star),
+                //new ColumnDefinition(GridLength.Star),
+                //new ColumnDefinition(GridLength.Star),
+                //new ColumnDefinition(GridLength.Star),
+                //new ColumnDefinition(GridLength.Star),
             },
             RowDefinitions =
             {
@@ -117,6 +117,7 @@ public partial class SettingsView : ContentPage
         gridMain.Margin = 10;
         gridMain.RowSpacing = 10;
         gridMain.VerticalOptions = LayoutOptions.Start;
+        gridMain.HorizontalOptions = LayoutOptions.StartAndExpand;
         // END: Create MAIN GRID of View ///
 
         int maxCompaniesPerRow = 3;
@@ -153,7 +154,9 @@ public partial class SettingsView : ContentPage
         {
             Text = "Výber obchodov",
             FontSize = 14,
-            FontAttributes = FontAttributes.Bold
+            FontAttributes = FontAttributes.Bold,
+            HorizontalOptions = LayoutOptions.StartAndExpand,
+            HorizontalTextAlignment = TextAlignment.Start
         };
 
         Grid.SetColumnSpan(labelChooseShops, 6);
@@ -209,14 +212,11 @@ public partial class SettingsView : ContentPage
                 {
                     Image image = new Image
                     {
-                        // workaround for not working commented code below
-                        //Source = this.GetCorrectCompanyLogoFileName(ListComp[helpCounter].Name),
+                        //Source = ListComp[helpCounter].Url,
                         Source = ImageSource.FromStream(() => stream),
 
-                        WidthRequest = 50,
-                        HeightRequest = 50,
-                        //Aspect = Aspect.AspectFit,
-                        HorizontalOptions = LayoutOptions.EndAndExpand
+                        Aspect = Aspect.AspectFit,
+                        HorizontalOptions = LayoutOptions.StartAndExpand
                     };
 
                     ListImage.Add(image);
@@ -232,13 +232,14 @@ public partial class SettingsView : ContentPage
 
         // START: Create Frame for Grid Customers //
         Frame frameCustomers = new Frame();
+        frameCustomers.HorizontalOptions = LayoutOptions.StartAndExpand;
         frameCustomers.Content = gridCustomers;
         frameCustomers.Content.HorizontalOptions = LayoutOptions.StartAndExpand;
         frameCustomers.Content.VerticalOptions = LayoutOptions.Start;
 
         Grid.SetRow(frameCustomers, 0);
-        Grid.SetColumnSpan(frameCustomers, 6);
-        gridMain.Add(frameCustomers);
+        //Grid.SetColumnSpan(frameCustomers, 6);
+        gridMain.Add(frameCustomers, 0, 0);
 
         // END: Create Frame for Grid Customers //
 
@@ -248,17 +249,18 @@ public partial class SettingsView : ContentPage
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition(), // Slider
-                new ColumnDefinition(), // To fit parent grid layout
-                new ColumnDefinition(), // To fit parent grid layout
-                new ColumnDefinition(), // To fit parent grid layout
-                new ColumnDefinition(), // To fit parent grid layout
-                new ColumnDefinition() // To fit parent grid layout
+                new ColumnDefinition( new GridLength(0.9, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(0.1, GridUnitType.Star)), 
+                //new ColumnDefinition(), // To fit parent grid layout
+                //new ColumnDefinition(), // To fit parent grid layout
+                //new ColumnDefinition(), // To fit parent grid layout
+                //new ColumnDefinition(), // To fit parent grid layout
+                //new ColumnDefinition() // To fit parent grid layout
             },
             RowDefinitions =
             {
-                new RowDefinition(), // Text
-                new RowDefinition(), // Slider and Text
+                new RowDefinition(), // contols: Text
+                new RowDefinition(), // controls: Slider + Text
             },
             RowSpacing = 20
         };
@@ -270,7 +272,7 @@ public partial class SettingsView : ContentPage
             FontSize = 14
         };
 
-        Grid.SetColumnSpan(labelDistance, 6);
+        Grid.SetColumnSpan(labelDistance, 2);
         gridDistance.Add(labelDistance, 0, 0);
 
         /* 
@@ -280,30 +282,30 @@ public partial class SettingsView : ContentPage
             !!!!!!
         */
 
+        slider = new Slider
+        {
+            Maximum = 100.0d,
+            VerticalOptions = LayoutOptions.StartAndExpand,
+            Value = 10.0d,
+        };
+
         LabelKm = new Label
         {
             Text = "10.0",
             FontAttributes = FontAttributes.Bold
         };
-        gridDistance.Add(LabelKm, 6, 1);
-
-        slider = new Slider
-        {
-            Maximum = 100.0d,
-            VerticalOptions = LayoutOptions.Start,
-            Value = 10.0d,
-        };
+        gridDistance.Add(LabelKm, 1, 1);
 
         slider.ValueChanged += this.Slider_ValueChanged;
         slider.Value = await SettingsService.Get<double>(nameof(slider), 10.0d);
-        Grid.SetColumnSpan(slider, 5);
+        //Grid.SetColumnSpan(slider, 5);
         gridDistance.Add(slider, 0, 1);
 
         Frame frameDistance = new Frame();
         frameDistance.Content = gridDistance;
 
         Grid.SetRow(frameDistance, 2);
-        Grid.SetColumnSpan(frameDistance, 6);
+        //Grid.SetColumnSpan(frameDistance, 6);
         gridMain.Add(frameDistance);
         // END: Frame Distance //
 

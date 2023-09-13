@@ -4,12 +4,14 @@
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              x:Class="Neminaj.Views.AddCardView"
              Title="Pridanie karty">
-    <Grid RowDefinitions="10, *, 0.5*, Auto, 75" ColumnDefinitions="10, *, 10">
-        <cv:CameraView Grid.Row="1" Grid.Column="1" x:Name="cameraView" CamerasLoaded="cameraView_CamerasLoaded" 
+    <ScrollView>
+        <Grid RowDefinitions="10, *, 0.5*, Auto, 75" ColumnDefinitions="10, *, 10">
+            <cv:CameraView Grid.Row="1" Grid.Column="1" x:Name="cameraView" CamerasLoaded="cameraView_CamerasLoaded" 
                            BarCodeDetectionEnabled="True" BarcodeDetected="cameraView_BarcodeDetected"
                            VerticalOptions="Start" HorizontalOptions="Start"/>
-        <!--<Image Grid.Row="2" Grid.Column="1" x:Name="CardImage" VerticalOptions="Center" HorizontalOptions="Center" />-->
-        <Label Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="1" x:Name="lblCode" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
-        <Button Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="1" x:Name="btnAddCard" IsVisible="false" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnAddCard_Clicked" />
-    </Grid>
+            <!--<Image Grid.Row="2" Grid.Column="1" x:Name="CardImage" VerticalOptions="Center" HorizontalOptions="Center" />-->
+            <Label Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="1" x:Name="lblCode" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Button Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="1" x:Name="btnAddCard" IsVisible="false" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnAddCard_Clicked" />
+        </Grid>
+    </ScrollView>
 </ContentPage>

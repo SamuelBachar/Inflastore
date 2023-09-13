@@ -17,23 +17,23 @@
         Route="LoginView" />
 
     <TabBar x:Name="MenuTapBar">
-        <Tab Title="Košík" Icon="cart.svg">
+        <Tab Title="Košík" Icon="cart.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:ItemPicker}" Route="ItemPicker"/>
         </Tab>
-        <Tab Title="Porovnávač" Icon="calculator.svg">
+        <Tab Title="Porovnávač" Icon="calculator.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:PriceComparerView}" Route="PriceComparerView"/>
         </Tab>
-        <Tab Title="Zoznamy" Icon="carts_list.svg">
+        <Tab Title="Zoznamy" Icon="carts_list.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:CartListView}" Route="CartListView"/>
         </Tab>
-        <Tab Title="Karty" Icon="club_cards.svg">
+        <Tab Title="Karty" Icon="club_cards.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:CardsView}" Route="CardsView"/>
         </Tab>
-        <Tab Title="Nastavenia" Icon="settings.svg">
+        <Tab Title="Nastavenia" Icon="settings.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:SettingsView}" Route="SettingsView"/>
         </Tab>
 
-        <Tab Title="Odhlásenie" Icon="logout_icon.svg">
+        <Tab Title="Odhlásenie" Icon="logout_icon.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:LoginView}" Route="LoginView"/>
         </Tab>
 

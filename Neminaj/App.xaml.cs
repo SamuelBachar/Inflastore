@@ -11,8 +11,16 @@ public partial class App : Application
     public App()
 	{
         InitializeComponent();
-        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjYzODI5N0AzMjMyMmUzMDJlMzBHbkM0WlN3MitzaVIyRk96bWQyandrb3EzZmdJSWYyUlVlQ01RbVlINzNVPQ==");
 
-		MainPage = new AppShell();
+        // For barcode generating 1D and QR code
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjY5MjU3MEAzMjMyMmUzMDJlMzBLWVZMazRJamxiemlucSsyOUIwM25HdU52T3k1MW0vQ05HcW1BVGx2c0U4PQ==");
+
+        // Important only light mode activate
+        Application.Current.UserAppTheme = AppTheme.Light;
+        this.RequestedThemeChanged += (s, e) => {
+            Application.Current.UserAppTheme = AppTheme.Light; 
+        };
+
+        MainPage = new AppShell();
 	}
 }

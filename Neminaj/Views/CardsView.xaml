@@ -5,7 +5,7 @@
              x:Class="Neminaj.Views.CardsView"
              Title="Klubové karty">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Pridať" IconImageSource="add_symbol.svg" Clicked="ToolbarCardAdd_Clicked" />
+        <ToolbarItem Text="Pridať" IconImageSource="add_symbol.png" Clicked="ToolbarCardAdd_Clicked" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>
@@ -25,7 +25,7 @@
                                 <Grid RowDefinitions="Auto" ColumnDefinitions="75, Auto">
                                     <Image Grid.Row="0" Grid.Column="0" IsVisible="{Binding IsKnownCard}" Source="{Binding Image, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
                                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="{Binding UknownCardColor}" BorderColor="{Binding UknownCardColor}" HeightRequest="72" WidthRequest="72"/>
-                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap" FontAttributes="Bold" FontSize="Body"></Label>
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding CardName}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap" FontAttributes="Bold" FontSize="Body"></Label>
                                 </Grid>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding Id}"/>

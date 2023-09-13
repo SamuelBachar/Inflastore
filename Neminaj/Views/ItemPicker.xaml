@@ -70,7 +70,7 @@
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
                     Spacing="10">
-                    <Image Source="cart.svg"
+                    <Image Source="cart.png"
                            HeightRequest="16"
                            WidthRequest="16"
                            Aspect="AspectFill">

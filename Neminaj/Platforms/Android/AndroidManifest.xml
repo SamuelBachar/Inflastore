@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:supportsRtl="true" android:icon="@mipmap/ic_launcher" android:label="Inflastore">
+	<application android:allowBackup="true" android:supportsRtl="true" android:icon="@mipmap/inflastore_appicon" android:label="Inflastore">
 		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBvbEPuCWlH-8Xc8LyerVovfkGJKEuTVoE" />
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-sdk android:minSdkVersion="21" />
 </manifest>
 <!-- <application android:allowBackup="true" android:icon="@mipmap/appicon" android:supportsRtl="true"> android:networkSecurityConfig="@xml/network_security_config"-->

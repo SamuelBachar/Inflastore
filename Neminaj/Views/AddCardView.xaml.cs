@@ -60,14 +60,13 @@ public partial class AddCardView : ContentPage
             ReadMultipleCodes = false
         };
 
-        cameraView.BarCodeDetectionFrameRate = 20;
-        cameraView.BarCodeDetectionMaxThreads = 10;
+        cameraView.BarCodeDetectionFrameRate = 3;
+        cameraView.BarCodeDetectionMaxThreads = 5;
         cameraView.ControlBarcodeResultDuplicate = true;
         cameraView.BarCodeDetectionEnabled = true;
-        cameraView.FlashMode = FlashMode.Auto;
 
-        if (cameraView.MaxZoomFactor >= 2.5f)
-            cameraView.ZoomFactor = 2.5f;
+        if (cameraView.MaxZoomFactor >= 2.0f)
+            cameraView.ZoomFactor = 2.0f;
 
         this.Appearing += AddCardView_Appearing;
     }
