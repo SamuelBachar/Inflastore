@@ -1,7 +1,4 @@
-﻿using System.Web;
-using static System.Net.WebRequestMethods;
-
-namespace InflaStoreWebAPI.Services.CompanyService;
+﻿namespace InflaStoreWebAPI.Services.CompanyService;
 public class CompanyService : ICompanyService
 {
     private readonly DataContext _context;

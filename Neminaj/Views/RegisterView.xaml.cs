@@ -1,4 +1,6 @@
-﻿using Neminaj.Interfaces;
+﻿using CommunityToolkit.Maui.Views;
+using Neminaj.ContentViews;
+using Neminaj.Interfaces;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API;
 
@@ -79,7 +81,13 @@ public partial class RegisterView : ContentPage
         UserRegisterRequest.ConfirmPassword = EntryPasswordConfirm.Text;
         UserRegisterRequest.Region_Id = ((SharedTypesLibrary.Models.API.DatabaseModels.Region)RegionPicker.ItemsSource[RegionPicker.SelectedIndex]).Id;
 
+        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Registrujem ...");
+        this.ShowPopupAsync(popUpIndic);
+        popUpIndic.TurnOnActivityIndicator();
+
         (UserRegisterDTO UserRegisterDTO, string Message) response = await _registerService.RegisterHTTPS(UserRegisterRequest);
+
+        popUpIndic.TurnOffActivityIndicator();
 
         if (response.UserRegisterDTO != null)
         {

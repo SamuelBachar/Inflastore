@@ -270,6 +270,11 @@ public partial class PriceComparerView : ContentPage
     VerticalStackLayout vertStackLayout = null;
     Label text = null;
 
+    // Semaphore for calling FillPrices function
+    // (needed when user is adding too much fast items from ItemsPicker)
+    SemaphoreSlim semaphoreFillPrices = new SemaphoreSlim(1, 1);
+    SemaphoreSlim semaphoreItemAdded = new SemaphoreSlim(1, 1);
+
     public PriceComparerView(ItemPicker mainPage, SettingsView settingsPage, CompanyRepository companyRepo, ItemPriceRepository itemPriceRepo, NavigationShopRepository navigationShopRepository, IGeolocation geoLocation)
     {
         InitializeComponent();
@@ -293,7 +298,7 @@ public partial class PriceComparerView : ContentPage
 
         this.EventCompaniesListLoaded += BuildPage;
         this.Loaded += async (s, e) => { await GetListCompanies(); };
-        this.ViewsBuilded += async (s, e) => { await FillPrices(build: true); };
+        this.ViewsBuilded += async (s, e) => { await FillPrices(actualList: ItemsChoosed.ToList(), build: true); };
         this.ViewsBuilded += OnAppearing;
         this.Appearing += OnAppearing;
     }
@@ -356,7 +361,7 @@ public partial class PriceComparerView : ContentPage
 
             TurnOnActivityIndicator();
             this.BuildPage(this, new EventArgs());
-            await FillPrices(build: true);
+            await FillPrices(actualList: ItemsChoosed.ToList(), build: true);
             TurnOffActivityIndicator();
         }
     }
@@ -364,20 +369,33 @@ public partial class PriceComparerView : ContentPage
     /* Function called after raising event CollectionChanged which is called after creating this class and user adds additional item into cart (or delete one) */
     private async Task ChoosenItems_Changed(object sender, NotifyCollectionChangedEventArgs args)
     {
-        TurnOnActivityIndicator();
+        // Asynchronously wait to enter the Semaphore.
+        // If no-one has been granted access to the Semaphore, code execution will proceed
+        // otherwise this thread waits here until the semaphore is released 
+        //await semaphoreItemAdded.WaitAsync();
 
-        if (args.Action == NotifyCollectionChangedAction.Add)
+        try
         {
-            int newItemsStartIndex = args.NewStartingIndex;
-            await this.FillPrices(added: true, newItemsStartIndex: newItemsStartIndex);
-        }
+            if (args.Action == NotifyCollectionChangedAction.Add)
+            {
+                List<ItemChoosen> listChoosenTemp = args.NewItems.Cast<ItemChoosen>().ToList();
+                await this.FillPrices(actualList: listChoosenTemp, added: true);
+            }
 
-        if (args.Action == NotifyCollectionChangedAction.Remove)
+            if (args.Action == NotifyCollectionChangedAction.Remove)
+            {
+                await this.FillPrices(actualList: ItemsChoosed.ToList(), added: false, deleted: true);
+            }
+        }
+        finally
         {
-            await this.FillPrices(added: false, deleted: true);
+            // When the task is ready, release the semaphore.
+            // It is vital to ALWAYS release the semaphore when we are ready
+            // or else we will end up with a Semaphore that is forever locked.
+            // This is why it is important to do the Release within a try...finally clause;
+            // program execution may crash or take a different path, this way you are guaranteed execution
+            //semaphoreItemAdded.Release();
         }
-
-        TurnOffActivityIndicator();
     }
 
     /* Function called after raising event OnObservableItemsChoosed_Swaped when user choosed saved cart from SQLite with it's items to work with */
@@ -390,7 +408,7 @@ public partial class PriceComparerView : ContentPage
         for (int i = 0; i < PageLayoutInfo.CntOfViewsInPage; i++)
             ListViewElements[i]._ListViewRecords.ListView.ItemsSource = ItemsChoosedModified;
 
-        await FillPrices(build: true);
+        await FillPrices(ItemsChoosedModified.ToList(), build: true);
 
         ItemsChoosed.CollectionChanged += async (s, e) => { await ChoosenItems_Changed(s, e); };
     }
@@ -493,40 +511,26 @@ public partial class PriceComparerView : ContentPage
         }
     }
 
-    private async Task FillPrices(bool build = false, bool added = false, bool deleted = false, int? newItemsStartIndex = null)
+    private async Task FillPrices(List<ItemChoosen> actualList, bool build = false, bool added = false, bool deleted = false, int? newItemsStartIndex = null)
     {
-        TurnOnActivityIndicator();
+        // Asynchronously wait to enter the Semaphore.
+        // If no-one has been granted access to the Semaphore, code execution will proceed
+        // otherwise this thread waits here until the semaphore is released 
 
-        ItemsChoosedModified = ItemsChoosed.ToList();
-        List<ItemChoosen> listChoosenTemp = new List<ItemChoosen>();
+        await semaphoreFillPrices.WaitAsync();
 
-        for (int i = 0; i < PageLayoutInfo.CntOfViewsInPage; i++)
+        if (!ActivityIndicator.IsRunning)
+            TurnOnActivityIndicator();
+
+        try
         {
+            List<ItemChoosen> listChoosenTemp = new List<ItemChoosen>();
 
-            if (build || deleted)
+            for (int i = 0; i < PageLayoutInfo.CntOfViewsInPage; i++)
             {
-                listChoosenTemp.AddRange(ItemsChoosedModified.Select(i => new ItemChoosen()
+                if (build)
                 {
-                    Name = i.Name,
-                    FinalName = i.FinalName,
-                    Id = i.Id,
-                    IdInList = i.IdInList,
-                    CntOfItems = i.CntOfItems
-                }));
-
-                await this.FillPrices(ListViewElements[i], PageLayoutInfo.ListViewLayoutInfo[i], listChoosenTemp);
-                ListViewElements[i]._ListViewRecords.ListView.ItemsSource = listChoosenTemp.ToList();
-                listChoosenTemp.Clear();
-            }
-
-            if (added)
-            {
-                listChoosenTemp = ListViewElements[i]._ListViewRecords.ListView.ItemsSource.Cast<ItemChoosen>().ToList();
-
-                // Deep copy added item / items to list of choosen items in view, later for new items prices will be filled
-                listChoosenTemp.AddRange(
-                    ItemsChoosedModified.GetRange(newItemsStartIndex.Value, ItemsChoosedModified.Count - newItemsStartIndex.Value).
-                    Select(i => new ItemChoosen()
+                    listChoosenTemp.AddRange(actualList.Select(i => new ItemChoosen()
                     {
                         Name = i.Name,
                         FinalName = i.FinalName,
@@ -535,13 +539,61 @@ public partial class PriceComparerView : ContentPage
                         CntOfItems = i.CntOfItems
                     }));
 
-                await this.FillPrices(ListViewElements[i], PageLayoutInfo.ListViewLayoutInfo[i], listChoosenTemp, newItemsStartIndex);
-                ListViewElements[i]._ListViewRecords.ListView.ItemsSource = listChoosenTemp.ToList();
-            }
-        }
+                    await this.FillPrices(ListViewElements[i], PageLayoutInfo.ListViewLayoutInfo[i], listChoosenTemp);
+                    ListViewElements[i]._ListViewRecords.ListView.ItemsSource = listChoosenTemp.ToList();
+                    listChoosenTemp.Clear();
+                }
 
-        TurnOffActivityIndicator();
-        Content = ListViewElements[CurrentViewIndex].MainGrid.ViewGrid;
+                if (deleted)
+                {
+                    listChoosenTemp.AddRange(actualList.Select(i => new ItemChoosen()
+                    {
+                        Name = i.Name,
+                        FinalName = i.FinalName,
+                        Id = i.Id,
+                        IdInList = i.IdInList,
+                        CntOfItems = i.CntOfItems
+                    }));
+
+                    await this.FillPrices(ListViewElements[i], PageLayoutInfo.ListViewLayoutInfo[i], listChoosenTemp);
+                    ListViewElements[i]._ListViewRecords.ListView.ItemsSource = listChoosenTemp.ToList();
+                    listChoosenTemp.Clear();
+                }
+
+                if (added)
+                {
+                    listChoosenTemp = ListViewElements[i]._ListViewRecords.ListView.ItemsSource.Cast<ItemChoosen>().ToList();
+
+                    // Deep copy added item / items to list of choosen items in view, later for new items prices will be filled
+                    listChoosenTemp.AddRange(actualList.
+                        Select(i => new ItemChoosen()
+                        {
+                            Name = i.Name,
+                            FinalName = i.FinalName,
+                            Id = i.Id,
+                            IdInList = i.IdInList,
+                            CntOfItems = i.CntOfItems
+                        }));
+
+                    await this.FillPrices(ListViewElements[i], PageLayoutInfo.ListViewLayoutInfo[i], listChoosenTemp, newItemsStartIndex);
+                    ListViewElements[i]._ListViewRecords.ListView.ItemsSource = listChoosenTemp.ToList();
+                }
+            }
+
+            Content = ListViewElements[CurrentViewIndex].MainGrid.ViewGrid;
+            ItemsChoosedModified = ItemsChoosed.ToList(); // for dissappearing empty cart list
+        }
+        finally
+        {
+            // When the task is ready, release the semaphore.
+            // It is vital to ALWAYS release the semaphore when we are ready
+            // or else we will end up with a Semaphore that is forever locked.
+            // This is why it is important to do the Release within a try...finally clause;
+            // program execution may crash or take a different path, this way you are guaranteed execution
+
+            TurnOffActivityIndicator();
+            semaphoreFillPrices.Release();
+        }
     }
 
     private async Task GetListCompanies()
@@ -551,7 +603,9 @@ public partial class PriceComparerView : ContentPage
         if (await ISettingsService.ContainsStatic("SettingsAtLeastOnceSaved"))
         {
             List<int> listIdsSavedAndChoosedCompanies = SettingsView.GetCheckedAndSavedCompaniesFromSettings(this.ListComp);
-            this.ListComp = this.ListComp.Where(com => listIdsSavedAndChoosedCompanies.Contains(com.Id)).ToList();
+
+            if (listIdsSavedAndChoosedCompanies != null)
+                this.ListComp = this.ListComp.Where(com => listIdsSavedAndChoosedCompanies.Contains(com.Id)).ToList();
         }
 
         this.EventCompaniesListLoaded?.Invoke(this, new EventArgs());
@@ -667,24 +721,39 @@ public partial class PriceComparerView : ContentPage
                 break;
             }
 
-            var stream = new MemoryStream(ListComp.Where(com => com.Id == viewLayoutInfo.ListCompaniesInView[i].Id).First().Image);
+            //var stream = new MemoryStream(ListComp.Where(com => com.Id == viewLayoutInfo.ListCompaniesInView[i].Id).First().Image);
+            //{
+            //    Image img = new Image
+            //    {
+            //        Source = ImageSource.FromStream(() => stream),
+            //        WidthRequest = 50,
+            //        HeightRequest = 50,
+            //        Aspect = Aspect.AspectFit,
+            //        HorizontalOptions = LayoutOptions.Center,
+            //        VerticalOptions = LayoutOptions.Center
+            //    };
+
+            //    tempGrid.Add(img, column: colOffset, row: 0);
+            //    pe.ListCompaniesImages.Add(img);
+
+            //    colOffset++;
+            //}
+
+            string companyUrl = ListComp.Where(com => com.Id == viewLayoutInfo.ListCompaniesInView[i].Id).First().Url;
+            Image img = new Image
             {
-                Image img = new Image
-                {
-                    Source = ImageSource.FromStream(() => stream),
-                    WidthRequest = 50,
-                    HeightRequest = 50,
-                    Aspect = Aspect.AspectFit,
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center
-                };
+                Source = companyUrl,
+                WidthRequest = 50,
+                HeightRequest = 50,
+                Aspect = Aspect.AspectFit,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
 
-                //pe.MainGrid.ViewGrid.Add(temp, colOffset, 0);
-                tempGrid.Add(img, column: colOffset, row: 0);
-                pe.ListCompaniesImages.Add(img);
+            tempGrid.Add(img, column: colOffset, row: 0);
+            pe.ListCompaniesImages.Add(img);
 
-                colOffset++;
-            }
+            colOffset++;
         }
 
         pe.MainGrid.ViewGrid.Add(tempGrid, 0, 0);

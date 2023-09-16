@@ -208,20 +208,31 @@ public partial class SettingsView : ContentPage
 
                 gridCustomers.Add(chkBox, col, row);
 
-                var stream = new MemoryStream(ListComp[helpCounter].Image);
+                Image image = new Image
                 {
-                    Image image = new Image
-                    {
-                        //Source = ListComp[helpCounter].Url,
-                        Source = ImageSource.FromStream(() => stream),
+                    Source = ListComp[helpCounter].Url,
+                    Aspect = Aspect.AspectFit,
+                    HorizontalOptions = LayoutOptions.StartAndExpand
+                };
 
-                        Aspect = Aspect.AspectFit,
-                        HorizontalOptions = LayoutOptions.StartAndExpand
-                    };
+                ListImage.Add(image);
+                gridCustomers.Add(image, col + 1, row);
 
-                    ListImage.Add(image);
-                    gridCustomers.Add(image, col + 1, row);
-                }
+                // From byte array
+                //var stream = new MemoryStream(ListComp[helpCounter].Image);
+                //{
+                //    Image image = new Image
+                //    {
+
+                //        Source = ImageSource.FromStream(() => stream),
+
+                //        Aspect = Aspect.AspectFit,
+                //        HorizontalOptions = LayoutOptions.StartAndExpand
+                //    };
+
+                //    ListImage.Add(image);
+                //    gridCustomers.Add(image, col + 1, row);
+                //}
 
                 helpCounter++;
             }

@@ -13,58 +13,77 @@ namespace Neminaj.Views;
 
 public partial class ChooseCardView : ContentPage
 {
-    private CompanyRepository _companyRepository { get; set; } = null;
+    private ClubCardRepository _clubCardRepository { get; set; } = null;
     private SavedCardRepository _savedCardRepository { get; set; } = null;
     private List<CardData> _listCardDatas { get; set; } = new List<CardData>();
 
     byte[] _imageBufferOtherCard = null;
-    public ChooseCardView(CompanyRepository companyRepository, SavedCardRepository savedCardRepository)
+    public ChooseCardView(ClubCardRepository clubCardRepository, SavedCardRepository savedCardRepository)
     {
         InitializeComponent();
-        _companyRepository = companyRepository;
+        _clubCardRepository = clubCardRepository;
         _savedCardRepository = savedCardRepository;
         this.Loaded += async (s, e) => { await BuildPage(); };
     }
 
     private async Task BuildPage()
     {
-            _listCardDatas.Clear();
+        _listCardDatas.Clear();
 
-            List<CompanyDTO> listCompanies = await _companyRepository.GetAllCompaniesAsync();
-            listCompanies = listCompanies.OrderBy(company => company.Name).ToList();
+        List<ClubCardDTO> listClubCards = await _clubCardRepository.GetAllClubCards();
 
-            foreach (CompanyDTO company in listCompanies)
-            {
-                _listCardDatas.Add
-                (
-                    new CardData
-                    {
-                        Name = company.Name,
-                        CardImage = company.Image,
-                        IsKnownCard = true
-                    }
-                );
-            }
+        List<ClubCardDTO> listClubCardsTemp = new List<ClubCardDTO>();
 
-            using (Stream stream = EmbeddedResource.OpenEmbeddedImageStream("club_cards.png"))
-            {
-                using (MemoryStream memoryStream = new MemoryStream())
+        // deep copy
+        listClubCardsTemp.AddRange(listClubCards.Select(i => new ClubCardDTO()
+        {
+            Id = i.Id,
+            Name = i.Name,
+            Company_Id = i.Company_Id,
+            Image = i.Image,
+            Url = i.Url,
+        }));
+
+        ClubCardDTO clubCardOther = listClubCardsTemp.Where(card => card.Name == "Other").First();
+        listClubCardsTemp.Remove(clubCardOther);
+        listClubCardsTemp = listClubCardsTemp.OrderBy(company => company.Name).ToList();
+
+        clubCardOther.Name = "Iná karta";
+        listClubCardsTemp.Add(clubCardOther);
+
+        foreach (ClubCardDTO clubCard in listClubCardsTemp)
+        {
+            _listCardDatas.Add
+            (
+                new CardData
                 {
-                    stream.CopyTo(memoryStream);
-
-                    _imageBufferOtherCard = new byte[stream.Length];
-                    memoryStream.ToArray().CopyTo(_imageBufferOtherCard, 0);
+                    Name = clubCard.Name,
+                    CardImage = clubCard.Image,
+                    CardImageUrl = clubCard.Url,
+                    IsKnownCard = clubCard.Name == "Iná karta" ? false : true
                 }
-            }
+            );
+        }
 
-            _listCardDatas.Add(new CardData
-            {
-                Name = "Iná karta",
-                CardImage = _imageBufferOtherCard,
-                IsKnownCard = false
-            });
+        //using (Stream stream = EmbeddedResource.OpenEmbeddedImageStream("club_cards.png"))
+        //{
+        //    using (MemoryStream memoryStream = new MemoryStream())
+        //    {
+        //        stream.CopyTo(memoryStream);
 
-            listCards.ItemsSource = new ObservableCollection<CardData>(_listCardDatas);
+        //        _imageBufferOtherCard = new byte[stream.Length];
+        //        memoryStream.ToArray().CopyTo(_imageBufferOtherCard, 0);
+        //    }
+        //}
+
+        //_listCardDatas.Add(new CardData
+        //{
+        //    Name = "Iná karta",
+        //    CardImage = _imageBufferOtherCard,
+        //    IsKnownCard = false
+        //});
+
+        listCards.ItemsSource = new ObservableCollection<CardData>(_listCardDatas);
     }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)

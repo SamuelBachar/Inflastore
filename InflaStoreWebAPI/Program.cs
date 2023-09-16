@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using InflaStoreWebAPI.Services.ClubCardService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +75,7 @@ builder.Services.AddScoped<IItemsService, ItemsService>();
 builder.Services.AddScoped<INavigationShopDatas, NavigationShopDatas>();
 builder.Services.AddScoped<IUnitsService, UnitService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IClubCardService, ClubCardService>();
 
 var app = builder.Build();
 

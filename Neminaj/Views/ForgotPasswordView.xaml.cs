@@ -1,4 +1,6 @@
-﻿using Neminaj.Interfaces;
+﻿using CommunityToolkit.Maui.Views;
+using Neminaj.ContentViews;
+using Neminaj.Interfaces;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API;
 
@@ -55,7 +57,13 @@ public partial class ForgotPasswordView : ContentPage
         ForgotPasswordRequest.Password = EntryPassword.Text;
         ForgotPasswordRequest.ConfirmPassword = EntryPasswordConfirm.Text;
 
+        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Pripravujem zmenu hesla ...");
+        this.ShowPopupAsync(popUpIndic);
+        popUpIndic.TurnOnActivityIndicator();
+
         (UserForgotPasswordDTO UserForgotPasswordDTO, string Message) response = await _forgotPasswordService.UserForgotPasswordHTTPS(ForgotPasswordRequest);
+
+        popUpIndic.TurnOffActivityIndicator();
 
         if (response.UserForgotPasswordDTO != null)
         {

@@ -24,4 +24,5 @@ public class DataContext : DbContext
     public DbSet<Unit> Units => Set<Unit>();
     public DbSet<NavigationShopData> NavigationShopDatas => Set<NavigationShopData>();
     public DbSet<Region> Regions => Set<Region>();
+    public DbSet<ClubCard> ClubCards => Set<ClubCard>();
 }

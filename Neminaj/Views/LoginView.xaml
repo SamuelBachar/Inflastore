@@ -5,7 +5,7 @@
              Title=""
              FlyoutItem.IsVisible="False">
 
-    <VerticalStackLayout Spacing="25" Padding="30,0" VerticalOptions="Center">
+    <VerticalStackLayout x:Name="MainVertStackLayout" Spacing="25" Padding="30,0" VerticalOptions="Center">
 
         <VerticalStackLayout Spacing="5">
             <Image Source="inflastoresplashscreen.png" HeightRequest="200" />
@@ -21,7 +21,7 @@
                 <Entry x:Name="EntryEmail" ToolTipProperties.Text="Zadajte e-mail" Text="{Binding Email}" TextColor="Black" Margin="20,0,0,0" VerticalOptions="Center" Placeholder="E-Mail" Keyboard="Email" TextChanged="EntryEmail_TextChanged"/>
             </Frame>
         </StackLayout>
-
+        
         <StackLayout Orientation="Horizontal">
             <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
                 <Image Source="lock_login.png" HeightRequest="20" WidthRequest="20" />

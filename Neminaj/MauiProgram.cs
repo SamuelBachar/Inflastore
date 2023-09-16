@@ -92,6 +92,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<SavedCartRepository>();
         builder.Services.AddSingleton<NavigationShopRepository>();
         builder.Services.AddSingleton<SavedCardRepository>();
+        builder.Services.AddSingleton<ClubCardRepository>();
 
         // Views
         builder.Services.AddSingleton<LoginView>();

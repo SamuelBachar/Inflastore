@@ -1,20 +1,28 @@
-﻿using Neminaj.Interfaces;
+﻿using CommunityToolkit.Maui.Views;
+using Neminaj.ContentViews;
+using Neminaj.Interfaces;
 using Neminaj.Models;
 using Neminaj.ViewsModels;
 using Newtonsoft.Json;
 using SharedTypesLibrary.DTOs.API;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Neminaj.Views;
 
 public partial class LoginView : ContentPage
 {
+    // ActivityIndicator ActivityIndicator { get; set; } = null;
+    // VerticalStackLayout vertActivityIndicatorStackLayout { get; set; } = null;
+    // Label text { get; set; } = null;
+
     readonly ILoginService _loginService = null;
 
     public LoginView(ILoginService loginService)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
         _loginService = loginService;
+
 
         if (Preferences.ContainsKey("RememberLogin"))
         {
@@ -38,7 +46,7 @@ public partial class LoginView : ContentPage
     private async void BtnLogInHttps_Clicked(object sender, EventArgs e)
     {
         //await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
-        
+
         bool badEnty = false;
 
         if (string.IsNullOrWhiteSpace(EntryEmail.Text))
@@ -63,13 +71,17 @@ public partial class LoginView : ContentPage
 
         if (!string.IsNullOrWhiteSpace(EntryEmail.Text) && !string.IsNullOrWhiteSpace(EntryPassword.Text))
         {
+            ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Prihlasujem ...");
+            this.ShowPopupAsync(popUpIndic);
+            popUpIndic.TurnOnActivityIndicator();
+
             (UserLoginDTO UserLoginDTO, string Message) response = await _loginService.LoginHTTPS(EntryEmail.Text, EntryPassword.Text);
 
             if (response.UserLoginDTO != null)
             {
                 UserLoginInfo userLoginInfo = new UserLoginInfo { Email = EntryEmail.Text, Password = EntryPassword.Text };
                 UserSessionInfo userSessionInfo = new UserSessionInfo { Email = EntryEmail.Text, JWT = response.UserLoginDTO.JWT };
-                
+
                 App.UserLoginInfo = userLoginInfo;
                 App.UserSessionInfo = userSessionInfo;
 
@@ -89,13 +101,14 @@ public partial class LoginView : ContentPage
                 }
 
                 await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
+                popUpIndic.TurnOffActivityIndicator();
             }
             else
             {
+                popUpIndic.TurnOffActivityIndicator();
                 await DisplayAlert("Prihlásenie chyba", response.Message, "Zavrieť");
             }
         }
-        
     }
 
     private void EntryPassword_TextChanged(object sender, TextChangedEventArgs e)
@@ -136,3 +149,4 @@ public partial class LoginView : ContentPage
         }
     }
 }
+

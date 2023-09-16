@@ -5,11 +5,11 @@
              x:Class="Neminaj.Views.ChooseCardView"
              Title="Výber karty">
 
-    <ContentPage.Resources>
+    <!--<ContentPage.Resources>
         <ResourceDictionary>
             <mct:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"></mct:ByteArrayToImageSourceConverter>
         </ResourceDictionary>
-    </ContentPage.Resources>
+    </ContentPage.Resources>-->
     
     <ScrollView>
         <Grid  Padding="5" RowDefinitions="Auto, *" ColumnDefinitions="*">
@@ -20,7 +20,8 @@
                         <Grid RowDefinitions="Auto, Auto" RowSpacing="15">
                             <Frame>
                                 <HorizontalStackLayout Grid.Row="0" Spacing="50">
-                                    <Image Grid.Row="0" Source="{Binding CardImage, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    <!--<Image Grid.Row="0" Source="{Binding CardImage, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>-->
+                                    <Image Grid.Row="0" Source="{Binding CardImageUrl}" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
                                     <Label Grid.Row="0" Text="{Binding Name}" VerticalOptions="Center" LineBreakMode="WordWrap" FontAttributes="Bold" FontSize="Body" ></Label>
                                 </HorizontalStackLayout>
                                 <Frame.GestureRecognizers>

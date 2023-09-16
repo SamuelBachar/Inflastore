@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+             x:Class="Neminaj.ContentViews.ActivityIndicatorPopUp"
+             CanBeDismissedByTappingOutsideOfPopup="False">
+    <Border BackgroundColor="White"
+            HorizontalOptions="Center"
+            WidthRequest="300"
+            HeightRequest="250">
+        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <ActivityIndicator x:Name="Indicator" 
+                               Color="Orange" 
+                               IsRunning="False" 
+                               WidthRequest="150" 
+                               HeightRequest="150"
+                               HorizontalOptions="Center"
+                               />
+            <Label x:Name="Text" 
+                   FontSize="Body"
+                   FontAttributes="Bold" 
+                   TextColor="DimGrey"
+                   HorizontalOptions="Center"
+                   />
+        </VerticalStackLayout>
+    </Border>
+</mct:Popup>

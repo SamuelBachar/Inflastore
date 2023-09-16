@@ -9,9 +9,9 @@ namespace InflaStoreWebAPI.Controllers
     {
         private readonly ICompanyService _companyService;
 
-        public CompanyController(ICompanyService unitsService)
+        public CompanyController(ICompanyService companyService)
         {
-            _companyService = unitsService;
+            _companyService = companyService;
         }
 
         [HttpGet("GetAllCompanies")]
