@@ -1,4 +1,6 @@
-using CommunityToolkit.Maui.Converters;
+﻿using CommunityToolkit.Maui.Converters;
+using CommunityToolkit.Maui.Views;
+using Neminaj.ContentViews;
 using Neminaj.Models;
 using Neminaj.Repositories;
 using Neminaj.Utils;
@@ -28,6 +30,10 @@ public partial class ChooseCardView : ContentPage
 
     private async Task BuildPage()
     {
+        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam karty ...");
+        this.ShowPopupAsync(popUpIndic);
+        popUpIndic.TurnOnActivityIndicator();
+
         _listCardDatas.Clear();
 
         List<ClubCardDTO> listClubCards = await _clubCardRepository.GetAllClubCards();
@@ -48,7 +54,7 @@ public partial class ChooseCardView : ContentPage
         listClubCardsTemp.Remove(clubCardOther);
         listClubCardsTemp = listClubCardsTemp.OrderBy(company => company.Name).ToList();
 
-        clubCardOther.Name = "In� karta";
+        clubCardOther.Name = "Iná karta";
         listClubCardsTemp.Add(clubCardOther);
 
         foreach (ClubCardDTO clubCard in listClubCardsTemp)
@@ -60,7 +66,7 @@ public partial class ChooseCardView : ContentPage
                     Name = clubCard.Name,
                     CardImage = clubCard.Image,
                     CardImageUrl = clubCard.Url,
-                    IsKnownCard = clubCard.Name == "In� karta" ? false : true
+                    IsKnownCard = clubCard.Name == "Iná karta" ? false : true
                 }
             );
         }
@@ -78,12 +84,13 @@ public partial class ChooseCardView : ContentPage
 
         //_listCardDatas.Add(new CardData
         //{
-        //    Name = "In� karta",
+        //    Name = "Iná karta",
         //    CardImage = _imageBufferOtherCard,
         //    IsKnownCard = false
         //});
 
         listCards.ItemsSource = new ObservableCollection<CardData>(_listCardDatas);
+        popUpIndic.TurnOffActivityIndicator();
     }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
@@ -101,6 +108,19 @@ public partial class ChooseCardView : ContentPage
 
     private async void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
     {
+        string text = ((SearchBar)sender).Text;
 
+        if (text.Length >= 1)
+        {
+            List<CardData> cardDataList = await _clubCardRepository.SearchItems(_listCardDatas, text);
+            listCards.ItemsSource = new ObservableCollection<CardData>(cardDataList);
+            _clubCardRepository.ClearFilteredList();
+        }
+
+        if (text.Length == 0)
+        {
+            _clubCardRepository.ClearFilteredList();
+            listCards.ItemsSource = new ObservableCollection<CardData>(_listCardDatas);
+        }
     }
 }

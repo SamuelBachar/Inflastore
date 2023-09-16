@@ -1,4 +1,6 @@
-﻿using Neminaj.Events;
+﻿using CommunityToolkit.Maui.Views;
+using Neminaj.ContentViews;
+using Neminaj.Events;
 using Neminaj.GlobalEnums;
 using Neminaj.GlobalText;
 using Neminaj.Interfaces;
@@ -86,11 +88,20 @@ public partial class SettingsView : ContentPage
     private void Slider_ValueChanged(object sender, ValueChangedEventArgs e)
     {
         double value = (double)e.NewValue;
-        LabelKm.Text = value.ToString().Substring(0, value.ToString().IndexOf(".") > 0 ? value.ToString().IndexOf(".") + 2 : value.ToString().Length);
+
+        if (value.ToString().Contains("."))
+            LabelKm.Text = value.ToString().Substring(0, value.ToString().IndexOf(".") + 2);
+
+        if (value.ToString().Contains(","))
+            LabelKm.Text = value.ToString().Substring(0, value.ToString().IndexOf(",") + 2);
     }
 
     public async Task BuildPage()
     {
+        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam nastavenia ...");
+        this.ShowPopupAsync(popUpIndic);
+        popUpIndic.TurnOnActivityIndicator();
+
         //this.Title = "Nastavenia";
 
         // START: Create MAIN GRID of View ///
@@ -293,19 +304,19 @@ public partial class SettingsView : ContentPage
             !!!!!!
         */
 
-        slider = new Slider
-        {
-            Maximum = 100.0d,
-            VerticalOptions = LayoutOptions.StartAndExpand,
-            Value = 10.0d,
-        };
-
         LabelKm = new Label
         {
             Text = "10.0",
             FontAttributes = FontAttributes.Bold
         };
         gridDistance.Add(LabelKm, 1, 1);
+
+        slider = new Slider
+        {
+            Maximum = 100.0d,
+            VerticalOptions = LayoutOptions.StartAndExpand,
+            Value = 10.0d,
+        };
 
         slider.ValueChanged += this.Slider_ValueChanged;
         slider.Value = await SettingsService.Get<double>(nameof(slider), 10.0d);
@@ -332,6 +343,7 @@ public partial class SettingsView : ContentPage
         // Set grid and its childrens as main content
         Content = scrollView;
 
+        popUpIndic.TurnOffActivityIndicator();
     }
 
     private void CompanyCheckBoxChanged(object sender, EventArgs e)

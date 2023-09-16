@@ -1,3 +1,5 @@
+﻿using CommunityToolkit.Maui.Views;
+using Neminaj.ContentViews;
 using Neminaj.Models;
 using Neminaj.Repositories;
 using SharedTypesLibrary.Models.API.DatabaseModels;
@@ -41,8 +43,7 @@ public partial class ItemPicker : ContentPage
         CartView.On_CartView_ItemRemovedFromList += async (s, e) => { await DecreaseShoppingCartCounter(); };
         ObservableItemsChoosed.CollectionChanged += ItemsChoosedCollection_Changed;
             
-        this.Loaded += async (s, e) => { await GetItemsObservableCollection(); };
-        this.Loaded += async (s, e) => { await GetUnits(); };
+        this.Loaded += async (s, e) => { await GetItemsAndUnits(); };
     }
 
     private void ItemsChoosedCollection_Changed(object sender, NotifyCollectionChangedEventArgs e)
@@ -53,12 +54,20 @@ public partial class ItemPicker : ContentPage
         }
     }
 
-    private async Task GetItemsObservableCollection()
+    private async Task GetItemsAndUnits()
 	{
-		List<Item> listItems = await ItemRepo.GetAllItemsAsync();
+        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam polôžky ...");
+        this.ShowPopupAsync(popUpIndic);
+        popUpIndic.TurnOnActivityIndicator();
+
+        List<Item> listItems = await ItemRepo.GetAllItemsAsync();
 
         this.BindingContext = this;
 		this.listItem.ItemsSource = listItems.OrderBy(n => n.Name);
+
+        ListUnits = await UnitRepo.GetAllUnitsAsync();
+
+        popUpIndic.TurnOffActivityIndicator();
     }
 
     private async Task GetUnits()

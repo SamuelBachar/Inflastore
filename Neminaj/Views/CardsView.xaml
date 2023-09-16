@@ -16,7 +16,12 @@
 
     <ScrollView x:Name="MainScrollView">
         <Grid  Padding="5" RowDefinitions="Auto, *" ColumnDefinitions="*">
-            <SearchBar  x:Name="SearchBar" IsEnabled="True" Grid.Row="1" Grid.Column="0" Placeholder="Hľadaj kartu" TextChanged="SearchBar_TextChanged"/>
+            <Border Grid.Row="0" Grid.Column="0" HorizontalOptions="Fill">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10, 10, 10, 10"/>
+                </Border.StrokeShape>
+                <SearchBar x:Name="SearchBar" IsEnabled="True" Placeholder="Hľadaj kartu" TextChanged="SearchBar_TextChanged" HorizontalOptions="Fill"/>
+            </Border>
             <CollectionView x:Name="listCards" Grid.Row="1" Grid.Column="0" BackgroundColor="Transparent" SelectionMode="Single" VerticalScrollBarVisibility="Always" SelectionChanged="listCards_SelectionChanged">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

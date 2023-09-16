@@ -158,36 +158,50 @@ public partial class NavigationView : ContentPage
                         });
                 }
 
-                if (listNearestShops.Count > 1)
+                if (listNearestShops.Count > 1) // atleast 2 Shops navigation
                 {
-                    FoundedShop nearest = listNearestShops[0];
-                    FoundedShop farrest = listNearestShops[0];
+                    //FoundedShop nearest = listNearestShops[0];
+                    //FoundedShop farrest = listNearestShops[0];
 
-                    foreach (FoundedShop foundShop in listNearestShops)
-                    {
-                        if (nearest.Latitude < foundShop.Latitude)
-                            nearest = foundShop;
+                    //foreach (FoundedShop foundShop in listNearestShops)
+                    //{
+                    //    if (nearest.Latitude < foundShop.Latitude)
+                    //        nearest = foundShop;
 
-                        if (farrest.Latitude > foundShop.Latitude)
-                            farrest = foundShop;
-                    }
+                    //    if (farrest.Latitude > foundShop.Latitude)
+                    //        farrest = foundShop;
+                    //}
 
-                    FoundedShop middleFictive = new FoundedShop
-                    {
-                        Latitude = ((nearest.Latitude + farrest.Latitude) / 2),
-                        Longtitude = ((nearest.Longtitude + farrest.Longtitude) / 2)
-                    };
+                    //FoundedShop middleFictive = new FoundedShop
+                    //{
+                    //    Latitude = ((nearest.Latitude + farrest.Latitude) / 2.0f),
+                    //    Longtitude = ((nearest.Longtitude + farrest.Longtitude) / 2.0f)
+                    //};
 
-                    mappy.MoveToRegion(new MapSpan(new Location(middleFictive.Latitude, middleFictive.Longtitude), 0.075, 0.075));
+                    //mappy.MoveToRegion(new MapSpan(new Location(middleFictive.Latitude, middleFictive.Longtitude), 0.075, 0.075));
+
+                    FoundedShop nearestShop = listNearestShops.OrderBy(shop => shop.Distance).First();
+                    //FoundedShop farrestShop = listNearestShops.OrderByDescending(shop => shop.Distance).First();
+
+                    //FoundedShop middleFictive = new FoundedShop
+                    //{
+                    //    Latitude = ((nearestShop.Latitude + farrestShop.Latitude) / 2.0f),
+                    //    Longtitude = ((nearestShop.Longtitude + farrestShop.Longtitude) / 2.0f)
+                    //};
+
+                    mappy.MoveToRegion(new MapSpan(new Location(nearestShop.Latitude, nearestShop.Longtitude), 0.075, 0.075));
                 }
-                else
+                else // Single shop navigation
                 {
                     mappy.MoveToRegion(new MapSpan(new Location(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), 0.05, 0.05));
                 }
             }
             else
             {
-             
+                await DisplayAlert("Nenajdené obchody",
+                    $"Vo Vami nastavenej vzdialenosti vyhľadávania: {distanceWithin} km, sa nenašli žiadne obchody.\r\n" +
+                     "Nastavenie vzdialenosti vyhľadávania nájdete v nastaveniach aplikácii",
+                     "Zavrieť") ;
             }
         }
         catch (Exception ex)

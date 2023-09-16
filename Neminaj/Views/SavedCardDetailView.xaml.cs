@@ -14,6 +14,10 @@ public partial class SavedCardDetailView : ContentPage
     SavedCardDetailViewModel _savedCardDetailViewModel { get; set; } = null;
     SavedCard SavedCard { get; set; } = null;
 
+    // Events
+    public delegate void SavedCardDetail_DeleteCard(object sender, EventArgs e);
+    public static event SavedCardDetail_DeleteCard On_SavedCardDetailView_DeleteCard;
+
     public SavedCardDetailView(SavedCardDetailViewModel savedCardDetailViewModel)
     {
         InitializeComponent();
@@ -62,6 +66,7 @@ public partial class SavedCardDetailView : ContentPage
         }
 
         sfBarcodeGen.Value = SavedCard.CardCode;
+        sfBarcodeGen.ShowText = true;
     }
 
     private async void ToolbarItemDelete_Clicked(object sender, EventArgs e)
@@ -76,6 +81,12 @@ public partial class SavedCardDetailView : ContentPage
             }
             else
             {
+                // Make sure someone is listening to event
+                if (On_SavedCardDetailView_DeleteCard != null)
+                {
+                    On_SavedCardDetailView_DeleteCard(this, new EventArgs());
+                }
+
                 await DisplayAlert("", "Klubová karta zmazaná", "Zavrieť");
             }
         }

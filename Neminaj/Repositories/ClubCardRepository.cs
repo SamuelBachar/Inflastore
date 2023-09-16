@@ -1,14 +1,28 @@
 ﻿using Neminaj.Constants;
 using SharedTypesLibrary.DTOs.API;
+using System.Globalization;
+using System.Text;
 using System.Text.Json;
 
 namespace Neminaj.Repositories;
+
+public class CardData
+{
+    public string Name { get; set; }
+    public byte[] CardImage { get; set; }
+
+    public string CardImageUrl { get; set; }
+
+    public bool IsKnownCard { get; set; }
+}
 
 public class ClubCardRepository
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
     private List<ClubCardDTO> _listClubCard { get; set; } = null;
+
+    List<CardData> FilteredItems = new List<CardData>();
 
     public ClubCardRepository(IHttpClientFactory httpClientFactory)
     {
@@ -85,5 +99,50 @@ public class ClubCardRepository
         }
 
         return new List<ClubCardDTO>();
+    }
+
+    public async Task<List<CardData>> SearchItems(List<CardData> listCardDatas, string filterText)
+    {
+        await Task.Run(() =>
+        {
+            listCardDatas.ForEach(async (card) =>
+            {
+                string strWithoutDiac = await removeDiacritics(card.Name);
+
+                if (strWithoutDiac.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))
+                    FilteredItems.Add(card);
+            });
+        });
+
+        return FilteredItems;
+    }
+
+    public async Task<string> removeDiacritics(string text)
+    {
+        string result = string.Empty;
+
+        await Task.Run(() =>
+        {
+            string formD = text.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+
+            foreach (char ch in formD)
+            {
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            result = sb.ToString().Normalize(NormalizationForm.FormC);
+        });
+
+        return result;
+    }
+
+    public void ClearFilteredList()
+    {
+        FilteredItems.Clear();
     }
 }

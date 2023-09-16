@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Maui.Converters;
+using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Controls;
+using Neminaj.ContentViews;
 using Neminaj.Models;
 using Neminaj.Repositories;
 using SharedTypesLibrary.DTOs.API;
@@ -9,15 +11,6 @@ using System.Globalization;
 
 namespace Neminaj.Views;
 
-public class CardData
-{
-    public string Name { get; set; }
-    public byte[] CardImage { get; set; }
-
-    public string CardImageUrl { get; set; }
-
-    public bool IsKnownCard { get; set; }
-}
 
 public partial class CardsView : ContentPage
 {
@@ -35,6 +28,7 @@ public partial class CardsView : ContentPage
 
         this.Loaded += async (s, e) => { await BuildPage(); };
         AddCardView.On_AddCardView_CardAdded += async (s, e) => { await ChangeListOfCards(); };
+        SavedCardDetailView.On_SavedCardDetailView_DeleteCard += async (s, e) => { await ChangeListOfCards(); };
     }
 
     private async Task BuildPage()
@@ -56,12 +50,18 @@ public partial class CardsView : ContentPage
         }
         else
         {
+            ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam uložené karty ...");
+            this.ShowPopupAsync(popUpIndic);
+            popUpIndic.TurnOnActivityIndicator();
+
             listSavedCards = listSavedCards.OrderBy(card => card.CardName).ToList();
             listSavedCards.ForEach(card => card.UknownCardColor = Color.FromInt(card.UknownCardColorDB));
 
             this.BindingContext = this;
             this.listCards.ItemsSource = listSavedCards;
             this.Content = this.MainScrollView;
+
+            popUpIndic.TurnOffActivityIndicator();
         }
     }
 
