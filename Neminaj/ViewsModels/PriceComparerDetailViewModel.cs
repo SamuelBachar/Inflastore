@@ -15,6 +15,8 @@ public class CheapestItemPerCompany
     public CompanyDTO Company { get; set; }
     public ItemChoosen ItemChoosen { get; set; }
     public bool Discount { get; set; }
+
+    public float Price { get; set; }
 }
 
 [QueryProperty(nameof(ListCheapestItemsPerCompanies), nameof(ListCheapestItemsPerCompanies))]

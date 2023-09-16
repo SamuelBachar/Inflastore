@@ -21,9 +21,12 @@ public partial class CartView : ContentPage
 
     private CartViewModel CartViewModel { get; set; } = null;
 
+    SemaphoreSlim semaphoreDeleteItem = new SemaphoreSlim(1, 1);
+    int _lastDeletedItemId { get; set; } = -1;
+
     public CartView(CartViewModel cartViewModel)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         BindingContext = cartViewModel;
         CartViewModel = cartViewModel;
 
@@ -38,18 +41,35 @@ public partial class CartView : ContentPage
         listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens();
     }
 
-    private void Delete_Clicked(object sender, EventArgs e)
+    private async void Delete_Clicked(object sender, EventArgs e)
     {
-        int idInList = int.Parse(((Microsoft.Maui.Controls.ImageButton)(sender)).ClassId);
-        CartViewModel.DeleteChoosenItem(idInList);
-
-        // Make sure someone is listening to event
-        if (On_CartView_ItemRemovedFromList != null)
+        try
         {
-            On_CartView_ItemRemovedFromList(this, new EventArgs()); 
-        }
+            await semaphoreDeleteItem.WaitAsync();
 
-        listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens();
+            await Task.Run(() =>
+            {
+                int idInList = int.Parse(((Microsoft.Maui.Controls.ImageButton)(sender)).ClassId);
+
+                if (_lastDeletedItemId != idInList)
+                {
+                    _lastDeletedItemId = idInList;
+                    CartViewModel.DeleteChoosenItem(idInList);
+
+                    // Make sure someone is listening to event
+                    if (On_CartView_ItemRemovedFromList != null)
+                    {
+                        On_CartView_ItemRemovedFromList(this, new EventArgs());
+                    }
+
+                    listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens();
+                }
+            });
+        }
+        finally
+        {
+            semaphoreDeleteItem.Release();
+        }
     }
 
     private void EntryCntOfItem_TextChanged(object sender, TextChangedEventArgs e)

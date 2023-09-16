@@ -1211,28 +1211,28 @@ public partial class PriceComparerView : ContentPage
                             smallestPriceInRowPerView = (item.CntOfItems * float.Parse(item.Price1));
                             smallestPriceInRow = smallestPriceInRowPerView;
 
-                            cheapestItemWithoutDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = false };
+                            cheapestItemWithoutDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = false, Price = smallestPriceInRow };
 
                         }
                         else if (item.Price1 != null && (item.CntOfItems * float.Parse(item.Price1)) < smallestPriceInRow)
                         {
                             smallestPriceInRowPerView = (item.CntOfItems * float.Parse(item.Price1));
                             smallestPriceInRow = smallestPriceInRowPerView;
-                            cheapestItemWithoutDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = false };
+                            cheapestItemWithoutDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = false, Price = smallestPriceInRow };
                         }
 
                         if (item.PriceDiscount1 != null && smallestPriceDiscountInRow == 0)
                         {
                             smallestPriceDiscountInRowPerView = (item.CntOfItems * float.Parse(item.PriceDiscount1));
                             smallestPriceDiscountInRow = smallestPriceDiscountInRowPerView;
-                            cheapestItemWithDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = true };
+                            cheapestItemWithDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = true, Price = smallestPriceDiscountInRow };
                         }
                         else if (item.PriceDiscount1 != null && (item.CntOfItems * float.Parse(item.PriceDiscount1)) < smallestPriceDiscountInRow)
                         {
                             smallestPriceDiscountInRowPerView = (item.CntOfItems * float.Parse(item.PriceDiscount1));
                             smallestPriceDiscountInRow = smallestPriceDiscountInRowPerView;
-                            cheapestItemWithDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = true };
-                }
+                            cheapestItemWithDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = true, Price = smallestPriceDiscountInRow };
+                        }
                     }
 
                     if (colIndex == 1)
@@ -1241,15 +1241,15 @@ public partial class PriceComparerView : ContentPage
                         {
                             smallestPriceInRowPerView = (item.CntOfItems * float.Parse(item.Price2));
                             smallestPriceInRow = smallestPriceInRowPerView;
-                            cheapestItemWithoutDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = false };
-            }
+                            cheapestItemWithoutDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = false, Price = smallestPriceInRow };
+                        }
 
                         if (item.PriceDiscount2 != null && (item.CntOfItems * float.Parse(item.PriceDiscount2)) < smallestPriceDiscountInRow)
                         {
                             smallestPriceDiscountInRowPerView = (item.CntOfItems * float.Parse(item.PriceDiscount2));
                             smallestPriceDiscountInRow = smallestPriceDiscountInRowPerView;
-                            cheapestItemWithDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = true };
-        }
+                            cheapestItemWithDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = true, Price = smallestPriceDiscountInRow };
+                        }
                     }
 
                     if (colIndex == 2)
@@ -1258,21 +1258,25 @@ public partial class PriceComparerView : ContentPage
                         {
                             smallestPriceInRowPerView = (item.CntOfItems * float.Parse(item.Price3));
                             smallestPriceInRow = smallestPriceInRowPerView;
-                            cheapestItemWithoutDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = false };
+                            cheapestItemWithoutDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = false, Price = smallestPriceInRow };
                         }
 
                         if (item.PriceDiscount3 != null && (item.CntOfItems * float.Parse(item.PriceDiscount3)) < smallestPriceDiscountInRow)
                         {
                             smallestPriceDiscountInRowPerView = (item.CntOfItems * float.Parse(item.PriceDiscount3));
                             smallestPriceDiscountInRow = smallestPriceDiscountInRowPerView;
-                            cheapestItemWithDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = true };
+                            cheapestItemWithDiscount = new CheapestItemPerCompany { Company = PageLayoutInfo.ListViewLayoutInfo[viewIndex].ListCompaniesInView[colIndex], ItemChoosen = item, Discount = true, Price = smallestPriceDiscountInRow };
                         }
                     }
                 }
             }
 
-            ListCheapestItemsPerCompanies.Add(cheapestItemWithoutDiscount);
-            ListCheapestItemsPerCompanies.Add(cheapestItemWithDiscount);
+            if(cheapestItemWithoutDiscount != null)
+                ListCheapestItemsPerCompanies.Add(cheapestItemWithoutDiscount);
+
+            if (cheapestItemWithDiscount != null)
+                ListCheapestItemsPerCompanies.Add(cheapestItemWithDiscount);
+
             summaryPrice += smallestPriceInRow;
             summaryPriceDiscount += smallestPriceDiscountInRow;
         }

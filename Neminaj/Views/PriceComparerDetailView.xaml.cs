@@ -3,6 +3,12 @@ using Neminaj.ViewsModels;
 
 namespace Neminaj.Views;
 
+public class CompanyItemsDetailData
+{
+    public string CompanyName { get; set; }
+    public List<Tuple<string, float>> ListItemData { get; set; }
+}
+
 public class CompanyItemsDetailText
 {
     public string CompanyName { get; set; }
@@ -15,6 +21,10 @@ public partial class PriceComparerDetailView : ContentPage
 
     private List<CompanyItemsDetailText> _listWithoutDiscount;
     private List<CompanyItemsDetailText> _listWithDiscount;
+
+    private List<CompanyItemsDetailData> _listWithoutDiscountExtra;
+    private List<CompanyItemsDetailData> _listWithDiscountExtra;
+
     private Grid _gridWithDiscount { get; set; } = new Grid();
     private Grid _gridWithoutDiscount { get; set; } = new Grid();
     private ScrollView _scrollViewWithDiscount { get; set; }
@@ -45,17 +55,27 @@ public partial class PriceComparerDetailView : ContentPage
         var groupsWithDiscount = _priceComparerDetailViewModel.ListCheapestItemsPerCompanies.Where(item => item.Discount).GroupBy(item => new { item.Company }).ToList();
 
         _listWithDiscount = new List<CompanyItemsDetailText>();
+        _listWithDiscountExtra = new List<CompanyItemsDetailData>();
 
         foreach (var group in groupsWithDiscount)
         {
             _listWithDiscount.Add(new CompanyItemsDetailText
             {
                 CompanyName = group.Key.Company.Name,
-                ListItemsNames = group.Select(s => s.ItemChoosen.FinalName).ToList(),
+                ListItemsNames = group.Select(s => $"{s.ItemChoosen.FinalName}     {s.Price}").ToList(),
+            });
+
+            _listWithDiscountExtra.Add(new CompanyItemsDetailData
+            {
+                CompanyName = group.Key.Company.Name,
+                //ListItemData = group.Select(s => new { s.ItemChoosen.FinalName, s.Price }).
+                //AsEnumerable().
+                //Select(d => new Tuple<string, float>(d.FinalName, d.Price)).ToList()
+                ListItemData = group.Select(s => new Tuple<string, float>(s.ItemChoosen.FinalName, s.Price)).ToList()
             });
         }
 
-        BuildGridView(_listWithDiscount, _gridWithDiscount, true);
+        BuildGridView(_listWithDiscount, _listWithDiscountExtra, _gridWithDiscount, true);
 
         _scrollViewWithDiscount = new ScrollView
         {
@@ -67,17 +87,28 @@ public partial class PriceComparerDetailView : ContentPage
         var groupsWithoutDiscount = _priceComparerDetailViewModel.ListCheapestItemsPerCompanies.Where(item => !item.Discount).GroupBy(item => new { item.Company }).ToList();
 
         _listWithoutDiscount = new List<CompanyItemsDetailText>();
+        _listWithoutDiscountExtra = new List<CompanyItemsDetailData>();
 
         foreach (var group in groupsWithoutDiscount)
         {
             _listWithoutDiscount.Add(new CompanyItemsDetailText
             {
                 CompanyName = group.Key.Company.Name,
-                ListItemsNames = group.Select(s => s.ItemChoosen.FinalName).ToList(),
+                ListItemsNames = group.Select(s => $"{s.ItemChoosen.FinalName}     {s.Price}").ToList(),
+            });
+
+            _listWithoutDiscountExtra.Add(new CompanyItemsDetailData
+            {
+                CompanyName = group.Key.Company.Name,
+                //ListItemData = group.Select(s => new { s.ItemChoosen.FinalName, s.Price }).
+                //AsEnumerable().
+                //Select(d => new Tuple<string, float>(d.FinalName, d.Price)).ToList()
+
+                ListItemData = group.Select(s => new Tuple<string, float>(s.ItemChoosen.FinalName, s.Price)).ToList()
             });
         }
 
-        BuildGridView(_listWithoutDiscount, _gridWithoutDiscount, false);
+        BuildGridView(_listWithoutDiscount, _listWithoutDiscountExtra, _gridWithoutDiscount, false);
 
         _scrollViewWithoutDiscount = new ScrollView
         {
@@ -90,7 +121,7 @@ public partial class PriceComparerDetailView : ContentPage
         AlreadyBuilded = true;
     }
 
-    private void BuildGridView(List<CompanyItemsDetailText> listItemsPerCompanies, Grid grid, bool discount)
+    private void BuildGridView(List<CompanyItemsDetailText> listItemsPerCompanies, List<CompanyItemsDetailData> listItemsPerCompaniesData, Grid grid, bool discount)
     {
         int row = 0;
         grid.Padding = 10;
@@ -124,7 +155,39 @@ public partial class PriceComparerDetailView : ContentPage
         Grid.SetColumn(btnNextBack, 2);
         grid.Add(btnNextBack);
 
-        foreach (var item in listItemsPerCompanies)
+        //foreach (var item in listItemsPerCompanies)
+        //{
+        //    grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+        //    row++;
+
+        //    Label lblCompany = new Label
+        //    {
+        //        Text = $"\r\n{item.CompanyName}\r\n",
+        //        FontSize = 14,
+        //        FontAttributes = FontAttributes.Bold
+        //    };
+
+        //    Grid.SetRow(lblCompany, row);
+        //    Grid.SetColumn(lblCompany, 0);
+        //    grid.Add(lblCompany);
+
+        //    grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+        //    row++;
+
+        //    Label itemsStringAgg = new Label
+        //    {
+        //        Text = item.ListItemsNames.Aggregate((i, j) => i + "\r\n" + j),
+        //        LineBreakMode = LineBreakMode.WordWrap,
+        //        HorizontalOptions = LayoutOptions.StartAndExpand,
+        //        VerticalOptions = LayoutOptions.CenterAndExpand
+        //    };
+
+        //    Grid.SetColumnSpan(itemsStringAgg, 3);
+        //    Grid.SetRow(itemsStringAgg, row);
+        //    grid.Add(itemsStringAgg);
+        //}
+
+        foreach (var item in listItemsPerCompaniesData)
         {
             grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
             row++;
@@ -140,20 +203,35 @@ public partial class PriceComparerDetailView : ContentPage
             Grid.SetColumn(lblCompany, 0);
             grid.Add(lblCompany);
 
-            grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
-            row++;
-
-            Label itemsStringAgg = new Label
+            foreach (var data in item.ListItemData)
             {
-                Text = item.ListItemsNames.Aggregate((i, j) => i + "\r\n" + j),
-                LineBreakMode = LineBreakMode.WordWrap,
-                HorizontalOptions = LayoutOptions.StartAndExpand,
-                VerticalOptions = LayoutOptions.CenterAndExpand
-            };
+                grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+                row++;
 
-            Grid.SetColumnSpan(itemsStringAgg, 3);
-            Grid.SetRow(itemsStringAgg, row);
-            grid.Add(itemsStringAgg);
+                Label itemName = new Label
+                {
+                    Text = data.Item1,
+                    LineBreakMode = LineBreakMode.WordWrap,
+                    HorizontalOptions = LayoutOptions.StartAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand
+                };
+
+                Grid.SetRow(itemName, row);
+                Grid.SetColumn(itemName, 0);
+                Grid.SetColumnSpan(itemName, 2);
+                grid.Add(itemName);
+
+                Label itemPrice = new Label
+                {
+                    Text = data.Item2.ToString("0.00") + " \u20AC",
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center
+                };
+
+                Grid.SetRow(itemPrice, row);
+                Grid.SetColumn(itemPrice, 2);
+                grid.Add(itemPrice);
+            }
         }
     }
 

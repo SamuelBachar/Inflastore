@@ -340,10 +340,10 @@ public partial class SettingsView : ContentPage
 
         scrollView.Content = gridMain;
 
+        popUpIndic.TurnOffActivityIndicator();
+
         // Set grid and its childrens as main content
         Content = scrollView;
-
-        popUpIndic.TurnOffActivityIndicator();
     }
 
     private void CompanyCheckBoxChanged(object sender, EventArgs e)
