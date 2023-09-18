@@ -31,13 +31,8 @@ public class SQLConnection
 
         m_ConnectionAsync = new SQLiteAsyncConnection(SQLConnection.m_DBPath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite);
 
-        await m_ConnectionAsync.CreateTableAsync<Item>();
-        await m_ConnectionAsync.CreateTableAsync<ItemPrice>();
-        await m_ConnectionAsync.CreateTableAsync<Company>();
-        await m_ConnectionAsync.CreateTableAsync<Unit>();
         await m_ConnectionAsync.CreateTableAsync<SavedCart>();
         await m_ConnectionAsync.CreateTableAsync<SavedCartItem>();
-        await m_ConnectionAsync.CreateTableAsync<NavigationShopData>();
         await m_ConnectionAsync.CreateTableAsync<SavedCard>();
     }
 
@@ -47,11 +42,8 @@ public class SQLConnection
             return;
 
         m_ConnectionSync = new SQLiteConnection(SQLConnection.m_DBPath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite);
-        m_ConnectionSync.CreateTable<Item>();
-        m_ConnectionSync.CreateTable<ItemPrice>();
-        m_ConnectionSync.CreateTable<Company>();
-        m_ConnectionSync.CreateTable<Unit>();
         m_ConnectionSync.CreateTable<SavedCart>();
         m_ConnectionSync.CreateTable<SavedCartItem>();
+        m_ConnectionSync.CreateTable<SavedCard>();
     }
 }

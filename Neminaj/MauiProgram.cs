@@ -38,16 +38,16 @@ public static class MauiProgram
         //if (!File.Exists(ItemRepository._dbPath))
         //{
             // TODO only do this when app first runs - this will happen all the time which is currently needed
-            var assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
+   //         var assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
 
-			using (Stream stream = assembly.GetManifestResourceStream("Neminaj.Resources.Database.neminaj.db3"))
-			{
-				using (MemoryStream memoryStream = new MemoryStream())
-				{
-					stream.CopyTo(memoryStream);
-                    File.WriteAllBytes(SQLConnection.m_DBPath, memoryStream.ToArray());
-				}
-			}
+			//using (Stream stream = assembly.GetManifestResourceStream("Neminaj.Resources.Database.neminaj.db3"))
+			//{
+			//	using (MemoryStream memoryStream = new MemoryStream())
+			//	{
+			//		stream.CopyTo(memoryStream);
+   //                 File.WriteAllBytes(SQLConnection.m_DBPath, memoryStream.ToArray());
+			//	}
+			//}
         //}
 
         // Https client
