@@ -1,4 +1,5 @@
 ﻿using SharedTypesLibrary.Models.API.DatabaseModels;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace InflaStoreWebAPI.Services.CategoryService;
 public class CategoryService : ICategoryService
@@ -21,7 +22,8 @@ public class CategoryService : ICategoryService
             {
                 Id = category.Id,
                 Name = category.Name,
-                ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Categories/{category.Path}",
+                //ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Categories/{category.Path}",
+                ImageUrl = @$"https://localhost:7279/StaticFile/Categories/{category.Path}"
             });
         }
 

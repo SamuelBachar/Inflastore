@@ -2,6 +2,7 @@
 using Neminaj.ContentViews;
 using Neminaj.Models;
 using Neminaj.Repositories;
+using Neminaj.ViewsModels;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -20,7 +21,8 @@ public partial class ItemPicker : ContentPage
     public delegate void ObservableItemsChoosed_Swaped(object sender, EventArgs e);
     public event ObservableItemsChoosed_Swaped OnObservableItemsChoosed_Swaped;
 
-    public ObservableCollection<ItemChoosen> ObservableItemsChoosed { get; set; } = new ObservableCollection<ItemChoosen>();
+    public static ObservableCollection<ItemChoosen> ObservableItemsChoosed { get; set; } = new ObservableCollection<ItemChoosen>();
+    private static int CountValue { get; set; } = 0;
 
     private List<Unit> ListUnits { get; set; } = null;
 
@@ -30,20 +32,43 @@ public partial class ItemPicker : ContentPage
 
     SavedCartRepository CartRepo = null;
 
-    private int CountValue { get; set; } = 0;
+    ItemPickerViewModel _itemPickerViewModel { get; set; } = null;
+
 
     private bool Rotate = true;
-    public ItemPicker(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo)
+    public ItemPicker(ItemPickerViewModel itemPickerViewModel)
 	{
 		InitializeComponent();
-		ItemRepo = itemRepo;
-        UnitRepo = unitRepo;
-        CartRepo = cartRepo;
+        _itemPickerViewModel = itemPickerViewModel;
+        this.BindingContext = _itemPickerViewModel;
 
         CartView.On_CartView_ItemRemovedFromList += async (s, e) => { await DecreaseShoppingCartCounter(); };
         ObservableItemsChoosed.CollectionChanged += ItemsChoosedCollection_Changed;
             
-        this.Loaded += async (s, e) => { await GetItemsAndUnits(); };
+        this.Loaded += async (s, e) => { await GetUnits(); };
+        this.Appearing += async (s, e) => { await GetItems(); };
+    }
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        ItemRepo = _itemPickerViewModel.ItemRepo;
+        UnitRepo = _itemPickerViewModel.UnitRepo;
+        CartRepo = _itemPickerViewModel.CartRepo;
+
+        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam polôžky ...");
+        this.ShowPopupAsync(popUpIndic);
+
+        ListUnits = await UnitRepo.GetAllUnitsAsync();
+
+        popUpIndic.TurnOnActivityIndicator();
+        List<Item> listItems = await ItemRepo.GetAllItemsAsync();
+        listItems = listItems.Where(item => item.Category_Id == _itemPickerViewModel.Category.Id).ToList();
+
+        this.listItem.ItemsSource = listItems.OrderBy(n => n.Name);
+
+        popUpIndic.TurnOffActivityIndicator();
     }
 
     private void ItemsChoosedCollection_Changed(object sender, NotifyCollectionChangedEventArgs e)
@@ -54,25 +79,13 @@ public partial class ItemPicker : ContentPage
         }
     }
 
-    private async Task GetItemsAndUnits()
+    private async Task GetUnits()
 	{
-        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam polôžky ...");
-        this.ShowPopupAsync(popUpIndic);
-        popUpIndic.TurnOnActivityIndicator();
-
-        List<Item> listItems = await ItemRepo.GetAllItemsAsync();
-
-        this.BindingContext = this;
-		this.listItem.ItemsSource = listItems.OrderBy(n => n.Name);
-
-        ListUnits = await UnitRepo.GetAllUnitsAsync();
-
-        popUpIndic.TurnOffActivityIndicator();
+        //ListUnits = await UnitRepo.GetAllUnitsAsync();
     }
 
-    private async Task GetUnits()
+    private async Task GetItems()
     {
-        ListUnits = await UnitRepo.GetAllUnitsAsync();
     }
 
     private async void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
@@ -149,7 +162,6 @@ public partial class ItemPicker : ContentPage
                 ["SavedCartRepository"] = CartRepo
             });
     }
-
 
     public async Task IncreaseShoppingCartCounter()
     {

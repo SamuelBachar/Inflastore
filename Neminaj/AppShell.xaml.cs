@@ -19,6 +19,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(NotKnownCardView), typeof(NotKnownCardView));
         Routing.RegisterRoute(nameof(PriceComparerDetailView), typeof(PriceComparerDetailView));
         Routing.RegisterRoute(nameof(ChooseCardView), typeof(ChooseCardView));
+        Routing.RegisterRoute(nameof(ItemPicker), typeof(ItemPicker));
     }
 
     // Code for closing of opened nested pages after clicking tap bar item

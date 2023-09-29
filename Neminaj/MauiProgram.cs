@@ -67,7 +67,7 @@ public static class MauiProgram
                 ? "https://10.0.2.2:7279"
                 : "https://localhost:7279";
 
-            baseUrl = "https://inflastoreapi.azurewebsites.net/";
+            //baseUrl = "https://inflastoreapi.azurewebsites.net/";
 
             httpClient.BaseAddress = new Uri(baseUrl);
         }).ConfigureHttpMessageHandlerBuilder(configBuilder =>
@@ -98,7 +98,6 @@ public static class MauiProgram
         // Views
         builder.Services.AddSingleton<LoginView>();
         builder.Services.AddSingleton<LogOutView>();
-        builder.Services.AddSingleton<ItemPicker>();
         builder.Services.AddSingleton<PriceComparerView>();
         builder.Services.AddSingleton<CartListView>();
         builder.Services.AddSingleton<NavigationView>();
@@ -115,6 +114,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<SavedCardDetailViewModel>();
         builder.Services.AddSingleton<NotKnownCardViewModel>();
         builder.Services.AddSingleton<PriceComparerDetailViewModel>();
+        builder.Services.AddSingleton<ItemPickerViewModel>();
 
         // Transients views
         builder.Services.AddTransient<RegisterView>();
@@ -125,7 +125,10 @@ public static class MauiProgram
         builder.Services.AddTransient<NotKnownCardView>();
         builder.Services.AddTransient<SavedCartDetailView>(); // CarT
         builder.Services.AddTransient<SavedCardDetailView>(); // CarD
-        builder.Services.AddTransient<CategoryPickerView>();
+
+        // test
+        builder.Services.AddSingleton<ItemPicker>();
+        builder.Services.AddSingleton<CategoryPickerView>();
 
         return builder.Build();
 	}

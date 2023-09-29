@@ -9,7 +9,9 @@
 
     <ScrollView>
         <CollectionView ItemsSource="{Binding _categories}"
-                        ItemsLayout="VerticalGrid, 3">
+                        ItemsLayout="VerticalGrid, 3"
+                        SelectionMode="Single"
+                        SelectionChanged="CollectionView_SelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:CategoryDTO">
                     <Border BackgroundColor="{StaticResource Primary}"

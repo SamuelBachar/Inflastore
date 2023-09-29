@@ -100,7 +100,7 @@ public partial class LoginView : ContentPage
                     }
                 }
 
-                await Shell.Current.GoToAsync($"//{nameof(ItemPicker)}");
+                await Shell.Current.GoToAsync($"//{nameof(CategoryPickerView)}");
                 popUpIndic.TurnOffActivityIndicator();
             }
             else

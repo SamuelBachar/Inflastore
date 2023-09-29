@@ -17,8 +17,8 @@
         Route="LoginView" />
 
     <TabBar x:Name="MenuTapBar">
-        <Tab Title="Košík" Icon="cart.png">
-            <ShellContent ContentTemplate="{DataTemplate localViews:ItemPicker}" Route="ItemPicker"/>
+        <Tab Title="Nákup" Icon="cart.png">
+            <ShellContent ContentTemplate="{DataTemplate localViews:CategoryPickerView}" Route="CategoryPickerView"/>
         </Tab>
         <Tab Title="Porovnávač" Icon="calculator.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:PriceComparerView}" Route="PriceComparerView"/>

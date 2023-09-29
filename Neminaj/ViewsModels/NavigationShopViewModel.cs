@@ -17,8 +17,6 @@ using System.Threading.Tasks;
 namespace Neminaj.ViewsModels;
 
 [QueryProperty(nameof(NavigationShopRepository), nameof(NavigationShopRepository))]
-//[QueryProperty(nameof(GeoLocation), nameof(GeoLocation))]
-//[QueryProperty(nameof(SettingsService), nameof(SettingsService))]
 [QueryProperty(nameof(ListCompaniesIds), nameof(ListCompaniesIds))]
 [QueryProperty(nameof(CompanyRepository), nameof(CompanyRepository))]
 
@@ -29,12 +27,6 @@ public partial class NavigationShopViewModel : ObservableObject
 
     [ObservableProperty]
     private CompanyRepository companyRepository;
-
-    //[ObservableProperty]
-    //private SettingsService settingsService;
-
-    //[ObservableProperty]
-    //private IGeolocation geoLocation;
 
     [ObservableProperty]
     private List<int> listCompaniesIds;

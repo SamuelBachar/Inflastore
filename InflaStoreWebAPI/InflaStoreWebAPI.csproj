@@ -14,11 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\StaticFile\Categories\category_flesh.png" />
+    <Content Remove="wwwroot\StaticFile\Categories\category_fruit.png" />
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\billa_logo.png" />
+    <Content Remove="wwwroot\StaticFile\Companies\ClubCard\coopjednota_logo.png" />
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\kaufland_logo.png" />
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\lidl_logo.png" />
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\other_card.png" />
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\tesco_logo.png" />
+    <Content Remove="wwwroot\StaticFile\Companies\ClubCard\yeme_logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,17 +43,20 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\StaticFile\Categories\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\EmailForgotPassword\EmailForgotPassword.html" />
     <None Include="wwwroot\EmailRegister\EmailRegister.html" />
+    <None Include="wwwroot\StaticFile\Categories\category_flesh.png" />
+    <None Include="wwwroot\StaticFile\Categories\category_fruit.png" />
     <None Include="wwwroot\StaticFile\Companies\ClubCard\billa_logo.png" />
+    <None Include="wwwroot\StaticFile\Companies\ClubCard\coopjednota_logo.png" />
     <None Include="wwwroot\StaticFile\Companies\ClubCard\other_card.png" />
     <None Include="wwwroot\StaticFile\Companies\ClubCard\kaufland_logo.png" />
     <None Include="wwwroot\StaticFile\Companies\ClubCard\lidl_logo.png" />
     <None Include="wwwroot\StaticFile\Companies\ClubCard\tesco_logo.png" />
+    <None Include="wwwroot\StaticFile\Companies\ClubCard\yeme_logo.png" />
     <None Include="wwwroot\StaticFile\Companies\Logo\billa_logo.png" />
     <None Include="wwwroot\StaticFile\Companies\Logo\kaufland_logo.png" />
     <None Include="wwwroot\StaticFile\Companies\Logo\lidl_logo.png" />

@@ -118,10 +118,6 @@ app.Run();
 // dotnet ef migrations add "Sprava"
 // dotnet ef database update
 
-// Patrick God asi najlepsie s tymto pokracovat https://www.youtube.com/watch?v=TDY_DtTEkes&ab_channel=PatrickGod Authentication - Authorization with JWT + Role
-// Patrick God Refresh tokens https://www.youtube.com/watch?v=HGIdAn2h8BA&ab_channel=PatrickGod
 // Patrick God read JWT Authorization Claims of a User (from a JSON Web Token) https://www.youtube.com/watch?v=fhWIkbF18lM&ab_channel=PatrickGod
 
 // Use HttpClient correct way in API https://www.youtube.com/watch?v=Z6Y2adsMnAA&ab_channel=NickChapsas
-
-// Mohamad refresh token https://www.youtube.com/watch?v=2_H0Zj-C8EM&ab_channel=MohamadLawand
