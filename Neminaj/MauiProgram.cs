@@ -93,6 +93,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<NavigationShopRepository>();
         builder.Services.AddSingleton<SavedCardRepository>();
         builder.Services.AddSingleton<ClubCardRepository>();
+        builder.Services.AddSingleton<CategoryRepository>();
 
         // Views
         builder.Services.AddSingleton<LoginView>();
@@ -122,10 +123,9 @@ public static class MauiProgram
         builder.Services.AddTransient<NavigationView>();
         builder.Services.AddTransient<PriceComparerDetailView>();
         builder.Services.AddTransient<NotKnownCardView>();
-
-        // ?? tood riesi problem s close stream
-        builder.Services.AddTransient<SavedCartDetailView>();
-        builder.Services.AddTransient<SavedCardDetailView>();
+        builder.Services.AddTransient<SavedCartDetailView>(); // CarT
+        builder.Services.AddTransient<SavedCardDetailView>(); // CarD
+        builder.Services.AddTransient<CategoryPickerView>();
 
         return builder.Build();
 	}
