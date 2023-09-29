@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\StaticFile\Categories\" />
   </ItemGroup>
 
   <ItemGroup>
