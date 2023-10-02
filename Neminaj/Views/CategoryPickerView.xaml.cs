@@ -7,10 +7,10 @@ namespace Neminaj.Views;
 
 public partial class CategoryPickerView : ContentPage
 {
-	private readonly CategoryRepository _categoryRepository;
-	public ObservableCollection<CategoryDTO> _categories { get; set; } = new ();
+    private readonly CategoryRepository _categoryRepository;
+    public ObservableCollection<CategoryDTO> _categories { get; set; } = new();
 
-	ItemRepository _itemRepo { get; set; } = null;
+    ItemRepository _itemRepo { get; set; } = null;
 
     UnitRepository _unitRepo { get; set; } = null;
 
@@ -18,11 +18,11 @@ public partial class CategoryPickerView : ContentPage
 
 
     public CategoryPickerView(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo, CategoryRepository categoryRepository)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
-		_categoryRepository = categoryRepository;
-		this.BindingContext = this;
+        _categoryRepository = categoryRepository;
+        this.BindingContext = this;
 
         _itemRepo = itemRepo;
         _unitRepo = unitRepo;
@@ -33,12 +33,14 @@ public partial class CategoryPickerView : ContentPage
     {
         base.OnAppearing();
 
+        CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
+
         _categories.Clear();
 
-		foreach (CategoryDTO category in await _categoryRepository.GetAllCategories())
-		{
-			_categories.Add(category);
-		}
+        foreach (CategoryDTO category in await _categoryRepository.GetAllCategories())
+        {
+            _categories.Add(category);
+        }
 
         if (this.CategoriesCollectionView.SelectedItems.Count != 0)
             this.CategoriesCollectionView.SelectedItems.Clear();
@@ -48,13 +50,13 @@ public partial class CategoryPickerView : ContentPage
 
     private async void CategoriesCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-		if (e.CurrentSelection?[0] is CategoryDTO category)
-		{
-			await Shell.Current.GoToAsync(nameof(ItemPicker),
+        if (e.CurrentSelection?[0] is CategoryDTO category)
+        {
+            await Shell.Current.GoToAsync(nameof(ItemPicker),
             new Dictionary<string, object>
             {
                 ["Category"] = category,
-				["ItemRepo"] = _itemRepo,
+                ["ItemRepo"] = _itemRepo,
                 ["UnitRepo"] = _unitRepo,
                 ["CartRepo"] = _savedCartRepo
             });

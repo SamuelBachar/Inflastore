@@ -5,35 +5,39 @@
              xmlns:views="clr-namespace:Neminaj.Views"
              x:Class="Neminaj.Views.CategoryPickerView"
              x:DataType="views:CategoryPickerView"
+             xmlns:controls="clr-namespace:Neminaj.ContentViews"
              Title="Výber položiek">
 
-    <ScrollView>
-        <CollectionView x:Name="CategoriesCollectionView"
+    <Grid>
+        <ScrollView>
+            <CollectionView x:Name="CategoriesCollectionView"
                         ItemsSource="{Binding _categories}"
                         ItemsLayout="VerticalGrid, 3"
                         SelectionMode="Single"
                         SelectionChanged="CategoriesCollectionView_SelectionChanged">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="model:CategoryDTO">
-                    <Border BackgroundColor="{StaticResource Primary}"
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:CategoryDTO">
+                        <Border BackgroundColor="{StaticResource Primary}"
                             StrokeShape="RoundRectangle 5"
                             Margin="5">
-                        <Grid RowDefinitions="100, 40">
-                            <Image Grid.Row="0"
+                            <Grid RowDefinitions="100, 40">
+                                <Image Grid.Row="0"
                                      Source="{Binding ImageUrl}"
                                      BackgroundColor="White"
                                      Aspect="AspectFit"/>
 
-                            <Label Grid.Row="1"
+                                <Label Grid.Row="1"
                                    Text="{Binding Name}"
                                    VerticalOptions="Center"
                                    HorizontalTextAlignment="Center"
                                    LineBreakMode="WordWrap"
                                    TextColor="White"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </ScrollView>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+        <controls:CartCounterControlView x:Name="CartCounterControlView" />
+    </Grid>
 </ContentPage>

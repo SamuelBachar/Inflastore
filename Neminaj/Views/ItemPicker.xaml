@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:y="clr-namespace:Neminaj.ContentViews"
              x:Class="Neminaj.Views.ItemPicker"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+             xmlns:controls="clr-namespace:Neminaj.ContentViews">
              
     <ContentPage.Content>
         <Grid>
@@ -46,36 +46,8 @@
                     </Grid>
                 </VerticalStackLayout>
             </ScrollView>
-            <Border x:Name="CartCounter"
-                    BackgroundColor="#E0662B"
-                    HorizontalOptions="End" 
-                    VerticalOptions="End" 
-                    Padding="30, 10" 
-                    StrokeShape="RoundRectangle 40"
-                    Margin="5"
-                    StrokeThickness="0">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="CartCounter_TapGestureRecognizer_Tapped" />
-                </Border.GestureRecognizers>
-                <HorizontalStackLayout 
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    Spacing="10">
-                    <Image Source="cart.png"
-                           HeightRequest="16"
-                           WidthRequest="16"
-                           Aspect="AspectFill">
-                        <Image.Behaviors>
-                            <toolkit:IconTintColorBehavior TintColor="White"/>
-                        </Image.Behaviors>
-                    </Image>
-                    <Label x:Name="lblCartCount"
-                           FontSize="16"
-                           TextColor="White"
-                           FontAttributes="Bold"
-                           Text="0"/>
-                </HorizontalStackLayout>
-            </Border>
+            <controls:CartCounterControlView x:Name="CartCounterControlView" />
+
         </Grid>
     </ContentPage.Content>
 
