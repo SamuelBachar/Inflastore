@@ -51,18 +51,21 @@ public partial class ItemPicker : ContentPage
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
+        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam polôžky ...");
+        popUpIndic.TurnOnActivityIndicator();
+        this.ShowPopupAsync(popUpIndic);
+
         base.OnNavigatedTo(args);
 
         ItemRepo = _itemPickerViewModel.ItemRepo;
         UnitRepo = _itemPickerViewModel.UnitRepo;
         CartRepo = _itemPickerViewModel.CartRepo;
 
-        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam polôžky ...");
-        this.ShowPopupAsync(popUpIndic);
+        this.Title = _itemPickerViewModel.Category.Name;
+
 
         ListUnits = await UnitRepo.GetAllUnitsAsync();
 
-        popUpIndic.TurnOnActivityIndicator();
         List<Item> listItems = await ItemRepo.GetAllItemsAsync();
         listItems = listItems.Where(item => item.Category_Id == _itemPickerViewModel.Category.Id).ToList();
 

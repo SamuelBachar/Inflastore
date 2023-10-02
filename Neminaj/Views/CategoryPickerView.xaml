@@ -8,19 +8,21 @@
              Title="Výber položiek">
 
     <ScrollView>
-        <CollectionView ItemsSource="{Binding _categories}"
+        <CollectionView x:Name="CategoriesCollectionView"
+                        ItemsSource="{Binding _categories}"
                         ItemsLayout="VerticalGrid, 3"
                         SelectionMode="Single"
-                        SelectionChanged="CollectionView_SelectionChanged">
+                        SelectionChanged="CategoriesCollectionView_SelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:CategoryDTO">
                     <Border BackgroundColor="{StaticResource Primary}"
                             StrokeShape="RoundRectangle 5"
                             Margin="5">
-                        <Grid RowDefinitions="*, 40">
+                        <Grid RowDefinitions="100, 40">
                             <Image Grid.Row="0"
                                      Source="{Binding ImageUrl}"
-                                     Aspect="AspectFill"/>
+                                     BackgroundColor="White"
+                                     Aspect="AspectFit"/>
 
                             <Label Grid.Row="1"
                                    Text="{Binding Name}"

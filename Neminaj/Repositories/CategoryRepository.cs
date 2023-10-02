@@ -20,6 +20,7 @@ public class CategoryRepository
     public CategoryRepository(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
+
         _httpClient = _httpClientFactory.CreateClient(AppConstants.HttpsClientName);
     }
 

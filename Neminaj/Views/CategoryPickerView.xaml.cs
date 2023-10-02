@@ -40,10 +40,13 @@ public partial class CategoryPickerView : ContentPage
 			_categories.Add(category);
 		}
 
+        if (this.CategoriesCollectionView.SelectedItems.Count != 0)
+            this.CategoriesCollectionView.SelectedItems.Clear();
+
         // todo: tu som skoncil https://youtu.be/FP_ZvUGcumg?t=692
     }
 
-    private async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void CategoriesCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
 		if (e.CurrentSelection?[0] is CategoryDTO category)
 		{

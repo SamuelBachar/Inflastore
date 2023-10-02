@@ -111,13 +111,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-// JWT Authentication a hovori ze Azure Key Vault existuje a ma video s nejakym inym riesenim
-//https://youtu.be/mgeuh8k3I4g?t=249
-
-// dotnet ef migrations add "Sprava"
-// dotnet ef database update
-
-// Patrick God read JWT Authorization Claims of a User (from a JSON Web Token) https://www.youtube.com/watch?v=fhWIkbF18lM&ab_channel=PatrickGod
-
-// Use HttpClient correct way in API https://www.youtube.com/watch?v=Z6Y2adsMnAA&ab_channel=NickChapsas

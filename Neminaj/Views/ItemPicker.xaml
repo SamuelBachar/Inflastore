@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:y="clr-namespace:Neminaj.ContentViews"
              x:Class="Neminaj.Views.ItemPicker"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="Výber položiek">
-
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+             
     <ContentPage.Content>
         <Grid>
             <ScrollView>
