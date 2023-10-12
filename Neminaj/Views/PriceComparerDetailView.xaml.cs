@@ -133,21 +133,21 @@ public partial class PriceComparerDetailView : ContentPage
         Label lblTypeOfList = new Label
         {
             Text = discount ? "Nákup s kartou" : "Nákup bez karty",
-            FontSize = 20,
             FontAttributes = FontAttributes.Bold,
-            VerticalOptions = LayoutOptions.Center,
-            HorizontalOptions = LayoutOptions.Center,
+            VerticalOptions = LayoutOptions.Start,
+            HorizontalOptions = LayoutOptions.Start,
         };
 
         Grid.SetColumnSpan(lblTypeOfList, 2);
+        Grid.SetColumn(lblTypeOfList, 0);
         Grid.SetRow(lblTypeOfList, row);
         grid.Add(lblTypeOfList);
 
         Button btnNextBack = new Button
         {
             Text = discount ? Texts.Next : Texts.Back,
-            HorizontalOptions = LayoutOptions.Center,
-            VerticalOptions = LayoutOptions.Center
+            HorizontalOptions = LayoutOptions.End,
+            VerticalOptions = LayoutOptions.End
         };
 
         btnNextBack.Clicked += BtnNextBack_Clicked;

@@ -46,8 +46,8 @@ public partial class ItemPicker : ContentPage
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam polôžky ...");
-        popUpIndic.TurnOnActivityIndicator();
-        this.ShowPopupAsync(popUpIndic);
+        //popUpIndic.TurnOnActivityIndicator();
+        this.ShowPopup(popUpIndic);
 
         base.OnNavigatedTo(args);
 
@@ -65,7 +65,8 @@ public partial class ItemPicker : ContentPage
 
         this.listItem.ItemsSource = listItems.OrderBy(n => n.Name);
 
-        popUpIndic.TurnOffActivityIndicator();
+        //popUpIndic.TurnOffActivityIndicator();
+        popUpIndic.Close();
     }
 
     private void ItemsChoosedCollection_Changed(object sender, NotifyCollectionChangedEventArgs e)

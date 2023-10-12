@@ -58,12 +58,13 @@ public partial class ForgotPasswordView : ContentPage
         ForgotPasswordRequest.ConfirmPassword = EntryPasswordConfirm.Text;
 
         ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Pripravujem zmenu hesla ...");
-        this.ShowPopupAsync(popUpIndic);
-        popUpIndic.TurnOnActivityIndicator();
+        this.ShowPopup(popUpIndic);
+        //popUpIndic.TurnOnActivityIndicator();
 
         (UserForgotPasswordDTO UserForgotPasswordDTO, string Message) response = await _forgotPasswordService.UserForgotPasswordHTTPS(ForgotPasswordRequest);
 
-        popUpIndic.TurnOffActivityIndicator();
+        //popUpIndic.TurnOffActivityIndicator();
+        popUpIndic.Close();
 
         if (response.UserForgotPasswordDTO != null)
         {

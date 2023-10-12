@@ -51,8 +51,8 @@ public partial class CardsView : ContentPage
         else
         {
             ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam uložené karty ...");
-            this.ShowPopupAsync(popUpIndic);
-            popUpIndic.TurnOnActivityIndicator();
+            this.ShowPopup(popUpIndic);
+            //popUpIndic.TurnOnActivityIndicator();
 
             listSavedCards = listSavedCards.OrderBy(card => card.CardName).ToList();
             listSavedCards.ForEach(card => card.UknownCardColor = Color.FromInt(card.UknownCardColorDB));
@@ -61,7 +61,8 @@ public partial class CardsView : ContentPage
             this.listCards.ItemsSource = listSavedCards;
             this.Content = this.MainScrollView;
 
-            popUpIndic.TurnOffActivityIndicator();
+            //popUpIndic.TurnOffActivityIndicator();
+            popUpIndic.Close();
         }
     }
 

@@ -28,30 +28,39 @@ public class LoginService : ILoginService
 
                 UserLoginRequest userLoginRequest = new UserLoginRequest { Email = email, Password = passWord };
                 var response = await httpClient.PostAsJsonAsync($"/api/User/login", userLoginRequest, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-                var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
 
                 if (response.IsSuccessStatusCode)
                 {
+                    var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
                     return (new UserLoginDTO { Email = serializedResponse.Data.Email, JWT = serializedResponse.Data.JWT }, serializedResponse.Message);
                 }
-                else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (!serializedResponse.Success))
+                else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (!response.IsSuccessStatusCode))
                 {
+                    var serializedResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserLoginDTO>>();
                     return (null, serializedResponse.Message);
                 }
-                else if ((response.StatusCode == System.Net.HttpStatusCode.BadRequest) && (serializedResponse.Data == null))
+                else if (!response.IsSuccessStatusCode)
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
-                    Dictionary<string, List<string>> dicGenericErrors = GenericHttpErrorReader.ExtractErrorsFromWebAPIResponse(responseString);
 
-                    var temp = string.Empty;
-
-                    foreach (var error in dicGenericErrors)
+                    if (responseString.Contains("errors"))
                     {
-                        foreach (var errorInfo in error.Value)
-                            temp += errorInfo + "\r\n";
-                    }
+                        Dictionary<string, List<string>> dicGenericErrors = GenericHttpErrorReader.ExtractErrorsFromWebAPIResponse(responseString);
 
-                    return (null, temp);
+                        var temp = string.Empty;
+
+                        foreach (var error in dicGenericErrors)
+                        {
+                            foreach (var errorInfo in error.Value)
+                                temp += errorInfo + "\r\n";
+                        }
+
+                        return (null, temp);
+                    }
+                    else
+                    {
+                        return (null, ResultMessage: $"Neočakavaná odpoveď od servera, neznáma chyba");
+                    }
                 }
 
                 return (null, ResultMessage: $"Neočakavaná odpoveď od servera, neznáma chyba");

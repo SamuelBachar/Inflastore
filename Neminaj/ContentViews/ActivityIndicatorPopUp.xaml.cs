@@ -10,6 +10,8 @@ public partial class ActivityIndicatorPopUp : Popup
 		InitializeComponent();
 		_text = text;
 
+        this.Text.Text = _text;
+        this.Indicator.IsRunning = true;
     }
 
     public void TurnOnActivityIndicator()
@@ -21,6 +23,6 @@ public partial class ActivityIndicatorPopUp : Popup
     public void TurnOffActivityIndicator()
 	{
         this.Indicator.IsRunning = false;
-		this.Close();
+		//this.Close();
     }
 }

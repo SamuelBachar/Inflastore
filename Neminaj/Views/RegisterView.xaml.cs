@@ -82,12 +82,13 @@ public partial class RegisterView : ContentPage
         UserRegisterRequest.Region_Id = ((SharedTypesLibrary.Models.API.DatabaseModels.Region)RegionPicker.ItemsSource[RegionPicker.SelectedIndex]).Id;
 
         ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Registrujem ...");
-        this.ShowPopupAsync(popUpIndic);
-        popUpIndic.TurnOnActivityIndicator();
+        this.ShowPopup(popUpIndic);
+        //popUpIndic.TurnOnActivityIndicator();
 
         (UserRegisterDTO UserRegisterDTO, string Message) response = await _registerService.RegisterHTTPS(UserRegisterRequest);
 
-        popUpIndic.TurnOffActivityIndicator();
+        //popUpIndic.TurnOffActivityIndicator();
+        popUpIndic.Close();
 
         if (response.UserRegisterDTO != null)
         {

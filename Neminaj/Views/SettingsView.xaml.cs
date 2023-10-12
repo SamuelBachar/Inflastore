@@ -99,8 +99,8 @@ public partial class SettingsView : ContentPage
     public async Task BuildPage()
     {
         ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam nastavenia ...");
-        this.ShowPopupAsync(popUpIndic);
-        popUpIndic.TurnOnActivityIndicator();
+       // this.ShowPopup(popUpIndic);
+        //popUpIndic.TurnOnActivityIndicator();
 
         //this.Title = "Nastavenia";
 
@@ -204,7 +204,7 @@ public partial class SettingsView : ContentPage
                 CheckBox chkBox = new CheckBox
                 {
                     AutomationId = ListComp[helpCounter].Id.ToString(), // Used to distinguish companies (selected and unselected companies)
-                    HorizontalOptions = LayoutOptions.StartAndExpand,
+                    HorizontalOptions = LayoutOptions.Start,
                 };
 
                 // load saved status of choosing company
@@ -223,7 +223,7 @@ public partial class SettingsView : ContentPage
                 {
                     Source = ListComp[helpCounter].Url,
                     Aspect = Aspect.AspectFit,
-                    HorizontalOptions = LayoutOptions.StartAndExpand
+                    HorizontalOptions = LayoutOptions.Start
                 };
 
                 ListImage.Add(image);
@@ -340,10 +340,12 @@ public partial class SettingsView : ContentPage
 
         scrollView.Content = gridMain;
 
-        popUpIndic.TurnOffActivityIndicator();
+        //popUpIndic.TurnOffActivityIndicator();
 
         // Set grid and its childrens as main content
         Content = scrollView;
+
+        //popUpIndic.Close();
     }
 
     private void CompanyCheckBoxChanged(object sender, EventArgs e)

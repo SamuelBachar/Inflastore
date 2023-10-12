@@ -99,6 +99,6 @@ public partial class CartView : ContentPage
     }
     private async Task BtnSaveCart_Clicked(object sender, EventArgs e)
     {
-        await this.ShowPopupAsync(new CartViewSaveCartPopUp(CartViewModel.GetItemChoosens().ToList(), CartViewModel, this));
+        this.ShowPopup(new CartViewSaveCartPopUp(CartViewModel.GetItemChoosens().ToList(), CartViewModel, this));
     }
 }

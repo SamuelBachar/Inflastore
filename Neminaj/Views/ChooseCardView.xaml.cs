@@ -31,8 +31,8 @@ public partial class ChooseCardView : ContentPage
     private async Task BuildPage()
     {
         ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam karty ...");
-        this.ShowPopupAsync(popUpIndic);
-        popUpIndic.TurnOnActivityIndicator();
+        this.ShowPopup(popUpIndic);
+        //popUpIndic.TurnOnActivityIndicator();
 
         _listCardDatas.Clear();
 
@@ -90,7 +90,8 @@ public partial class ChooseCardView : ContentPage
         //});
 
         listCards.ItemsSource = new ObservableCollection<CardData>(_listCardDatas);
-        popUpIndic.TurnOffActivityIndicator();
+        //popUpIndic.TurnOffActivityIndicator();
+        popUpIndic.Close();
     }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
