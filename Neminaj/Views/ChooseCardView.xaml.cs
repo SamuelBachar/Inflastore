@@ -7,6 +7,7 @@ using Neminaj.Utils;
 using Neminaj.ViewsModels;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
+using SQLite;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -20,18 +21,27 @@ public partial class ChooseCardView : ContentPage
     private List<CardData> _listCardDatas { get; set; } = new List<CardData>();
 
     byte[] _imageBufferOtherCard = null;
+
+    ActivityIndicatorPopUp _popUpIndic = new ActivityIndicatorPopUp("Načítavam karty ...");
+
+    private delegate Task PageBuilded_Event();
+    private event PageBuilded_Event On_PageBuilded_Event;
+
     public ChooseCardView(ClubCardRepository clubCardRepository, SavedCardRepository savedCardRepository)
     {
         InitializeComponent();
         _clubCardRepository = clubCardRepository;
         _savedCardRepository = savedCardRepository;
+
+        this.Loaded += async (s, e) => { await ShowPopupIndicator(); };
         this.Loaded += async (s, e) => { await BuildPage(); };
+        this.On_PageBuilded_Event += async () => { await On_PageBuilded(); };
     }
 
     private async Task BuildPage()
     {
-        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam karty ...");
-        this.ShowPopup(popUpIndic);
+        //ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam karty ...");
+        //this.ShowPopup(popUpIndic);
         //popUpIndic.TurnOnActivityIndicator();
 
         _listCardDatas.Clear();
@@ -89,9 +99,24 @@ public partial class ChooseCardView : ContentPage
         //    IsKnownCard = false
         //});
 
+        if (On_PageBuilded_Event != null)
+        {
+            await On_PageBuilded_Event();
+        }
+
         listCards.ItemsSource = new ObservableCollection<CardData>(_listCardDatas);
         //popUpIndic.TurnOffActivityIndicator();
-        popUpIndic.Close();
+    }
+
+    private async Task ShowPopupIndicator()
+    {
+        await this.ShowPopupAsync(_popUpIndic);
+    }
+
+    private async Task On_PageBuilded()
+    {
+        await Task.Delay(1000);
+        await _popUpIndic.CloseAsync();
     }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)

@@ -20,9 +20,10 @@ public partial class ActivityIndicatorPopUp : Popup
 		this.Indicator.IsRunning = true;
     }
 
-    public void TurnOffActivityIndicator()
+    public async Task TurnOffActivityIndicator()
 	{
         this.Indicator.IsRunning = false;
-		//this.Close();
+        await Task.Delay(1000);
+        await this.CloseAsync();
     }
 }
