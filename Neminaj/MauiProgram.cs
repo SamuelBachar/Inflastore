@@ -9,6 +9,9 @@ using Neminaj.Views;
 using Neminaj.ViewsModels;
 using System.Reflection;
 using Syncfusion.Maui.Core.Hosting;
+using BarcodeScanner.Mobile;
+
+using ZXing.Net.Maui.Controls;
 
 namespace Neminaj;
 
@@ -19,10 +22,15 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseBarcodeReader()
             .ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
             .UseMauiMaps()
             .UseMauiCameraView()
+            .ConfigureMauiHandlers( handlers =>
+            {
+                handlers.AddBarcodeScannerHandler();
+            })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

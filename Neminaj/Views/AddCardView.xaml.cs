@@ -1,14 +1,6 @@
-﻿using Camera.MAUI;
-using CommunityToolkit.Maui.Views;
-using Microsoft.Maui.Storage;
-using Neminaj.ContentViews;
+﻿//using BarcodeScanner.Mobile;
 using Neminaj.Models;
-using Neminaj.Repositories;
-using Neminaj.Utils;
 using Neminaj.ViewsModels;
-using System.Dynamic;
-using System.Reflection;
-using ZXing;
 
 namespace Neminaj.Views;
 
@@ -45,28 +37,45 @@ public partial class AddCardView : ContentPage
 
         NotKnownCardView.On_NotKnownCardView_BtnAddCard_Clicked += On_NotKnownCardView_BtnAddCard_Clicked;
 
-        cameraView.BarCodeOptions = new()
+#if IOS
+            BarcodeScanner.Mobile.Methods.SetSupportBarcodeFormat(BarcodeScanner.Mobile.BarcodeFormats.All);
+            BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
+#endif
+
+#if ANDROID
+            BarcodeScanner.Mobile.Methods.SetSupportBarcodeFormat(BarcodeScanner.Mobile.BarcodeFormats.All);
+            BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
+#endif
+
+
+        //cameraView.BarCodeOptions = new()
+        //{
+        //    PossibleFormats =
+        //    {
+        //        ZXing.BarcodeFormat.QR_CODE,
+        //        ZXing.BarcodeFormat.All_1D,
+        //        ZXing.BarcodeFormat.MAXICODE,
+        //        ZXing.BarcodeFormat.RSS_14
+        //    },
+        //    AutoRotate = true,
+        //    TryHarder = true,
+        //    TryInverted = true,
+        //    ReadMultipleCodes = false
+        //};
+
+        //cameraView.BarCodeDetectionFrameRate = 3;
+        ////cameraView.BarCodeDetectionMaxThreads = 5;
+        //cameraView.ControlBarcodeResultDuplicate = true;
+        //cameraView.BarCodeDetectionEnabled = true;
+
+        //if (cameraView.MaxZoomFactor >= 2.0f)
+        //    cameraView.ZoomFactor = 2.0f;
+
+        cameraView.Options = new ZXing.Net.Maui.BarcodeReaderOptions
         {
-            PossibleFormats =
-            {
-                ZXing.BarcodeFormat.QR_CODE,
-                ZXing.BarcodeFormat.All_1D,
-                ZXing.BarcodeFormat.MAXICODE,
-                ZXing.BarcodeFormat.RSS_14
-            },
-            AutoRotate = true,
-            TryHarder = true,
             TryInverted = true,
-            ReadMultipleCodes = false
+            AutoRotate = true
         };
-
-        cameraView.BarCodeDetectionFrameRate = 3;
-        cameraView.BarCodeDetectionMaxThreads = 5;
-        cameraView.ControlBarcodeResultDuplicate = true;
-        cameraView.BarCodeDetectionEnabled = true;
-
-        if (cameraView.MaxZoomFactor >= 2.0f)
-            cameraView.ZoomFactor = 2.0f;
 
         this.Appearing += AddCardView_Appearing;
     }
@@ -83,34 +92,6 @@ public partial class AddCardView : ContentPage
         // az tu su nainicializovane hodnoty pre SavedCardViewModel
     }
 
-    private void cameraView_CamerasLoaded(object sender, EventArgs e)
-    {
-        cameraView.Camera = cameraView.Cameras.First();
-
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            // todo skontrolovat ci na samsungu ma problem zo startovanim kamery
-            await cameraView.StopCameraAsync(); // malo by to tu byt lebo je na nejakych zariadeniach problem ked sa rovno zavola Start
-            await cameraView.StartCameraAsync();
-        });
-    }
-
-    private void cameraView_BarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
-    {
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            string text = $"{args.Result[0].BarcodeFormat}: {args.Result[0].Text}";
-            lblCode.Text = $"Skenovanie úspešné:\r\n{text}";
-
-            TempCardData.Format = args.Result[0].BarcodeFormat;
-            TempCardData.CardCode = args.Result[0].Text;
-            TempCardData.Image = SavedCardViewModel.CardData.CardImage;
-            TempCardData.CardName = SavedCardViewModel.CardData.Name;
-            TempCardData.IsKnownCard = SavedCardViewModel.CardData.IsKnownCard;
-
-            this.btnAddCard.IsVisible = true;
-        });
-    }
 
     private async void btnAddCard_Clicked(object sender, EventArgs e)
     {
@@ -178,32 +159,49 @@ public partial class AddCardView : ContentPage
         await Shell.Current.GoToAsync("..");
     }
 
-    private (string CardName, string PictureName) GetImageFromResource(string cardInfo)
+    private void cameraView_BarcodesDetected(object sender, ZXing.Net.Maui.BarcodeDetectionEventArgs e)
     {
-        string imageName = string.Empty;
-        string cardName = string.Empty;
+        Dispatcher.Dispatch(() =>
+        { 
+            string text = $"{e.Results[0].Value}: {e.Results[0].Format}";
+            lblCode.Text = $"Skenovanie úspešné:\r\n{text}";
 
-        if (cardInfo.StartsWith("6340095")) // Tesco
-        {
-            imageName = "testo_card.png";
-            cardName = "Tesco";
-        }
-        else if (cardInfo.StartsWith("600211")) // Kaufland
-        {
-            imageName = "kaufland_card.png";
-            cardName = "Kaufland";
-        }
-        else if (cardInfo.StartsWith("99958")) // Coop-Jednota
-        {
-            imageName = "coop_jednota_card.png";
-            cardName = "COOP Jednota";
-        }
-        else if (cardInfo.StartsWith("994027")) // Billa
-        {
-            imageName = "billa_card.png";
-            cardName = "Billa";
-        }
+            //TempCardData.Format = e.Results[0].Format;
+            TempCardData.CardCode = e.Results[0].Value;
+            TempCardData.Image = SavedCardViewModel.CardData.CardImage;
+            TempCardData.CardName = SavedCardViewModel.CardData.Name;
+            TempCardData.IsKnownCard = SavedCardViewModel.CardData.IsKnownCard;
 
-        return (cardName, imageName);
+            this.btnAddCard.IsVisible = true;
+        });
     }
+
+    //private void cameraView_OnDetected(object sender, BarcodeScanner.Mobile.OnDetectedEventArg e)
+    //{
+    //    List<BarcodeResult> obj = e.BarcodeResults;
+
+    //    string result = string.Empty;
+
+    //    for (int i =0; i < obj.Count; i++)
+    //    {
+    //        result += $"Type : {obj[i].BarcodeType}, Value: {obj[i].DisplayValue}{Environment.NewLine}";
+    //    }
+
+    //    Dispatcher.Dispatch(async () =>
+    //    {
+    //        await DisplayAlert("Result", result, "OK");
+    //        cameraView.IsScanning = true;
+    //    });
+
+    //    string text = $"{obj[0].BarcodeFormat}: {obj[0].DisplayValue}";
+    //    lblCode.Text = $"Skenovanie úspešné:\r\n{text}";
+
+    //    //TempCardData.Format = obj[0].BarcodeFormat;
+    //    TempCardData.CardCode = obj[0].DisplayValue;
+    //    TempCardData.Image = SavedCardViewModel.CardData.CardImage;
+    //    TempCardData.CardName = SavedCardViewModel.CardData.Name;
+    //    TempCardData.IsKnownCard = SavedCardViewModel.CardData.IsKnownCard;
+
+    //    this.btnAddCard.IsVisible = true;
+    //}
 }

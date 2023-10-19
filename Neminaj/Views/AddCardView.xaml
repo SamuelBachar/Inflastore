@@ -2,16 +2,46 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             xmlns:cvML="clr-namespace:BarcodeScanner.Mobile;assembly=BarcodeScanner.Mobile.Maui"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
              x:Class="Neminaj.Views.AddCardView"
              Title="Pridanie karty">
     <ScrollView>
-        <Grid RowDefinitions="10, *, 0.5*, Auto, 75" ColumnDefinitions="10, *, 10">
-            <cv:CameraView Grid.Row="1" Grid.Column="1" x:Name="cameraView" CamerasLoaded="cameraView_CamerasLoaded" 
-                           BarCodeDetectionEnabled="True" BarcodeDetected="cameraView_BarcodeDetected"
-                           VerticalOptions="Start" HorizontalOptions="Start"/>
-            <!--<Image Grid.Row="2" Grid.Column="1" x:Name="CardImage" VerticalOptions="Center" HorizontalOptions="Center" />-->
+        <Grid RowDefinitions="10, *, Auto, 75" ColumnDefinitions="10, *, 10">
+            <zxing:CameraBarcodeReaderView Grid.Row="1" 
+                                           Grid.Column="1" 
+                                           x:Name="cameraView" 
+                                           HorizontalOptions="FillAndExpand" 
+                                           VerticalOptions="FillAndExpand" 
+                                           IsTorchOn="False"
+                                           BarcodesDetected="cameraView_BarcodesDetected"/>
+            
             <Label Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="1" x:Name="lblCode" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
             <Button Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="1" x:Name="btnAddCard" IsVisible="false" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnAddCard_Clicked" />
         </Grid>
     </ScrollView>
 </ContentPage>
+
+<!-- OLD SHIT -->
+<!-- <Grid RowDefinitions="10, *, 0.5*, Auto, 75" ColumnDefinitions="10, *, 10">
+            <cv:CameraView Grid.Row="1" Grid.Column="1" x:Name="cameraView" CamerasLoaded="cameraView_CamerasLoaded" 
+                           BarCodeDetectionEnabled="True" BarcodeDetected="cameraView_BarcodeDetected"
+                           VerticalOptions="Start" HorizontalOptions="Start" HeightRequest="400" WidthRequest="400"/>
+            
+<Image Grid.Row="2" Grid.Column="1" x:Name="CardImage" VerticalOptions="Center" HorizontalOptions="Center" />
+<Label Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="1" x:Name="lblCode" LineBreakMode="WordWrap" VerticalOptions="Center" HorizontalOptions="Center" />
+<Button Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="1" x:Name="btnAddCard" IsVisible="false" Text="Uložiť kartu" VerticalOptions="Center" HorizontalOptions="Center" Clicked="btnAddCard_Clicked" />
+</Grid>-->
+
+<!--ML KIT--> 
+<!--<Grid RowDefinitions="10, *, Auto, 75" ColumnDefinitions="10, *, 10">
+    <cvML:CameraView
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalOptions="FillAndExpand" 
+            VerticalOptions="FillAndExpand" 
+            TorchOn="False" 
+            VibrationOnDetected="False"
+            ScanInterval="100"
+            x:Name="cameraView"
+            OnDetected="cameraView_OnDetected" />-->
