@@ -7,7 +7,8 @@ namespace Neminaj.Views;
 
 public class TempCardData
 {
-    public ZXing.BarcodeFormat Format { get; set; }
+    public ZXing.Net.Maui.BarcodeFormat Format { get; set; }
+    
     public string CardCode { get; set; }
 
     public byte[] Image { get; set; }
@@ -143,6 +144,7 @@ public partial class AddCardView : ContentPage
                 On_AddCardView_CardAdded(this, new EventArgs()); // toto bolo vela krat ked view bolo transient
             }
 
+            await Task.Delay(500);
             await DisplayAlert("", "Karta uložená", "Zavrieť");
         }
 
@@ -156,6 +158,7 @@ public partial class AddCardView : ContentPage
         lblCode.Text = string.Empty;
         //this.CardImage.Source = null;
 
+
         await Shell.Current.GoToAsync("..");
     }
 
@@ -166,7 +169,7 @@ public partial class AddCardView : ContentPage
             string text = $"{e.Results[0].Value}: {e.Results[0].Format}";
             lblCode.Text = $"Skenovanie úspešné:\r\n{text}";
 
-            //TempCardData.Format = e.Results[0].Format;
+            TempCardData.Format = e.Results[0].Format;
             TempCardData.CardCode = e.Results[0].Value;
             TempCardData.Image = SavedCardViewModel.CardData.CardImage;
             TempCardData.CardName = SavedCardViewModel.CardData.Name;

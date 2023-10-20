@@ -18,7 +18,7 @@
                                     <Button Grid.Row="0" Grid.Column="1" Text="Náhľad" ClassId="{Binding Id}" HorizontalOptions="Start" VerticalOptions="Center" Clicked="Button_Nahlad_Clicked"/>
                                     <Label Grid.Row="0" Grid.Column="2" Text="Predvoliť" HorizontalOptions="End"  VerticalOptions="Center" />
                                     <CheckBox Grid.Row="0" Grid.Column="3" ClassId="{Binding Id}" IsChecked="{Binding IsChecked}" HorizontalOptions="End"  VerticalOptions="Center" CheckedChanged="PredvolitCheckBox_CheckedChanged"/>
-                                    <ImageButton Grid.Row="0" Grid.Column="4" ClassId="{Binding Id}" HeightRequest="30" WidthRequest="30" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.svg" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="Center" />
+                                    <ImageButton Grid.Row="0" Grid.Column="4" ClassId="{Binding Id}" HeightRequest="30" WidthRequest="30" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.png" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="Center" />
                                 </Grid>
                             </Frame>
                         </DataTemplate>

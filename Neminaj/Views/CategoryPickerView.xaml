@@ -8,36 +8,62 @@
              xmlns:controls="clr-namespace:Neminaj.ContentViews"
              Title="Výber položiek">
 
-    <Grid>
-        <ScrollView>
+    <ScrollView x:Name="MainControlWrapper">
+        <Grid RowDefinitions="*, Auto" ColumnDefinitions="*">
             <CollectionView x:Name="CategoriesCollectionView"
+                        Grid.Row="0"
                         ItemsSource="{Binding _categories}"
                         ItemsLayout="VerticalGrid, 3"
                         SelectionMode="Single"
                         SelectionChanged="CategoriesCollectionView_SelectionChanged">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:CategoryDTO">
-                        <Border BackgroundColor="{StaticResource Primary}"
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:CategoryDTO">
+                    <Border BackgroundColor="{StaticResource Primary}"
                             StrokeShape="RoundRectangle 5"
                             Margin="5">
-                            <Grid RowDefinitions="100, 40">
-                                <Image Grid.Row="0"
+                        <Grid RowDefinitions="100, 40">
+                            <Image Grid.Row="0"
                                      Source="{Binding ImageUrl}"
                                      BackgroundColor="White"
                                      Aspect="AspectFit"/>
 
-                                <Label Grid.Row="1"
+                            <Label Grid.Row="1"
                                    Text="{Binding Name}"
                                    VerticalOptions="Center"
                                    HorizontalTextAlignment="Center"
                                    LineBreakMode="WordWrap"
                                    TextColor="White"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
-        <controls:CartCounterControlView x:Name="CartCounterControlView" />
-    </Grid>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped123" CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+            <controls:CartCounterControlView x:Name="CartCounterControlView" Grid.Row="1" />
+        </Grid>
+    </ScrollView>
 </ContentPage>
+
+<!--<controls:CartCounterControlView x:Name="CartCounterControlView" />-->
+<!--<Border BackgroundColor="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 5"
+                            Margin="5">
+    <Grid RowDefinitions="100, 40" Focused="Grid_Focused">
+        <Image Grid.Row="0"
+                                     Source="{Binding ImageUrl}"
+                                     BackgroundColor="White"
+                                     Aspect="AspectFit"/>
+
+        <Label Grid.Row="1"
+                                   Text="{Binding Name}"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap"
+                                   TextColor="White"/>
+    </Grid>
+    <Border.GestureRecognizers>
+        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding .}" />
+    </Border.GestureRecognizers>
+</Border>-->

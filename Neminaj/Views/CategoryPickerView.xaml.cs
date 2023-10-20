@@ -1,3 +1,4 @@
+﻿using Neminaj.ContentViews;
 using Neminaj.Repositories;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
@@ -16,6 +17,7 @@ public partial class CategoryPickerView : ContentPage
 
     SavedCartRepository _savedCartRepo { get; set; } = null;
 
+    PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam polôžky ...");
 
     public CategoryPickerView(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo, CategoryRepository categoryRepository)
     {
@@ -27,6 +29,8 @@ public partial class CategoryPickerView : ContentPage
         _itemRepo = itemRepo;
         _unitRepo = unitRepo;
         _savedCartRepo = cartRepo;
+
+        this.Loaded += (s, e) => { this.Content = _popUpIndic; };
     }
 
     protected override async void OnAppearing()
@@ -45,12 +49,57 @@ public partial class CategoryPickerView : ContentPage
         if (this.CategoriesCollectionView.SelectedItems.Count != 0)
             this.CategoriesCollectionView.SelectedItems.Clear();
 
-        // todo: tu som skoncil https://youtu.be/FP_ZvUGcumg?t=692
+        this.Content = this.MainControlWrapper;
     }
 
     private async void CategoriesCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection?[0] is CategoryDTO category)
+        {
+            await Shell.Current.GoToAsync(nameof(ItemPicker),
+            new Dictionary<string, object>
+            {
+                ["Category"] = category,
+                ["ItemRepo"] = _itemRepo,
+                ["UnitRepo"] = _unitRepo,
+                ["CartRepo"] = _savedCartRepo
+            });
+        }
+    }
+
+    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is CategoryDTO category)
+        {
+            await Shell.Current.GoToAsync(nameof(ItemPicker),
+            new Dictionary<string, object>
+            {
+                ["Category"] = category,
+                ["ItemRepo"] = _itemRepo,
+                ["UnitRepo"] = _unitRepo,
+                ["CartRepo"] = _savedCartRepo
+            });
+        }
+    }
+
+    private async void TapGestureRecognizer_Tapped_1(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is CategoryDTO category)
+        {
+            await Shell.Current.GoToAsync(nameof(ItemPicker),
+            new Dictionary<string, object>
+            {
+                ["Category"] = category,
+                ["ItemRepo"] = _itemRepo,
+                ["UnitRepo"] = _unitRepo,
+                ["CartRepo"] = _savedCartRepo
+            });
+        }
+    }
+
+    private async void TapGestureRecognizer_Tapped123(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is CategoryDTO category)
         {
             await Shell.Current.GoToAsync(nameof(ItemPicker),
             new Dictionary<string, object>

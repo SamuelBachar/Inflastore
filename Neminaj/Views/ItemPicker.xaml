@@ -4,31 +4,29 @@
              xmlns:y="clr-namespace:Neminaj.ContentViews"
              x:Class="Neminaj.Views.ItemPicker"
              xmlns:controls="clr-namespace:Neminaj.ContentViews">
-             
+
     <ContentPage.Content>
-        <Grid>
-            <ScrollView>
-                <VerticalStackLayout>
-                    <Grid
+        <ScrollView x:Name="MainControlWrapper">
+            <Grid
                         Padding="5"
         RowDefinitions="Auto, 0.15*, *"
         ColumnDefinitions="*, *" >
                         <VerticalStackLayout Grid.ColumnSpan="2" Spacing="20">
-                            <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalOptions="Fill">
+                            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalOptions="Fill">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10, 10, 10, 10"/>
                                 </Border.StrokeShape>
                                 <SearchBar x:Name="SearchBar" IsEnabled="True" Placeholder="Hľadaj položku" TextChanged="SearchBar_TextChanged" HorizontalOptions="Fill" />
                             </Border>
-                            <CollectionView 
-            x:Name="listItem"
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            BackgroundColor="Transparent"
-            SelectionMode="Single"
-            VerticalScrollBarVisibility="Always"
-            SelectionChanged="listItem_SelectionChanged">
+                            <CollectionView
+                                x:Name="listItem"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                BackgroundColor="Transparent"
+                                SelectionMode="Single"
+                                VerticalScrollBarVisibility="Always"
+                                SelectionChanged="listItem_SelectionChanged">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid RowDefinitions="Auto, Auto" RowSpacing="15">
@@ -41,16 +39,12 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
-
                         </VerticalStackLayout>
+                        <controls:CartCounterControlView Grid.Row="2" Grid.Column="1" HorizontalOptions="End" x:Name="CartCounterControlView" />
                     </Grid>
-                </VerticalStackLayout>
             </ScrollView>
-            <controls:CartCounterControlView x:Name="CartCounterControlView" />
-
-        </Grid>
     </ContentPage.Content>
-
+</ContentPage>
 
     <!--<Label Grid.Row="2" Grid.ColumnSpan="4" HorizontalOptions="Center" VerticalOptions="Center" Text="Košík" FontAttributes="Bold" FontSize="14"> </Label>
 
@@ -83,4 +77,3 @@
         </Frame>
 
         <Button x:Name="BtnCompare" Grid.Row="4" Grid.Column="1" Text="Porovnaj ceny"> </Button>-->
-</ContentPage>

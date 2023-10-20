@@ -14,7 +14,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView x:Name="MainScrollView">
+    <ScrollView x:Name="MainControlWrapper">
         <Grid  Padding="5" RowDefinitions="Auto, *" ColumnDefinitions="*">
             <Border Grid.Row="0" Grid.Column="0" HorizontalOptions="Fill">
                 <Border.StrokeShape>
@@ -28,7 +28,7 @@
                         <Grid RowDefinitions="Auto" RowSpacing="15">
                             <Frame>
                                 <Grid RowDefinitions="Auto" ColumnDefinitions="75, Auto">
-                                    <Image Grid.Row="0" Grid.Column="0" IsVisible="{Binding IsKnownCard}" Source="{Binding Image, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    <Image Grid.Row="0" Grid.Column="0" IsVisible="{Binding IsKnownCard}" Source="{Binding Image, Mode=TwoWay, Converter={StaticResource ByteArrayToImageSourceConverter}}" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
                                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="{Binding UknownCardColor}" BorderColor="{Binding UknownCardColor}" HeightRequest="72" WidthRequest="72"/>
                                     <Label Grid.Row="0" Grid.Column="1" Text="{Binding CardName}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap" FontAttributes="Bold" FontSize="Body"></Label>
                                 </Grid>

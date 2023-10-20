@@ -71,6 +71,8 @@
     <MauiImage Update="Resources\Images\club_cards.svg" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\settings.svg" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\logout_icon.svg" BaseSize="20,20" />
+    <MauiImage Update="Resources\Images\recycle_bin.svg" BaseSize="20,20" />
+    
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -160,6 +162,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="ContentViews\CartViewSaveCartPopUp.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ContentViews\PopUpActivityIndicator.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="ContentViews\PriceComparerPopUpDetails.xaml">

@@ -19,13 +19,23 @@ public partial class CardsView : ContentPage
     public delegate void PageBuilded(object sender, EventArgs e);
     public static event PageBuilded OnPageBuilded;
 
+    public bool ShowPopUp = true;
+
     public List<TapGestureRecognizer> ListTapGestureRecognizers { get; set; } = new List<TapGestureRecognizer>();
+
+    PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam uložené karty ...");
+
+    private delegate Task PageBuilded_Event();
+    private event PageBuilded_Event On_PageBuilded_Event;
+
 
     public CardsView(SavedCardRepository savedCardRepository)
     {
         InitializeComponent();
         _savedCardRepo = savedCardRepository;
+        this.BindingContext = this;
 
+        this.Appearing += (s, e) => { this.Content = _popUpIndic; };
         this.Loaded += async (s, e) => { await BuildPage(); };
         AddCardView.On_AddCardView_CardAdded += async (s, e) => { await ChangeListOfCards(); };
         SavedCardDetailView.On_SavedCardDetailView_DeleteCard += async (s, e) => { await ChangeListOfCards(); };
@@ -50,25 +60,19 @@ public partial class CardsView : ContentPage
         }
         else
         {
-            ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam uložené karty ...");
-            this.ShowPopup(popUpIndic);
-            //popUpIndic.TurnOnActivityIndicator();
-
             listSavedCards = listSavedCards.OrderBy(card => card.CardName).ToList();
             listSavedCards.ForEach(card => card.UknownCardColor = Color.FromInt(card.UknownCardColorDB));
 
-            this.BindingContext = this;
             this.listCards.ItemsSource = listSavedCards;
-            this.Content = this.MainScrollView;
-
-            //popUpIndic.TurnOffActivityIndicator();
-            popUpIndic.Close();
+            this.Content = this.MainControlWrapper;
         }
     }
 
     private async Task ChangeListOfCards()
     {
+        ShowPopUp = false;
         await BuildPage();
+        ShowPopUp = true;
     }
 
     private async void listCards_SelectionChanged(object sender, SelectionChangedEventArgs e)

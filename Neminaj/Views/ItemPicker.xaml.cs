@@ -26,6 +26,7 @@ public partial class ItemPicker : ContentPage
 
     ItemPickerViewModel _itemPickerViewModel { get; set; } = null;
 
+    PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam polôžky ...");
 
     private bool Rotate = true;
     public ItemPicker(ItemPickerViewModel itemPickerViewModel)
@@ -34,21 +35,15 @@ public partial class ItemPicker : ContentPage
         _itemPickerViewModel = itemPickerViewModel;
         this.BindingContext = _itemPickerViewModel;
 
+        this.Appearing += (s, e) => { this.Content = _popUpIndic; };
         CartView.On_CartView_ItemRemovedFromList += async (s, e) => { await CartCounterControlView.DecreaseShoppingCartCounter(); };
         ObservableItemsChoosed.CollectionChanged += ItemsChoosedCollection_Changed;
-            
-        this.Loaded += async (s, e) => { await GetUnits(); };
-        this.Appearing += async (s, e) => { await GetItems(); };
 
         CartCounterControlView.Init(CartRepo, ObservableItemsChoosed);
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam polôžky ...");
-        //popUpIndic.TurnOnActivityIndicator();
-        this.ShowPopup(popUpIndic);
-
         base.OnNavigatedTo(args);
 
         ItemRepo = _itemPickerViewModel.ItemRepo;
@@ -57,16 +52,15 @@ public partial class ItemPicker : ContentPage
 
         this.Title = _itemPickerViewModel.Category.Name;
 
-
-        ListUnits = await UnitRepo.GetAllUnitsAsync();
+        if (ListUnits == null)
+            ListUnits = await UnitRepo.GetAllUnitsAsync();
 
         List<Item> listItems = await ItemRepo.GetAllItemsAsync();
         listItems = listItems.Where(item => item.Category_Id == _itemPickerViewModel.Category.Id).ToList();
 
         this.listItem.ItemsSource = listItems.OrderBy(n => n.Name);
 
-        //popUpIndic.TurnOffActivityIndicator();
-        popUpIndic.Close();
+        this.Content = this.MainControlWrapper;
     }
 
     private void ItemsChoosedCollection_Changed(object sender, NotifyCollectionChangedEventArgs e)
@@ -75,15 +69,6 @@ public partial class ItemPicker : ContentPage
         {
             ObservableItemsChoosed[e.NewStartingIndex].FinalName = $"{ObservableItemsChoosed[e.NewStartingIndex].CntOfItems}x {ObservableItemsChoosed[e.NewStartingIndex].Name}";
         }
-    }
-
-    private async Task GetUnits()
-	{
-        //ListUnits = await UnitRepo.GetAllUnitsAsync();
-    }
-
-    private async Task GetItems()
-    {
     }
 
     private async void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
