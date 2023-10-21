@@ -6,6 +6,7 @@ using Neminaj.ViewsModels;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Diagnostics;
+using Map = Microsoft.Maui.ApplicationModel.Map;
 
 namespace Neminaj.Views;
 
@@ -50,6 +51,23 @@ public partial class NavigationView : ContentPage
         base.OnNavigatedTo(args);
 
         await FindClosestShops();
+
+        await NavigateToBuilding25();
+    }
+
+    public async Task NavigateToBuilding25()
+    {
+        var location = new Location(47.645160, -122.1306032);
+        var options = new MapLaunchOptions { Name = "Microsoft Building 25" };
+
+        try
+        {
+            await Map.Default.OpenAsync(location, options);
+        }
+        catch (Exception ex)
+        {
+            // No map application available to open
+        }
     }
 
     public void CreateActivityIndicator()

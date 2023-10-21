@@ -19,8 +19,9 @@
                     VerticalOptions="Center"
                     Spacing="10">
             <Image Source="cart.png"
-                           HeightRequest="16"
-                           WidthRequest="16"
+                           HeightRequest="20"
+                           WidthRequest="20"
+                           Margin="10,0,0,0"
                            Aspect="AspectFill">
                 <Image.Behaviors>
                     <toolkit:IconTintColorBehavior TintColor="White"/>

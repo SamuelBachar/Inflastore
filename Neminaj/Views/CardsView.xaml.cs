@@ -35,7 +35,7 @@ public partial class CardsView : ContentPage
         _savedCardRepo = savedCardRepository;
         this.BindingContext = this;
 
-        this.Appearing += (s, e) => { this.Content = _popUpIndic; };
+        //this.Appearing += (s, e) => { this.Content = _popUpIndic; };
         this.Loaded += async (s, e) => { await BuildPage(); };
         AddCardView.On_AddCardView_CardAdded += async (s, e) => { await ChangeListOfCards(); };
         SavedCardDetailView.On_SavedCardDetailView_DeleteCard += async (s, e) => { await ChangeListOfCards(); };
@@ -43,13 +43,15 @@ public partial class CardsView : ContentPage
 
     private async Task BuildPage()
     {
+        this.Content = _popUpIndic;
+
         List<SavedCard> listSavedCards = await _savedCardRepo.GetAllSavedCards();
 
         if (listSavedCards.Count == 0)
         {
             this.Content = new Label
             {
-                Text = "Nemáte pridanú žiadnu kartu\r\nKartu si môžte pridať stlačením tlačidla v pravom hornom rohu",
+                Text = "Nemáte pridanú žiadnu kartu\r\nKartu si môžte pridať stlačením tlačidla + v hornej lište",
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
                 FontAttributes = FontAttributes.Bold,

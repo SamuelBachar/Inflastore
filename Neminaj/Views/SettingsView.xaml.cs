@@ -44,6 +44,8 @@ public partial class SettingsView : ContentPage
     private Slider slider = null;
     private Label LabelKm = null;
 
+    PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam nastavenia ...");
+
     public SettingsView(CompanyRepository companyRepository, ISettingsService settingsService)
     {
         InitializeComponent();
@@ -52,6 +54,8 @@ public partial class SettingsView : ContentPage
 
         this.Loaded += async (s, e) => { await BuildPage(); };
         this.Disappearing += async (s, e) => { await SettingsView_OnDisappearing(); };
+
+        this.Content = this._popUpIndic;
     }
 
     public ISettingsService GetSettingService()
@@ -204,7 +208,7 @@ public partial class SettingsView : ContentPage
                 CheckBox chkBox = new CheckBox
                 {
                     AutomationId = ListComp[helpCounter].Id.ToString(), // Used to distinguish companies (selected and unselected companies)
-                    HorizontalOptions = LayoutOptions.Start,
+                    HorizontalOptions = LayoutOptions.Fill,
                 };
 
                 // load saved status of choosing company
@@ -223,10 +227,13 @@ public partial class SettingsView : ContentPage
                 {
                     Source = ListComp[helpCounter].Url,
                     Aspect = Aspect.AspectFit,
-                    HorizontalOptions = LayoutOptions.Start
+                    HorizontalOptions = LayoutOptions.Fill,
+                    HeightRequest = 75,
+                    WidthRequest = 75
                 };
 
                 ListImage.Add(image);
+
                 gridCustomers.Add(image, col + 1, row);
 
                 // From byte array
@@ -254,9 +261,9 @@ public partial class SettingsView : ContentPage
 
         // START: Create Frame for Grid Customers //
         Frame frameCustomers = new Frame();
-        frameCustomers.HorizontalOptions = LayoutOptions.StartAndExpand;
+        frameCustomers.HorizontalOptions = LayoutOptions.FillAndExpand;
         frameCustomers.Content = gridCustomers;
-        frameCustomers.Content.HorizontalOptions = LayoutOptions.StartAndExpand;
+        frameCustomers.Content.HorizontalOptions = LayoutOptions.FillAndExpand;
         frameCustomers.Content.VerticalOptions = LayoutOptions.Start;
 
         Grid.SetRow(frameCustomers, 0);

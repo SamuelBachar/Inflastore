@@ -23,7 +23,7 @@
                                 <Label Grid.Column="0" Grid.ColumnSpan="2" FontAttributes="Bold" FontSize="14" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" VerticalTextAlignment="End" />
                                 <Entry Grid.Column="2" x:Name="EntryCntOfItem" Text="{Binding CntOfItems}" VerticalOptions="Center" VerticalTextAlignment="Center" HorizontalOptions="Start" TextChanged="EntryCntOfItem_TextChanged" ClassId="{Binding IdInList}"></Entry>
                                 <Label Grid.Column="2" Text="{Binding UnitTag}" VerticalTextAlignment="End" VerticalOptions="Center" HorizontalOptions="End"/>
-                                <ImageButton Grid.Column="3" HeightRequest="30" WidthRequest="30" ClassId="{Binding IdInList}" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.svg" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                <ImageButton Grid.Column="3" HeightRequest="30" WidthRequest="30" ClassId="{Binding IdInList}" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.png" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="Center"/>
                             </Grid>
                         </Frame.Content>
                     </Frame>

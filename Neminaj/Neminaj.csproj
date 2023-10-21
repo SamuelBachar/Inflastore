@@ -72,6 +72,7 @@
     <MauiImage Update="Resources\Images\settings.svg" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\logout_icon.svg" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\recycle_bin.svg" BaseSize="20,20" />
+    <MauiImage Update="Resources\Images\cart_button.png" BaseSize="20,20" />
     
 
 		<!-- Custom Fonts -->
@@ -95,6 +96,7 @@
 	  <None Remove="Resources\Images\calculator.svg" />
 	  <None Remove="Resources\Images\cart.png" />
 	  <None Remove="Resources\Images\cart.svg" />
+	  <None Remove="Resources\Images\cart_button.png" />
 	  <None Remove="Resources\Images\gps.svg" />
 	  <None Remove="Resources\Images\house.svg" />
 	  <None Remove="Resources\Images\lidl.png" />

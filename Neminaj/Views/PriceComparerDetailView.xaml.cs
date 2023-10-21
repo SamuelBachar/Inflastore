@@ -81,7 +81,7 @@ public partial class PriceComparerDetailView : ContentPage
         {
             BackgroundColor = Colors.White,
             Content = _gridWithDiscount,
-            HorizontalOptions = LayoutOptions.Center
+            HorizontalOptions = LayoutOptions.FillAndExpand
         };
 
         var groupsWithoutDiscount = _priceComparerDetailViewModel.ListCheapestItemsPerCompanies.Where(item => !item.Discount).GroupBy(item => new { item.Company }).ToList();
@@ -114,7 +114,7 @@ public partial class PriceComparerDetailView : ContentPage
         {
             BackgroundColor = Colors.White,
             Content = _gridWithoutDiscount,
-            HorizontalOptions = LayoutOptions.Center
+            HorizontalOptions = LayoutOptions.FillAndExpand
         };
 
         this.Content = _scrollViewWithDiscount;
@@ -134,11 +134,11 @@ public partial class PriceComparerDetailView : ContentPage
         {
             Text = discount ? "Nákup s kartou" : "Nákup bez karty",
             FontAttributes = FontAttributes.Bold,
-            VerticalOptions = LayoutOptions.Start,
+            VerticalOptions = LayoutOptions.Center,
             HorizontalOptions = LayoutOptions.Start,
         };
 
-        Grid.SetColumnSpan(lblTypeOfList, 2);
+        Grid.SetColumnSpan(lblTypeOfList, 3);
         Grid.SetColumn(lblTypeOfList, 0);
         Grid.SetRow(lblTypeOfList, row);
         grid.Add(lblTypeOfList);
@@ -146,46 +146,14 @@ public partial class PriceComparerDetailView : ContentPage
         Button btnNextBack = new Button
         {
             Text = discount ? Texts.Next : Texts.Back,
-            HorizontalOptions = LayoutOptions.End,
-            VerticalOptions = LayoutOptions.End
+            HorizontalOptions = LayoutOptions.Fill,
+            VerticalOptions = LayoutOptions.Fill
         };
 
         btnNextBack.Clicked += BtnNextBack_Clicked;
         Grid.SetRow(btnNextBack, row);
         Grid.SetColumn(btnNextBack, 2);
         grid.Add(btnNextBack);
-
-        //foreach (var item in listItemsPerCompanies)
-        //{
-        //    grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
-        //    row++;
-
-        //    Label lblCompany = new Label
-        //    {
-        //        Text = $"\r\n{item.CompanyName}\r\n",
-        //        FontSize = 14,
-        //        FontAttributes = FontAttributes.Bold
-        //    };
-
-        //    Grid.SetRow(lblCompany, row);
-        //    Grid.SetColumn(lblCompany, 0);
-        //    grid.Add(lblCompany);
-
-        //    grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
-        //    row++;
-
-        //    Label itemsStringAgg = new Label
-        //    {
-        //        Text = item.ListItemsNames.Aggregate((i, j) => i + "\r\n" + j),
-        //        LineBreakMode = LineBreakMode.WordWrap,
-        //        HorizontalOptions = LayoutOptions.StartAndExpand,
-        //        VerticalOptions = LayoutOptions.CenterAndExpand
-        //    };
-
-        //    Grid.SetColumnSpan(itemsStringAgg, 3);
-        //    Grid.SetRow(itemsStringAgg, row);
-        //    grid.Add(itemsStringAgg);
-        //}
 
         foreach (var item in listItemsPerCompaniesData)
         {

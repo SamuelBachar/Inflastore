@@ -7,7 +7,7 @@
              Title="Navigácia">
 
     <Grid>
-        <maps:Map x:Name="mappy" IsShowingUser="True" IsTrafficEnabled="True">
+        <maps:Map x:Name="mappy" IsShowingUser="True" IsTrafficEnabled="True" MapType="Street">
             <maps:Map.MapElements>
                 
             </maps:Map.MapElements>    

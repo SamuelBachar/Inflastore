@@ -23,6 +23,7 @@ public partial class CartListView : ContentPage
     public CartListView(SavedCartRepository savedCartRepository, ItemRepository itemRepository, UnitRepository unitRepository, ItemPicker mainPage)
 	{
 		InitializeComponent();
+        this.BindingContext = this;
 
         SavedCartRepo = savedCartRepository;
         ItemRepo = itemRepository;
@@ -50,11 +51,9 @@ public partial class CartListView : ContentPage
         }
         else
         {
+            this.listViewSavedCarts.ItemsSource = ListSavedCarts.OrderBy(n => n.Name);
             this.Content = MainScrollView;
         }
-        
-        this.BindingContext = this;
-        this.listViewSavedCarts.ItemsSource = ListSavedCarts.OrderBy(n => n.Name);
     }
 
     private async void Button_Nahlad_Clicked(object sender, EventArgs e)

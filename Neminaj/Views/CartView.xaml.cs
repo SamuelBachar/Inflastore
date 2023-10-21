@@ -47,8 +47,6 @@ public partial class CartView : ContentPage
         {
             await semaphoreDeleteItem.WaitAsync();
 
-            await Task.Run(() =>
-            {
                 int idInList = int.Parse(((Microsoft.Maui.Controls.ImageButton)(sender)).ClassId);
 
                 if (_lastDeletedItemId != idInList)
@@ -64,7 +62,6 @@ public partial class CartView : ContentPage
 
                     listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens();
                 }
-            });
         }
         finally
         {
@@ -99,6 +96,6 @@ public partial class CartView : ContentPage
     }
     private async Task BtnSaveCart_Clicked(object sender, EventArgs e)
     {
-        this.ShowPopup(new CartViewSaveCartPopUp(CartViewModel.GetItemChoosens().ToList(), CartViewModel, this));
+        await this.ShowPopupAsync(new CartViewSaveCartPopUp(CartViewModel.GetItemChoosens().ToList(), CartViewModel, this));
     }
 }

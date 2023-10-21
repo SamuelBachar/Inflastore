@@ -17,6 +17,8 @@ public partial class LoginView : ContentPage
 
     readonly ILoginService _loginService = null;
 
+    PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Prihlasujem ...");
+
     public LoginView(ILoginService loginService)
     {
         InitializeComponent();
@@ -71,9 +73,11 @@ public partial class LoginView : ContentPage
 
         if (!string.IsNullOrWhiteSpace(EntryEmail.Text) && !string.IsNullOrWhiteSpace(EntryPassword.Text))
         {
-            ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Prihlasujem ...");
-            this.ShowPopup(popUpIndic);
+            //ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Prihlasujem ...");
+            //this.ShowPopup(popUpIndic);
             //popUpIndic.TurnOnActivityIndicator();
+
+            this.Content = this._popUpIndic;
 
             (UserLoginDTO UserLoginDTO, string Message) response = await _loginService.LoginHTTPS(EntryEmail.Text, EntryPassword.Text);
 
@@ -101,13 +105,15 @@ public partial class LoginView : ContentPage
                 }
 
                 await Shell.Current.GoToAsync($"//{nameof(CategoryPickerView)}");
+                this.Content = this.MainControlWrapper;
                 //popUpIndic.TurnOffActivityIndicator();
-                popUpIndic.Close();
+                //popUpIndic.Close();
             }
             else
             {
                 //popUpIndic.TurnOffActivityIndicator();
-                popUpIndic.Close();
+                //popUpIndic.Close();
+                this.Content = this.MainControlWrapper;
                 await DisplayAlert("Prihlásenie chyba", response.Message, "Zavrieť");
             }
         }
