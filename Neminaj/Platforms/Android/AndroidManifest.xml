@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 	<application android:allowBackup="true" android:supportsRtl="true" android:icon="@mipmap/inflastore_appicon" android:label="Inflastore">
-		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBvbEPuCWlH-8Xc8LyerVovfkGJKEuTVoE" />
+		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDTndQJ2Z_W4QZnHUPvgkX2AC1LWfch5Ok" />
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />

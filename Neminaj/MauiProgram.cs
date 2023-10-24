@@ -13,6 +13,10 @@ using BarcodeScanner.Mobile;
 
 using ZXing.Net.Maui.Controls;
 
+#if ANDROID || IOS
+    using Maui.GoogleMaps.Hosting;
+#endif
+
 namespace Neminaj;
 
 public static class MauiProgram
@@ -22,10 +26,15 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiMaps()
+#if ANDROID
+            .UseGoogleMaps()
+#elif IOS
+            .UseGoogleMaps("AIzaSyDTndQJ2Z_W4QZnHUPvgkX2AC1LWfch5Ok")
+#endif
             .UseBarcodeReader()
             .ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
-            .UseMauiMaps()
             .UseMauiCameraView()
             .ConfigureMauiHandlers( handlers =>
             {

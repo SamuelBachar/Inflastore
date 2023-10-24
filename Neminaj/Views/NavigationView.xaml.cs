@@ -42,17 +42,18 @@ public partial class NavigationView : ContentPage
         this.NavigationShopViewModel = navigShopViewModel;
         this.Geolocation = NavigationShopViewModel.GeoLocation;
 
-        CreateActivityIndicator();
-        TurnOnActivityIndicator();
+        //CreateActivityIndicator();
+        //TurnOnActivityIndicator();
     }
 
+#if ANDROID || IOS
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
 
         await FindClosestShops();
 
-        await NavigateToBuilding25();
+        //await NavigateToBuilding25();
     }
 
     public async Task NavigateToBuilding25()
@@ -115,7 +116,8 @@ public partial class NavigationView : ContentPage
     public void TurnOffActivityIndicator()
     {
         ActivityIndicator.IsRunning = false;
-        Content = mappy;
+        //Content = mappy;
+        Content = googleMaps;
     }
 
     private async Task FindClosestShops()
@@ -166,52 +168,37 @@ public partial class NavigationView : ContentPage
 
                 foreach (FoundedShop shop in listNearestShops)
                 {
-                    mappy.Pins.Add(
-                        new Pin()
+                    googleMaps.Pins.Add(
+                        new Maui.GoogleMaps.Pin
                         {
                             Label = shop.CompanyName,
                             Address = shop.FullAddress,
-                            Type = PinType.Place,
-                            Location = new Location(shop.Latitude, shop.Longtitude)
+                            Type = Maui.GoogleMaps.PinType.Place,
+                            Position = new Maui.GoogleMaps.Position(shop.Latitude, shop.Longtitude)
+
                         });
+                    //mappy.Pins.Add(
+                    //    new Pin()
+                    //    {
+                    //        Label = shop.CompanyName,
+                    //        Address = shop.FullAddress,
+                    //        Type = PinType.Place,
+                    //        Location = new Location(shop.Latitude, shop.Longtitude)
+                    //    });
                 }
 
                 if (listNearestShops.Count > 1) // atleast 2 Shops navigation
                 {
-                    //FoundedShop nearest = listNearestShops[0];
-                    //FoundedShop farrest = listNearestShops[0];
-
-                    //foreach (FoundedShop foundShop in listNearestShops)
-                    //{
-                    //    if (nearest.Latitude < foundShop.Latitude)
-                    //        nearest = foundShop;
-
-                    //    if (farrest.Latitude > foundShop.Latitude)
-                    //        farrest = foundShop;
-                    //}
-
-                    //FoundedShop middleFictive = new FoundedShop
-                    //{
-                    //    Latitude = ((nearest.Latitude + farrest.Latitude) / 2.0f),
-                    //    Longtitude = ((nearest.Longtitude + farrest.Longtitude) / 2.0f)
-                    //};
-
-                    //mappy.MoveToRegion(new MapSpan(new Location(middleFictive.Latitude, middleFictive.Longtitude), 0.075, 0.075));
 
                     FoundedShop nearestShop = listNearestShops.OrderBy(shop => shop.Distance).First();
-                    //FoundedShop farrestShop = listNearestShops.OrderByDescending(shop => shop.Distance).First();
 
-                    //FoundedShop middleFictive = new FoundedShop
-                    //{
-                    //    Latitude = ((nearestShop.Latitude + farrestShop.Latitude) / 2.0f),
-                    //    Longtitude = ((nearestShop.Longtitude + farrestShop.Longtitude) / 2.0f)
-                    //};
-
-                    mappy.MoveToRegion(new MapSpan(new Location(nearestShop.Latitude, nearestShop.Longtitude), 0.075, 0.075));
+                    //mappy.MoveToRegion(new MapSpan(new Location(nearestShop.Latitude, nearestShop.Longtitude), 0.075, 0.075));
+                    googleMaps.MoveToRegion(new Maui.GoogleMaps.MapSpan(new Maui.GoogleMaps.Position(nearestShop.Latitude, nearestShop.Longtitude), nearestShop.Latitude, nearestShop.Longtitude));
                 }
                 else // Single shop navigation
                 {
-                    mappy.MoveToRegion(new MapSpan(new Location(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), 0.05, 0.05));
+                    //mappy.MoveToRegion(new MapSpan(new Location(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), 0.05, 0.05));
+                    googleMaps.MoveToRegion(new Maui.GoogleMaps.MapSpan(new Maui.GoogleMaps.Position(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), listNearestShops[0].Latitude, listNearestShops[0].Longtitude));
                 }
             }
             else
@@ -231,3 +218,4 @@ public partial class NavigationView : ContentPage
         TurnOffActivityIndicator();
     }
 }
+#endif

@@ -3,14 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Neminaj.Views.NavigationView"
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             xmlns:googleMaps="clr-namespace:Maui.GoogleMaps;assembly=Maui.GoogleMaps"
              xmlns:loc="clr-namespace:Microsoft.Maui.Devices.Sensors;assembly=Microsoft.Maui.Essentials"
              Title="Navigácia">
 
-    <Grid>
+    <!--<Grid>
         <maps:Map x:Name="mappy" IsShowingUser="True" IsTrafficEnabled="True" MapType="Street">
             <maps:Map.MapElements>
                 
             </maps:Map.MapElements>    
         </maps:Map>
+    </Grid>-->
+
+    <Grid>
+        <googleMaps:Map 
+            x:Name="googleMaps"
+            MapType="Street"
+            MyLocationEnabled="True"
+            >
+        </googleMaps:Map>
     </Grid>
 </ContentPage>
