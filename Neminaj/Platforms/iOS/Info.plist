@@ -34,7 +34,7 @@
 		<true/>
 	</dict>
 	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/appicon.appiconset</string>
+	<string>AppIcons/inflastore_appicon.png</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Inflastore vie nájsť obchody vo vašej blízkosti. Povolíte inflastoru prístup k funkcii GPS ?</string>
 	<key>NSCameraUsageDescription</key>

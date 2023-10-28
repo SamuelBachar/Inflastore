@@ -1,12 +1,17 @@
-﻿using Microsoft.Maui.Controls.Maps;
+﻿#if (ANDROID || IOS) && !MACCATALYST
+using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
+#endif
 using Neminaj.Models;
 using Neminaj.Repositories;
 using Neminaj.ViewsModels;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Diagnostics;
+
+#if (ANDROID || IOS) && !MACCATALYST
 using Map = Microsoft.Maui.ApplicationModel.Map;
+#endif
 
 namespace Neminaj.Views;
 
@@ -46,7 +51,7 @@ public partial class NavigationView : ContentPage
         //TurnOnActivityIndicator();
     }
 
-#if ANDROID || IOS
+#if (ANDROID || IOS) && !MACCATALYST
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
@@ -217,5 +222,5 @@ public partial class NavigationView : ContentPage
 
         TurnOffActivityIndicator();
     }
-}
 #endif
+}
