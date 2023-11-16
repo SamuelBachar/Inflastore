@@ -1,4 +1,5 @@
 ﻿#if (ANDROID || IOS) && !MACCATALYST
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
 #endif
@@ -39,43 +40,71 @@ public partial class NavigationView : ContentPage
 
     NavigationShopViewModel NavigationShopViewModel { get; set; } = null;
 
-    public NavigationView(NavigationShopViewModel navigShopViewModel)
-	{
-		InitializeComponent();
+    bool IsInitialized = false;
 
+    Location _lastClickedLocation { get; set; } = null;
+
+    List<Pin> _listPins { get; set; } = new List<Pin>();
+
+    public NavigationView(NavigationShopViewModel navigShopViewModel)
+    { 
         BindingContext = navigShopViewModel;
         this.NavigationShopViewModel = navigShopViewModel;
         this.Geolocation = NavigationShopViewModel.GeoLocation;
+        this.Appearing +=  async (s ,e) => { await NavigationView_Appearing(s, e); };
+    }
 
-        //CreateActivityIndicator();
-        //TurnOnActivityIndicator();
+    private async Task NavigationView_Appearing(object sender, EventArgs e)
+    {
+        PermissionStatus status = PermissionStatus.Unknown;
+
+        status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+        if (status != PermissionStatus.Granted)
+        {
+            if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
+            {
+                await DisplayAlert("GPS povolenie",
+                    "V minulosti bolo zamietnuté aplikácii používať navigáciu.\r\n" +
+                    "Prosím povoľte v nastaveniach telefónu Navigáciu / GPS pre Inflastore"
+                    , "Ok");
+                return;
+            }
+
+            // Android - hlaska sa zobrazi ak uzivatel v minulosti nepovolil navigaciu
+            if (Permissions.ShouldShowRationale<Permissions.LocationWhenInUse>())
+            {
+                await DisplayAlert("GPS povolenie",
+                                   "Inflastore vie nájsť obchody vo vašej blízkosti. Prosím povoľte v nasledujúcej výzve prístup k Navigácii / GPS"
+                                  , "Ok");
+            }
+
+            status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+
+            if (status != PermissionStatus.Granted)
+                return;
+            else
+            {
+                if (!IsInitialized)
+                {
+                    InitializeComponent();
+                    IsInitialized = true;
+                    await FindClosestShops();
+                }
+            }
+        }
+        else
+        {
+            if (!IsInitialized)
+            {
+                InitializeComponent();
+                IsInitialized = true;
+                await FindClosestShops();
+            }
+        }
     }
 
 #if (ANDROID || IOS) && !MACCATALYST
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        base.OnNavigatedTo(args);
-
-        await FindClosestShops();
-
-        //await NavigateToBuilding25();
-    }
-
-    public async Task NavigateToBuilding25()
-    {
-        var location = new Location(47.645160, -122.1306032);
-        var options = new MapLaunchOptions { Name = "Microsoft Building 25" };
-
-        try
-        {
-            await Map.Default.OpenAsync(location, options);
-        }
-        catch (Exception ex)
-        {
-            // No map application available to open
-        }
-    }
-
     public void CreateActivityIndicator()
     {
         ActivityIndicator = new ActivityIndicator
@@ -121,8 +150,8 @@ public partial class NavigationView : ContentPage
     public void TurnOffActivityIndicator()
     {
         ActivityIndicator.IsRunning = false;
-        //Content = mappy;
-        Content = googleMaps;
+        Content = this.MainControl;
+        //Content = googleMaps;
     }
 
     private async Task FindClosestShops()
@@ -173,23 +202,27 @@ public partial class NavigationView : ContentPage
 
                 foreach (FoundedShop shop in listNearestShops)
                 {
-                    googleMaps.Pins.Add(
-                        new Maui.GoogleMaps.Pin
-                        {
-                            Label = shop.CompanyName,
-                            Address = shop.FullAddress,
-                            Type = Maui.GoogleMaps.PinType.Place,
-                            Position = new Maui.GoogleMaps.Position(shop.Latitude, shop.Longtitude)
-
-                        });
-                    //mappy.Pins.Add(
-                    //    new Pin()
+                    //googleMaps.Pins.Add(
+                    //    new Maui.GoogleMaps.Pin
                     //    {
                     //        Label = shop.CompanyName,
                     //        Address = shop.FullAddress,
-                    //        Type = PinType.Place,
-                    //        Location = new Location(shop.Latitude, shop.Longtitude)
+                    //        Type = Maui.GoogleMaps.PinType.Place,
+                    //        Position = new Maui.GoogleMaps.Position(shop.Latitude, shop.Longtitude)
+
                     //    });
+                    Pin pin = new Pin()
+                    {
+                        Label = shop.CompanyName,
+                        Address = shop.FullAddress,
+                        Type = PinType.Place,
+                        Location = new Location(shop.Latitude, shop.Longtitude)
+                    };
+                    pin.MarkerClicked += Pin_MarkerClicked;
+                    pin.InfoWindowClicked += Pin_InfoWindowClicked;
+
+                    _listPins.Add(pin);
+                    mappy.Pins.Add(pin);
                 }
 
                 if (listNearestShops.Count > 1) // atleast 2 Shops navigation
@@ -197,14 +230,18 @@ public partial class NavigationView : ContentPage
 
                     FoundedShop nearestShop = listNearestShops.OrderBy(shop => shop.Distance).First();
 
-                    //mappy.MoveToRegion(new MapSpan(new Location(nearestShop.Latitude, nearestShop.Longtitude), 0.075, 0.075));
-                    googleMaps.MoveToRegion(new Maui.GoogleMaps.MapSpan(new Maui.GoogleMaps.Position(nearestShop.Latitude, nearestShop.Longtitude), nearestShop.Latitude, nearestShop.Longtitude));
+                    mappy.MoveToRegion(new MapSpan(new Location(nearestShop.Latitude, nearestShop.Longtitude), 0.075, 0.075));
+                    //googleMaps.MoveToRegion(new Maui.GoogleMaps.MapSpan(new Maui.GoogleMaps.Position(nearestShop.Latitude, nearestShop.Longtitude), nearestShop.Latitude, nearestShop.Longtitude));
                 }
                 else // Single shop navigation
                 {
-                    //mappy.MoveToRegion(new MapSpan(new Location(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), 0.05, 0.05));
-                    googleMaps.MoveToRegion(new Maui.GoogleMaps.MapSpan(new Maui.GoogleMaps.Position(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), listNearestShops[0].Latitude, listNearestShops[0].Longtitude));
+                    mappy.MoveToRegion(new MapSpan(new Location(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), 0.05, 0.05));
+                    //googleMaps.MoveToRegion(new Maui.GoogleMaps.MapSpan(new Maui.GoogleMaps.Position(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), listNearestShops[0].Latitude, listNearestShops[0].Longtitude));
+
+                    //await Map.Default.OpenAsync(listNearestShops[0].Latitude, listNearestShops[0].Longtitude, new MapLaunchOptions { Name = "Test" });
                 }
+
+                // Todo zobrazit dole button a po kliknuti na PIN nechat zobrazit Navigovat -> co mi spusti Map.Default
             }
             else
             {
@@ -219,8 +256,24 @@ public partial class NavigationView : ContentPage
             Debug.WriteLine($"Unable to query location: {ex.Message}");
             await DisplayAlert("Navigácia chyba", "Pri vyhľadávaní lokácií nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
         }
+    }
 
-        TurnOffActivityIndicator();
+    private void Pin_InfoWindowClicked(object sender, PinClickedEventArgs e)
+    {
+        _lastClickedLocation = ((Pin)sender).Location;
+        this.btnNavigate.IsEnabled = true;
+    }
+
+
+    private void Pin_MarkerClicked(object sender, PinClickedEventArgs e)
+    {
+        _lastClickedLocation = ((Pin)sender).Location;
+        this.btnNavigate.IsEnabled = true;
+    }
+
+    private async void btnNavigate_Clicked(object sender, EventArgs e)
+    {
+        await Map.Default.OpenAsync(_lastClickedLocation.Latitude, _lastClickedLocation.Longitude);
     }
 #endif
 }

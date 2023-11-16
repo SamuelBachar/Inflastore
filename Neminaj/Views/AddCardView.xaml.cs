@@ -29,70 +29,85 @@ public partial class AddCardView : ContentPage
 
     ResultNotKnownCard ResultNotKnownCard { get; set; } = new ResultNotKnownCard();
 
+    bool IsInitialized = false;
+
     public AddCardView(SavedCardDetailViewModel savedCardViewModel)
     {
-        InitializeComponent();
+        this.Appearing += async (s, e) => { await NavigationView_Appearing(s, e); };
 
         BindingContext = savedCardViewModel;
         SavedCardViewModel = savedCardViewModel;
 
         NotKnownCardView.On_NotKnownCardView_BtnAddCard_Clicked += On_NotKnownCardView_BtnAddCard_Clicked;
 
-#if IOS
-            BarcodeScanner.Mobile.Methods.SetSupportBarcodeFormat(BarcodeScanner.Mobile.BarcodeFormats.All);
-            BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
-#endif
+        BarcodeScanner.Mobile.Methods.SetSupportBarcodeFormat(BarcodeScanner.Mobile.BarcodeFormats.All);
+    }
 
-#if ANDROID
-            BarcodeScanner.Mobile.Methods.SetSupportBarcodeFormat(BarcodeScanner.Mobile.BarcodeFormats.All);
-            BarcodeScanner.Mobile.Methods.AskForRequiredPermission();
-#endif
+    private async Task NavigationView_Appearing(object sender, EventArgs e)
+    {
+        PermissionStatus status = PermissionStatus.Unknown;
 
+        status = await Permissions.CheckStatusAsync<Permissions.Camera>();
 
-        //cameraView.BarCodeOptions = new()
-        //{
-        //    PossibleFormats =
-        //    {
-        //        ZXing.BarcodeFormat.QR_CODE,
-        //        ZXing.BarcodeFormat.All_1D,
-        //        ZXing.BarcodeFormat.MAXICODE,
-        //        ZXing.BarcodeFormat.RSS_14
-        //    },
-        //    AutoRotate = true,
-        //    TryHarder = true,
-        //    TryInverted = true,
-        //    ReadMultipleCodes = false
-        //};
-
-        //cameraView.BarCodeDetectionFrameRate = 3;
-        ////cameraView.BarCodeDetectionMaxThreads = 5;
-        //cameraView.ControlBarcodeResultDuplicate = true;
-        //cameraView.BarCodeDetectionEnabled = true;
-
-        //if (cameraView.MaxZoomFactor >= 2.0f)
-        //    cameraView.ZoomFactor = 2.0f;
-
-        cameraView.Options = new ZXing.Net.Maui.BarcodeReaderOptions
+        if (status != PermissionStatus.Granted)
         {
-            TryInverted = true,
-            AutoRotate = true
-        };
+            if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
+            {
+                await DisplayAlert("Kamera povolenie",
+                    "V minulosti bolo zamietnuté aplikácii používať kameru.\r\n" +
+                    "Prosím povoľte v nastaveniach telefónu kameru pre Inflastore"
+                    , "Ok");
+                return;
+            }
 
-        this.Appearing += AddCardView_Appearing;
+            // Android - hlaska sa zobrazi ak uzivatel v minulosti nepovolil navigaciu
+            if (Permissions.ShouldShowRationale<Permissions.Camera>())
+            {
+                await DisplayAlert("Kamera povolenie",
+                                   "Inflastore vie nájsť obchody vo vašej blízkosti. Prosím povoľte v nasledujúcej výzve prístup ku kamere"
+                                  , "Ok");
+            }
+
+            status = await Permissions.RequestAsync<Permissions.Camera>();
+
+            if (status != PermissionStatus.Granted)
+                return;
+            else
+            {
+                if (!IsInitialized)
+                {
+                    InitializeComponent();
+
+                    this.btnAddCard.IsVisible = false;
+                    this.lblCode.Text = string.Empty;
+                    cameraView.Options = new ZXing.Net.Maui.BarcodeReaderOptions
+                    {
+                        TryInverted = true,
+                        AutoRotate = true
+                    };
+
+                    IsInitialized = true;
+                }
+            }
+        }
+        else
+        {
+            if (!IsInitialized)
+            {
+                InitializeComponent();
+
+                this.btnAddCard.IsVisible = false;
+                this.lblCode.Text = string.Empty;
+                cameraView.Options = new ZXing.Net.Maui.BarcodeReaderOptions
+                {
+                    TryInverted = true,
+                    AutoRotate = true
+                };
+
+                IsInitialized = true;
+            }
+        }
     }
-
-    private void AddCardView_Appearing(object sender, EventArgs e)
-    {
-        this.btnAddCard.IsVisible = false;
-        this.lblCode.Text = string.Empty;
-    }
-
-    protected override void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        base.OnNavigatedTo(args);
-        // az tu su nainicializovane hodnoty pre SavedCardViewModel
-    }
-
 
     private async void btnAddCard_Clicked(object sender, EventArgs e)
     {
