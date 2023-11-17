@@ -33,8 +33,6 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>XSAppIconAssets</key>
-	<string>AppIcons/inflastore_appicon.png</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Inflastore vie nájsť obchody vo vašej blízkosti. Povolíte inflastoru prístup k funkcii GPS ?</string>
 	<key>NSCameraUsageDescription</key>

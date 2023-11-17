@@ -77,8 +77,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- App Icon -->
-    
               
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\inflastoresplashscreenv2.png" BaseSize="400, 200" Color="White">
@@ -105,11 +103,12 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" />
+  </ItemGroup>
+
 	<ItemGroup>
 	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
-	  <None Remove="Platforms\iOS\AppIcons\inflastore_appicon.png" />
-	  <None Remove="Resources\AppIcon\inflastoresplashscreenv2.png" />
-	  <None Remove="Resources\AppIcon\inflastore_appicon.png" />
 	  <None Remove="Resources\Database\neminaj.db3" />
 	  <None Remove="Resources\ImagesEmbedded\billa_card.png" />
 	  <None Remove="Resources\ImagesEmbedded\club_cards.png" />
@@ -128,13 +127,6 @@
 	  <None Remove="Resources\Images\settings.svg" />
 	  <None Remove="Resources\Images\tesco_logo.jpg" />
 	  <None Remove="Resources\Images\user_login.png" />
-	  <None Remove="Resources\Splash\inflastoresplashscreen.png" />
-	  <None Remove="Resources\Splash\inflastoresplashscreen.svg" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiIcon Include="Platforms\iOS\AppIcons\inflastore_appicon.png" />
-	  <MauiIcon Include="Resources\AppIcon\inflastore_appicon.png" />
 	</ItemGroup>
 
 	<ItemGroup>

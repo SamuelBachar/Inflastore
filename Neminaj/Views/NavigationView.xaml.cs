@@ -44,6 +44,8 @@ public partial class NavigationView : ContentPage
 
     Location _lastClickedLocation { get; set; } = null;
 
+    string _lastClickedAddress { get; set; } = null;
+
     List<Pin> _listPins { get; set; } = new List<Pin>();
 
     public NavigationView(NavigationShopViewModel navigShopViewModel)
@@ -261,6 +263,7 @@ public partial class NavigationView : ContentPage
     private void Pin_InfoWindowClicked(object sender, PinClickedEventArgs e)
     {
         _lastClickedLocation = ((Pin)sender).Location;
+        _lastClickedAddress = $"{((Pin)sender).Label} - {((Pin)sender).Address}";
         this.btnNavigate.IsEnabled = true;
     }
 
@@ -268,12 +271,13 @@ public partial class NavigationView : ContentPage
     private void Pin_MarkerClicked(object sender, PinClickedEventArgs e)
     {
         _lastClickedLocation = ((Pin)sender).Location;
+        _lastClickedAddress = ((Pin)sender).Address;
         this.btnNavigate.IsEnabled = true;
     }
 
     private async void btnNavigate_Clicked(object sender, EventArgs e)
     {
-        await Map.Default.OpenAsync(_lastClickedLocation.Latitude, _lastClickedLocation.Longitude);
+        await Map.Default.OpenAsync(_lastClickedLocation.Latitude, _lastClickedLocation.Longitude, new MapLaunchOptions { Name = _lastClickedAddress });
     }
 #endif
 }
