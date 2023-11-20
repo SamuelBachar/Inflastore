@@ -22,9 +22,9 @@ public partial class LoginView : ContentPage
     public LoginView(ILoginService loginService)
     {
         InitializeComponent();
+        this.Appearing += LoginView_Appearing;
 
         _loginService = loginService;
-
 
         if (Preferences.ContainsKey("RememberLogin"))
         {
@@ -43,6 +43,13 @@ public partial class LoginView : ContentPage
                 }
             }
         }
+    }
+
+    private void LoginView_Appearing(object sender, EventArgs e)
+    {
+        NavigationPage.SetHasNavigationBar(this, false);
+        NavigationPage.SetBackButtonTitle(this, null);
+        Shell.SetTabBarIsVisible(this, false);
     }
 
     private async void BtnLogInHttps_Clicked(object sender, EventArgs e)

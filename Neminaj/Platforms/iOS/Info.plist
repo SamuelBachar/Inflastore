@@ -43,5 +43,7 @@
 	<string>XSAppIconAssets</string>
   <key>Assets.xcassets/appicon.appiconset</key>
   <string></string>
+  <key>UIViewControllerBasedStatusBarAppearance</key>
+  <false/>
 </dict>
 </plist>

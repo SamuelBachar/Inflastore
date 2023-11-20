@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
              x:Class="Neminaj.Views.LoginView"
              FlyoutItem.IsVisible="False"
              Shell.NavBarIsVisible="False">
+
+    <Page.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="{StaticResource Primary}" StatusBarStyle="DarkContent"/>
+    </Page.Behaviors>
 
     <VerticalStackLayout x:Name="MainControlWrapper" Spacing="25" Padding="30,0" VerticalOptions="Center">
 
