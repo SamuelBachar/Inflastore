@@ -37,6 +37,8 @@ public partial class SettingsView : ContentPage
     private CompanyRepository CompanyRepo { get; set; } = null;
     private ISettingsService SettingsService { get; set; } = null;
 
+    private IConnectivity ConnectivityService { get; set; } = null;
+
     private List<CompanyDTO> ListComp { get; set; } = null;
     private List<CompanyCheckboxesState> ListCompanyCheckboxesState = new();
     private List<Image> ListImage = new List<Image>();
@@ -46,16 +48,24 @@ public partial class SettingsView : ContentPage
 
     PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam nastavenia ...");
 
-    public SettingsView(CompanyRepository companyRepository, ISettingsService settingsService)
+    private bool PageBuilded = false;
+
+    public SettingsView(CompanyRepository companyRepository, ISettingsService settingsService, IConnectivity connectivityService)
     {
         InitializeComponent();
         CompanyRepo = companyRepository;
         SettingsService = settingsService;
+        ConnectivityService = connectivityService;
 
-        this.Loaded += async (s, e) => { await BuildPage(); };
+        //this.Loaded += async (s, e) => { await BuildPage(); };
+        
         this.Disappearing += async (s, e) => { await SettingsView_OnDisappearing(); };
+    }
 
-        this.Content = this._popUpIndic;
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        await CheckBuildAndBuildIfNeeded();
     }
 
     public ISettingsService GetSettingService()
@@ -65,15 +75,20 @@ public partial class SettingsView : ContentPage
 
     private async Task SettingsView_OnDisappearing()
     {
-        await SettingsService.Save(nameof(slider), slider.Value);
-
-        foreach (CompanyCheckboxesState compChkBoxState in ListCompanyCheckboxesState)
+        if (PageBuilded)
         {
-            await SettingsService.Save($"{compChkBoxState.Name}_SettingsChkBox_Id_{compChkBoxState.Id}", compChkBoxState.IsChecked);
-        }
 
-        if (!await ISettingsService.ContainsStatic("SettingsAtLeastOnceSaved"))
-            await SettingsService.Save("SettingsAtLeastOnceSaved", true);
+            await SettingsService.Save(nameof(slider), slider.Value);
+
+            foreach (CompanyCheckboxesState compChkBoxState in ListCompanyCheckboxesState)
+            {
+                await SettingsService.Save($"{compChkBoxState.Name}_SettingsChkBox_Id_{compChkBoxState.Id}", compChkBoxState.IsChecked);
+            }
+
+            if (!await ISettingsService.ContainsStatic("SettingsAtLeastOnceSaved"))
+                await SettingsService.Save("SettingsAtLeastOnceSaved", true);
+
+        }
     }
 
     public static List<int> GetCheckedAndSavedCompaniesFromSettings(List<CompanyDTO> listCompanies)
@@ -100,19 +115,34 @@ public partial class SettingsView : ContentPage
             LabelKm.Text = value.ToString().Substring(0, value.ToString().IndexOf(",") + 2);
     }
 
+    public async Task CheckBuildAndBuildIfNeeded()
+    {
+        if (ConnectivityService.NetworkAccess == NetworkAccess.Internet && !PageBuilded)
+        {
+            this.Content = this._popUpIndic;
+            await BuildPage();
+        }
+        else
+        {
+            await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné načítať položky", "Zavrieť");
+        }
+    }
+
     public async Task BuildPage()
     {
-        ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam nastavenia ...");
-       // this.ShowPopup(popUpIndic);
-        //popUpIndic.TurnOnActivityIndicator();
-
-        //this.Title = "Nastavenia";
-
-        // START: Create MAIN GRID of View ///
-        Grid gridMain = new Grid
+        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            // Fix column definition
-            ColumnDefinitions =
+            ActivityIndicatorPopUp popUpIndic = new ActivityIndicatorPopUp("Načítavam nastavenia ...");
+            // this.ShowPopup(popUpIndic);
+            //popUpIndic.TurnOnActivityIndicator();
+
+            //this.Title = "Nastavenia";
+
+            // START: Create MAIN GRID of View ///
+            Grid gridMain = new Grid
+            {
+                // Fix column definition
+                ColumnDefinitions =
             {
                 new ColumnDefinition(GridLength.Star),
                 //new ColumnDefinition(GridLength.Star),
@@ -121,29 +151,29 @@ public partial class SettingsView : ContentPage
                 //new ColumnDefinition(GridLength.Star),
                 //new ColumnDefinition(GridLength.Star),
             },
-            RowDefinitions =
+                RowDefinitions =
             {
                 new RowDefinition(GridLength.Auto), // for Grid Customers
                 new RowDefinition(GridLength.Auto), // for Price Comparer mode
                 new RowDefinition(GridLength.Auto), // for Distance (km) within which to search shops navigation
             }
-        };
+            };
 
-        gridMain.Margin = 10;
-        gridMain.RowSpacing = 10;
-        gridMain.VerticalOptions = LayoutOptions.Start;
-        gridMain.HorizontalOptions = LayoutOptions.StartAndExpand;
-        // END: Create MAIN GRID of View ///
+            gridMain.Margin = 10;
+            gridMain.RowSpacing = 10;
+            gridMain.VerticalOptions = LayoutOptions.Start;
+            gridMain.HorizontalOptions = LayoutOptions.StartAndExpand;
+            // END: Create MAIN GRID of View ///
 
-        int maxCompaniesPerRow = 3;
-        int numberOfRows = 0;
-        int numberOfColumns = 6;
-        ListComp = await CompanyRepo.GetAllCompaniesAsync();
+            int maxCompaniesPerRow = 3;
+            int numberOfRows = 0;
+            int numberOfColumns = 6;
+            ListComp = await CompanyRepo.GetAllCompaniesAsync();
 
-        Grid gridCustomers = new Grid
-        {
-            // Fix column definition
-            ColumnDefinitions =
+            Grid gridCustomers = new Grid
+            {
+                // Fix column definition
+                ColumnDefinitions =
             {
                 new ColumnDefinition(GridLength.Star), // chkBox
                 new ColumnDefinition(GridLength.Star), // Image
@@ -152,131 +182,131 @@ public partial class SettingsView : ContentPage
                 new ColumnDefinition(GridLength.Star), // chkBox
                 new ColumnDefinition(GridLength.Star), // Image
             }
-        };
+            };
 
-        gridCustomers.ColumnSpacing = 5;
-        gridCustomers.RowSpacing = 20;
-        gridCustomers.HorizontalOptions = LayoutOptions.StartAndExpand;
-        gridCustomers.VerticalOptions = LayoutOptions.Start;
-
-
-        // START: add label Výber obchodov
-
-        // Add one row for text
-        gridCustomers.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
-
-        Label labelChooseShops = new Label
-        {
-            Text = "Výber obchodov",
-            FontSize = 14,
-            FontAttributes = FontAttributes.Bold,
-            HorizontalOptions = LayoutOptions.StartAndExpand,
-            HorizontalTextAlignment = TextAlignment.Start
-        };
-
-        Grid.SetColumnSpan(labelChooseShops, 6);
-        gridCustomers.Add(labelChooseShops, 0, 0);
-        // END: add label Výber obchodov
+            gridCustomers.ColumnSpacing = 5;
+            gridCustomers.RowSpacing = 20;
+            gridCustomers.HorizontalOptions = LayoutOptions.StartAndExpand;
+            gridCustomers.VerticalOptions = LayoutOptions.Start;
 
 
-        // Add grid rows
-        numberOfRows += (ListComp.Count / maxCompaniesPerRow) + (ListComp.Count % maxCompaniesPerRow > 0 ? 1 : 0);
+            // START: add label Výber obchodov
 
-        for (int i = 0; i < numberOfRows; i++)
-        {
-            gridCustomers.RowDefinitions.Add(new RowDefinition() { Height = 50 });
-        }
+            // Add one row for text
+            gridCustomers.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 
-        // Add chkBoxes and Images
-        int helpCounter = 0;
-        bool breakLoop = false;
-        int rowOffset = 1; // 1 because of one row for text
-        ListCompanyCheckboxesState.Clear(); // clear Company check boxes state list
-
-        for (int row = rowOffset; row < (numberOfRows + rowOffset); row++)
-        {
-            // One row == max 3 companies (combination chkBox and picture)
-            for (int col = 0; col < numberOfColumns; col += 2)
+            Label labelChooseShops = new Label
             {
-                // Check if all companieos were already processed
-                if (helpCounter == ListComp.Count)
+                Text = "Výber obchodov",
+                FontSize = 14,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalOptions = LayoutOptions.StartAndExpand,
+                HorizontalTextAlignment = TextAlignment.Start
+            };
+
+            Grid.SetColumnSpan(labelChooseShops, 6);
+            gridCustomers.Add(labelChooseShops, 0, 0);
+            // END: add label Výber obchodov
+
+
+            // Add grid rows
+            numberOfRows += (ListComp.Count / maxCompaniesPerRow) + (ListComp.Count % maxCompaniesPerRow > 0 ? 1 : 0);
+
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                gridCustomers.RowDefinitions.Add(new RowDefinition() { Height = 50 });
+            }
+
+            // Add chkBoxes and Images
+            int helpCounter = 0;
+            bool breakLoop = false;
+            int rowOffset = 1; // 1 because of one row for text
+            ListCompanyCheckboxesState.Clear(); // clear Company check boxes state list
+
+            for (int row = rowOffset; row < (numberOfRows + rowOffset); row++)
+            {
+                // One row == max 3 companies (combination chkBox and picture)
+                for (int col = 0; col < numberOfColumns; col += 2)
                 {
-                    breakLoop = true;
-                    break;
+                    // Check if all companieos were already processed
+                    if (helpCounter == ListComp.Count)
+                    {
+                        breakLoop = true;
+                        break;
+                    }
+
+                    CheckBox chkBox = new CheckBox
+                    {
+                        AutomationId = ListComp[helpCounter].Id.ToString(), // Used to distinguish companies (selected and unselected companies)
+                        HorizontalOptions = LayoutOptions.Fill,
+                    };
+
+                    // load saved status of choosing company
+                    chkBox.IsChecked = await SettingsService.Get<bool>($"{ListComp[helpCounter].Name}_SettingsChkBox_Id_{ListComp[helpCounter].Id}", true);
+                    chkBox.CheckedChanged += CompanyCheckBoxChanged;
+                    ListCompanyCheckboxesState.Add(new CompanyCheckboxesState
+                    {
+                        Id = chkBox.AutomationId,
+                        Name = ListComp[helpCounter].Name,
+                        IsChecked = chkBox.IsChecked
+                    });
+
+                    gridCustomers.Add(chkBox, col, row);
+
+                    Image image = new Image
+                    {
+                        Source = ListComp[helpCounter].Url,
+                        Aspect = Aspect.AspectFit,
+                        HorizontalOptions = LayoutOptions.Fill,
+                        HeightRequest = 75,
+                        WidthRequest = 75
+                    };
+
+                    ListImage.Add(image);
+
+                    gridCustomers.Add(image, col + 1, row);
+
+                    // From byte array
+                    //var stream = new MemoryStream(ListComp[helpCounter].Image);
+                    //{
+                    //    Image image = new Image
+                    //    {
+
+                    //        Source = ImageSource.FromStream(() => stream),
+
+                    //        Aspect = Aspect.AspectFit,
+                    //        HorizontalOptions = LayoutOptions.StartAndExpand
+                    //    };
+
+                    //    ListImage.Add(image);
+                    //    gridCustomers.Add(image, col + 1, row);
+                    //}
+
+                    helpCounter++;
                 }
 
-                CheckBox chkBox = new CheckBox
-                {
-                    AutomationId = ListComp[helpCounter].Id.ToString(), // Used to distinguish companies (selected and unselected companies)
-                    HorizontalOptions = LayoutOptions.Fill,
-                };
-
-                // load saved status of choosing company
-                chkBox.IsChecked = await SettingsService.Get<bool>($"{ListComp[helpCounter].Name}_SettingsChkBox_Id_{ListComp[helpCounter].Id}", true);
-                chkBox.CheckedChanged += CompanyCheckBoxChanged;
-                ListCompanyCheckboxesState.Add(new CompanyCheckboxesState
-                {
-                    Id = chkBox.AutomationId,
-                    Name = ListComp[helpCounter].Name,
-                    IsChecked = chkBox.IsChecked
-                });
-
-                gridCustomers.Add(chkBox, col, row);
-
-                Image image = new Image
-                {
-                    Source = ListComp[helpCounter].Url,
-                    Aspect = Aspect.AspectFit,
-                    HorizontalOptions = LayoutOptions.Fill,
-                    HeightRequest = 75,
-                    WidthRequest = 75
-                };
-
-                ListImage.Add(image);
-
-                gridCustomers.Add(image, col + 1, row);
-
-                // From byte array
-                //var stream = new MemoryStream(ListComp[helpCounter].Image);
-                //{
-                //    Image image = new Image
-                //    {
-
-                //        Source = ImageSource.FromStream(() => stream),
-
-                //        Aspect = Aspect.AspectFit,
-                //        HorizontalOptions = LayoutOptions.StartAndExpand
-                //    };
-
-                //    ListImage.Add(image);
-                //    gridCustomers.Add(image, col + 1, row);
-                //}
-
-                helpCounter++;
+                if (breakLoop)
+                    break;
             }
 
-            if (breakLoop)
-                break;
-        }
+            // START: Create Frame for Grid Customers //
+            Frame frameCustomers = new Frame();
+            frameCustomers.HorizontalOptions = LayoutOptions.FillAndExpand;
+            frameCustomers.Content = gridCustomers;
+            frameCustomers.Content.HorizontalOptions = LayoutOptions.FillAndExpand;
+            frameCustomers.Content.VerticalOptions = LayoutOptions.Start;
 
-        // START: Create Frame for Grid Customers //
-        Frame frameCustomers = new Frame();
-        frameCustomers.HorizontalOptions = LayoutOptions.FillAndExpand;
-        frameCustomers.Content = gridCustomers;
-        frameCustomers.Content.HorizontalOptions = LayoutOptions.FillAndExpand;
-        frameCustomers.Content.VerticalOptions = LayoutOptions.Start;
+            Grid.SetRow(frameCustomers, 0);
+            //Grid.SetColumnSpan(frameCustomers, 6);
+            gridMain.Add(frameCustomers, 0, 0);
 
-        Grid.SetRow(frameCustomers, 0);
-        //Grid.SetColumnSpan(frameCustomers, 6);
-        gridMain.Add(frameCustomers, 0, 0);
+            // END: Create Frame for Grid Customers //
 
-        // END: Create Frame for Grid Customers //
+            // START: Frame Distance //
 
-        // START: Frame Distance //
-
-        Grid gridDistance = new Grid
-        {
-            ColumnDefinitions =
+            Grid gridDistance = new Grid
+            {
+                ColumnDefinitions =
             {
                 new ColumnDefinition( new GridLength(0.9, GridUnitType.Star)),
                 new ColumnDefinition(new GridLength(0.1, GridUnitType.Star)), 
@@ -286,73 +316,80 @@ public partial class SettingsView : ContentPage
                 //new ColumnDefinition(), // To fit parent grid layout
                 //new ColumnDefinition() // To fit parent grid layout
             },
-            RowDefinitions =
+                RowDefinitions =
             {
                 new RowDefinition(), // contols: Text
                 new RowDefinition(), // controls: Slider + Text
             },
-            RowSpacing = 20
-        };
+                RowSpacing = 20
+            };
 
-        Label labelDistance = new Label
+            Label labelDistance = new Label
+            {
+                Text = "Hladať obchody v okruhu km",
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 14
+            };
+
+            Grid.SetColumnSpan(labelDistance, 2);
+            gridDistance.Add(labelDistance, 0, 0);
+
+            /* 
+                !!!!!!
+                be aware label needs to be created before Slider because of ValueChanged event which is raised when value of
+                slider is changed due to taking already saved value of slider from Application Preferences (store used for settings saving)
+                !!!!!!
+            */
+
+            LabelKm = new Label
+            {
+                Text = "10.0",
+                FontAttributes = FontAttributes.Bold
+            };
+            gridDistance.Add(LabelKm, 1, 1);
+
+            slider = new Slider
+            {
+                Maximum = 100.0d,
+                VerticalOptions = LayoutOptions.StartAndExpand,
+                Value = 10.0d,
+            };
+
+            slider.ValueChanged += this.Slider_ValueChanged;
+            slider.Value = await SettingsService.Get<double>(nameof(slider), 10.0d);
+            //Grid.SetColumnSpan(slider, 5);
+            gridDistance.Add(slider, 0, 1);
+
+            Frame frameDistance = new Frame();
+            frameDistance.Content = gridDistance;
+
+            Grid.SetRow(frameDistance, 2);
+            //Grid.SetColumnSpan(frameDistance, 6);
+            gridMain.Add(frameDistance);
+            // END: Frame Distance //
+
+            // Create ScrollView
+            ScrollView scrollView = new ScrollView
+            {
+                VerticalScrollBarVisibility = ScrollBarVisibility.Always,
+                Orientation = ScrollOrientation.Vertical
+            };
+
+            scrollView.Content = gridMain;
+
+            //popUpIndic.TurnOffActivityIndicator();
+
+            // Set grid and its childrens as main content
+            Content = scrollView;
+
+            PageBuilded = true;
+
+            //popUpIndic.Close();
+        }
+        else
         {
-            Text = "Hladať obchody v okruhu km",
-            FontAttributes = FontAttributes.Bold,
-            FontSize = 14
-        };
-
-        Grid.SetColumnSpan(labelDistance, 2);
-        gridDistance.Add(labelDistance, 0, 0);
-
-        /* 
-            !!!!!!
-            be aware label needs to be created before Slider because of ValueChanged event which is raised when value of
-            slider is changed due to taking already saved value of slider from Application Preferences (store used for settings saving)
-            !!!!!!
-        */
-
-        LabelKm = new Label
-        {
-            Text = "10.0",
-            FontAttributes = FontAttributes.Bold
-        };
-        gridDistance.Add(LabelKm, 1, 1);
-
-        slider = new Slider
-        {
-            Maximum = 100.0d,
-            VerticalOptions = LayoutOptions.StartAndExpand,
-            Value = 10.0d,
-        };
-
-        slider.ValueChanged += this.Slider_ValueChanged;
-        slider.Value = await SettingsService.Get<double>(nameof(slider), 10.0d);
-        //Grid.SetColumnSpan(slider, 5);
-        gridDistance.Add(slider, 0, 1);
-
-        Frame frameDistance = new Frame();
-        frameDistance.Content = gridDistance;
-
-        Grid.SetRow(frameDistance, 2);
-        //Grid.SetColumnSpan(frameDistance, 6);
-        gridMain.Add(frameDistance);
-        // END: Frame Distance //
-
-        // Create ScrollView
-        ScrollView scrollView = new ScrollView
-        {
-            VerticalScrollBarVisibility = ScrollBarVisibility.Always,
-            Orientation = ScrollOrientation.Vertical
-        };
-
-        scrollView.Content = gridMain;
-
-        //popUpIndic.TurnOffActivityIndicator();
-
-        // Set grid and its childrens as main content
-        Content = scrollView;
-
-        //popUpIndic.Close();
+            await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné načítať nastavenie aplikácie", "Zavrieť");
+        }
     }
 
     private void CompanyCheckBoxChanged(object sender, EventArgs e)

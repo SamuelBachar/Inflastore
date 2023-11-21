@@ -14,13 +14,13 @@ public partial class CartViewSaveCartPopUp : Popup
     CartView CartView { get; set; }
 
     public CartViewSaveCartPopUp(List<ItemChoosen> listItems, CartViewModel cartViewModel, CartView cartView)
-	{
+    {
         ListItems = listItems;
         CartViewModel = cartViewModel;
         CartView = cartView;
 
         InitializeComponent();
-	}
+    }
 
     private void Cancel_Button_Clicked(object sender, EventArgs e)
     {
@@ -75,11 +75,6 @@ public partial class CartViewSaveCartPopUp : Popup
         }
     }
 
-    //private Task DisplayAlert(string v1, string v2, string v3)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
     private void CartListNote_TextChanged(object sender, TextChangedEventArgs e)
     {
 
@@ -87,10 +82,10 @@ public partial class CartViewSaveCartPopUp : Popup
 
     private void CartListName_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if(CartListName.Text.Length == 0)
+        if (CartListName.Text.Length == 0)
         {
             CartListName.PlaceholderColor = Colors.Black;
             CartListName.Placeholder = "";
-        }   
+        }
     }
 }

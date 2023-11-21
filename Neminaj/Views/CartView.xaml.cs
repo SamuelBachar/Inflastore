@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using Neminaj.ContentViews;
 using Neminaj.Events;
 using Neminaj.Models;
@@ -47,21 +47,21 @@ public partial class CartView : ContentPage
         {
             await semaphoreDeleteItem.WaitAsync();
 
-                int idInList = int.Parse(((Microsoft.Maui.Controls.ImageButton)(sender)).ClassId);
+            int idInList = int.Parse(((Microsoft.Maui.Controls.ImageButton)(sender)).ClassId);
 
-                if (_lastDeletedItemId != idInList)
+            if (_lastDeletedItemId != idInList)
+            {
+                _lastDeletedItemId = idInList;
+                CartViewModel.DeleteChoosenItem(idInList);
+
+                // Make sure someone is listening to event
+                if (On_CartView_ItemRemovedFromList != null)
                 {
-                    _lastDeletedItemId = idInList;
-                    CartViewModel.DeleteChoosenItem(idInList);
-
-                    // Make sure someone is listening to event
-                    if (On_CartView_ItemRemovedFromList != null)
-                    {
-                        On_CartView_ItemRemovedFromList(this, new EventArgs());
-                    }
-
-                    listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens();
+                    On_CartView_ItemRemovedFromList(this, new EventArgs());
                 }
+
+                listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens();
+            }
         }
         finally
         {
@@ -96,6 +96,13 @@ public partial class CartView : ContentPage
     }
     private async Task BtnSaveCart_Clicked(object sender, EventArgs e)
     {
-        await this.ShowPopupAsync(new CartViewSaveCartPopUp(CartViewModel.GetItemChoosens().ToList(), CartViewModel, this));
+        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            await this.ShowPopupAsync(new CartViewSaveCartPopUp(CartViewModel.GetItemChoosens().ToList(), CartViewModel, this));
+        }
+        else
+        {
+            await DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nPre lokálne uloženie nákupného zoznamu je potrebné pripojenie", "Zavrieť");
+        }
     }
 }

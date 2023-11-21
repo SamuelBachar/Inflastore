@@ -271,7 +271,7 @@ public partial class NavigationView : ContentPage
     private void Pin_MarkerClicked(object sender, PinClickedEventArgs e)
     {
         _lastClickedLocation = ((Pin)sender).Location;
-        _lastClickedAddress = ((Pin)sender).Address;
+        _lastClickedAddress = $"{((Pin)sender).Label} - {((Pin)sender).Address}";
         this.btnNavigate.IsEnabled = true;
     }
 

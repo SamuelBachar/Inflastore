@@ -46,19 +46,26 @@ public partial class ItemPicker : ContentPage
     {
         base.OnNavigatedTo(args);
 
-        ItemRepo = _itemPickerViewModel.ItemRepo;
-        UnitRepo = _itemPickerViewModel.UnitRepo;
-        CartRepo = _itemPickerViewModel.CartRepo;
+        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+        {
+            ItemRepo = _itemPickerViewModel.ItemRepo;
+            UnitRepo = _itemPickerViewModel.UnitRepo;
+            CartRepo = _itemPickerViewModel.CartRepo;
 
-        this.Title = _itemPickerViewModel.Category.Name;
+            this.Title = _itemPickerViewModel.Category.Name;
 
-        if (ListUnits == null)
-            ListUnits = await UnitRepo.GetAllUnitsAsync();
+            if (ListUnits == null)
+                ListUnits = await UnitRepo.GetAllUnitsAsync();
 
-        List<Item> listItems = await ItemRepo.GetAllItemsAsync();
-        listItems = listItems.Where(item => item.Category_Id == _itemPickerViewModel.Category.Id).ToList();
+            List<Item> listItems = await ItemRepo.GetAllItemsAsync();
+            listItems = listItems.Where(item => item.Category_Id == _itemPickerViewModel.Category.Id).ToList();
 
-        this.listItem.ItemsSource = listItems.OrderBy(n => n.Name);
+            this.listItem.ItemsSource = listItems.OrderBy(n => n.Name);
+        }
+        else
+        {
+            await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné načítať položky", "Zavrieť");
+        }
 
         this.Content = this.MainControlWrapper;
     }
@@ -121,18 +128,25 @@ public partial class ItemPicker : ContentPage
 
     private async void listItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        Item item = ((Item)e.CurrentSelection.First());
-        int idInList = ObservableItemsChoosed.Count == 0 ? 0 : ObservableItemsChoosed.Last().IdInList + 1;
-
-        ObservableItemsChoosed.Add(new ItemChoosen
+        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            Id = item.Id,
-            IdInList = idInList,
-            Name = item.Name,
-            CntOfItems = 1,
-            UnitTag = ListUnits.First(u => u.Id == item.Unit_Id).Tag
-        });
+            Item item = ((Item)e.CurrentSelection.First());
+            int idInList = ObservableItemsChoosed.Count == 0 ? 0 : ObservableItemsChoosed.Last().IdInList + 1;
 
-        await CartCounterControlView.IncreaseShoppingCartCounter();
+            ObservableItemsChoosed.Add(new ItemChoosen
+            {
+                Id = item.Id,
+                IdInList = idInList,
+                Name = item.Name,
+                CntOfItems = 1,
+                UnitTag = ListUnits.First(u => u.Id == item.Unit_Id).Tag
+            });
+
+            await CartCounterControlView.IncreaseShoppingCartCounter();
+        }
+        else
+        {
+            await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné pridať položku", "Zavrieť");
+        }
     }
 }

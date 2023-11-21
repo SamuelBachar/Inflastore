@@ -100,6 +100,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ILoginService, LoginService>();
         builder.Services.AddSingleton<IRegisterService, RegisterService>();
         builder.Services.AddSingleton<IForgotPasswordService, ForgotPasswordService>();
+        builder.Services.AddSingleton<IConnectivity>(Connectivity.Current);
 
         // Repositories ( DB queries)
         builder.Services.AddSingleton<ItemRepository>();
