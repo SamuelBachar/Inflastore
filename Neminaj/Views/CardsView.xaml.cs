@@ -115,11 +115,19 @@ public partial class CardsView : ContentPage
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(SavedCardDetailView),
-        new Dictionary<string, object>
+        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            [nameof(SavedCardRepository)] = this._savedCardRepo,
-            ["CardID"] = e.Parameter
-        });
+            await Shell.Current.GoToAsync(nameof(SavedCardDetailView),
+            new Dictionary<string, object>
+            {
+                [nameof(SavedCardRepository)] = this._savedCardRepo,
+                ["CardID"] = e.Parameter
+            });
+        }
+        else
+        {
+            await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné načítať predvolené klubové karty", "Zavrieť");
+        }
     }
+
 }
