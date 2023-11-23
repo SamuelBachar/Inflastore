@@ -580,7 +580,7 @@ public partial class PriceComparerView : ContentPage
                 }
             }
 
-            Content = ListViewElements[CurrentViewIndex].MainGrid.ViewGrid;
+             Content = ListViewElements[CurrentViewIndex].MainGrid.ViewGrid;
             ItemsChoosedModified = ItemsChoosed.ToList(); // for dissappearing empty cart list
         }
         finally

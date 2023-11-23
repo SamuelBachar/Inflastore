@@ -154,7 +154,6 @@ public partial class SettingsView : ContentPage
                 RowDefinitions =
             {
                 new RowDefinition(GridLength.Auto), // for Grid Customers
-                new RowDefinition(GridLength.Auto), // for Price Comparer mode
                 new RowDefinition(GridLength.Auto), // for Distance (km) within which to search shops navigation
             }
             };
@@ -238,7 +237,7 @@ public partial class SettingsView : ContentPage
                     CheckBox chkBox = new CheckBox
                     {
                         AutomationId = ListComp[helpCounter].Id.ToString(), // Used to distinguish companies (selected and unselected companies)
-                        HorizontalOptions = LayoutOptions.Fill,
+                        HorizontalOptions = LayoutOptions.Start,
                     };
 
                     // load saved status of choosing company
@@ -256,10 +255,10 @@ public partial class SettingsView : ContentPage
                     Image image = new Image
                     {
                         Source = ListComp[helpCounter].Url,
+                        HeightRequest = 50,
+                        WidthRequest = 50,
                         Aspect = Aspect.AspectFit,
-                        HorizontalOptions = LayoutOptions.Fill,
-                        HeightRequest = 75,
-                        WidthRequest = 75
+                        HorizontalOptions = LayoutOptions.Start,
                     };
 
                     ListImage.Add(image);
@@ -293,7 +292,7 @@ public partial class SettingsView : ContentPage
             Frame frameCustomers = new Frame();
             frameCustomers.HorizontalOptions = LayoutOptions.FillAndExpand;
             frameCustomers.Content = gridCustomers;
-            frameCustomers.Content.HorizontalOptions = LayoutOptions.FillAndExpand;
+            frameCustomers.Content.HorizontalOptions = LayoutOptions.Start;
             frameCustomers.Content.VerticalOptions = LayoutOptions.Start;
 
             Grid.SetRow(frameCustomers, 0);
@@ -308,8 +307,8 @@ public partial class SettingsView : ContentPage
             {
                 ColumnDefinitions =
             {
-                new ColumnDefinition( new GridLength(0.9, GridUnitType.Star)),
-                new ColumnDefinition(new GridLength(0.1, GridUnitType.Star)), 
+                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(GridLength.Auto),
                 //new ColumnDefinition(), // To fit parent grid layout
                 //new ColumnDefinition(), // To fit parent grid layout
                 //new ColumnDefinition(), // To fit parent grid layout
@@ -346,12 +345,13 @@ public partial class SettingsView : ContentPage
                 Text = "10.0",
                 FontAttributes = FontAttributes.Bold
             };
-            gridDistance.Add(LabelKm, 1, 1);
+            gridDistance.Add(LabelKm, 3, 1);
 
             slider = new Slider
             {
                 Maximum = 100.0d,
                 VerticalOptions = LayoutOptions.StartAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
                 Value = 10.0d,
             };
 
@@ -362,8 +362,11 @@ public partial class SettingsView : ContentPage
 
             Frame frameDistance = new Frame();
             frameDistance.Content = gridDistance;
+            frameDistance.HorizontalOptions = LayoutOptions.FillAndExpand;
+            frameDistance.Content.HorizontalOptions = LayoutOptions.FillAndExpand;
+            frameDistance.Content.VerticalOptions = LayoutOptions.FillAndExpand;
 
-            Grid.SetRow(frameDistance, 2);
+            Grid.SetRow(frameDistance, 1);
             //Grid.SetColumnSpan(frameDistance, 6);
             gridMain.Add(frameDistance);
             // END: Frame Distance //
