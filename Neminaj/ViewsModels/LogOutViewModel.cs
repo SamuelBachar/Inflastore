@@ -10,12 +10,12 @@ namespace Neminaj.ViewsModels;
 
 public partial class LogOutViewModel
 {
-    public async void SignOut() // Not used covered during LogIn
+    public async Task SignOut()
     {
-        if (Preferences.ContainsKey(nameof(App.UserLoginInfo)))
-        {
-            Preferences.Remove(nameof(App.UserLoginInfo));
-        }
+        //if (Preferences.ContainsKey(nameof(App.UserLoginInfo)))
+        //{
+        //    Preferences.Remove(nameof(App.UserLoginInfo));
+        //}
 
         await Shell.Current.GoToAsync($"//{nameof(LoginView)}");
     }

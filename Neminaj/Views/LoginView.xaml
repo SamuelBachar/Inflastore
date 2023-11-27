@@ -6,6 +6,10 @@
              FlyoutItem.IsVisible="False"
              Shell.NavBarIsVisible="False">
 
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" IsEnabled="False" />
+    </Shell.BackButtonBehavior>
+    
     <Page.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="{StaticResource Primary}" StatusBarStyle="DarkContent"/>
     </Page.Behaviors>

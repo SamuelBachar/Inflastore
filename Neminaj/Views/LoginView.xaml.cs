@@ -22,7 +22,12 @@ public partial class LoginView : ContentPage
     public LoginView(ILoginService loginService)
     {
         InitializeComponent();
-        this.Appearing += LoginView_Appearing;
+        NavigationPage.SetHasNavigationBar(this, false);
+        NavigationPage.SetBackButtonTitle(this, null);
+        NavigationPage.SetHasBackButton(this, false);
+        Shell.SetTabBarIsVisible(this, false);
+
+        //this.Appearing += LoginView_Appearing;
 
         _loginService = loginService;
 

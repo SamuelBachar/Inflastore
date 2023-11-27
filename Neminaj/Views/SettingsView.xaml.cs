@@ -122,7 +122,7 @@ public partial class SettingsView : ContentPage
             this.Content = this._popUpIndic;
             await BuildPage();
         }
-        else
+        else if (!PageBuilded)
         {
             await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné načítať položky", "Zavrieť");
         }

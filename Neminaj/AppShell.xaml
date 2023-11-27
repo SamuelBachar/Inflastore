@@ -34,7 +34,7 @@
         </Tab>
 
         <Tab Title="Odhlásenie" Icon="logout_icon.png">
-            <ShellContent ContentTemplate="{DataTemplate localViews:LoginView}" Route="LoginView"/>
+            <ShellContent ContentTemplate="{DataTemplate localViews:LogOutView}" Route="LogOutView"/>
         </Tab>
 
     </TabBar>
