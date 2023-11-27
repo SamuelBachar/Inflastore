@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\ResetPasword\ResetPasswordResponse.html" />
     <Content Remove="wwwroot\StaticFile\Categories\category_flesh.png" />
     <Content Remove="wwwroot\StaticFile\Categories\category_fruit.png" />
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\billa_logo.png" />
@@ -23,6 +24,7 @@
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\other_card.png" />
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\tesco_logo.png" />
     <Content Remove="wwwroot\StaticFile\Companies\ClubCard\yeme_logo.png" />
+    <Content Remove="wwwroot\VerifyEmailRegistration\VerifyResponse.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +50,7 @@
   <ItemGroup>
     <None Include="wwwroot\EmailForgotPassword\EmailForgotPassword.html" />
     <None Include="wwwroot\EmailRegister\EmailRegister.html" />
+    <None Include="wwwroot\ResetPasword\ResetPasswordResponse.html" />
     <None Include="wwwroot\StaticFile\Categories\category_flesh.png" />
     <None Include="wwwroot\StaticFile\Categories\category_fruit.png" />
     <None Include="wwwroot\StaticFile\Companies\ClubCard\billa_logo.png" />
@@ -62,6 +65,7 @@
     <None Include="wwwroot\StaticFile\Companies\Logo\lidl_logo.png" />
     <None Include="wwwroot\StaticFile\Companies\Logo\tesco_logo.png" />
     <None Include="wwwroot\StaticFile\Inflastore\inflastore_logo.png" />
+    <None Include="wwwroot\VerifyEmailRegistration\VerifyResponse.html" />
   </ItemGroup>
 
   <ItemGroup>

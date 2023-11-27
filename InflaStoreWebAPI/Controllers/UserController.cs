@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -71,7 +72,7 @@ public class UserController : ControllerBase
         return Ok(responseUserService);
     }
 
-    [HttpGet("verify")]
+    [HttpGet("verify_bkp")]
     public async Task<ActionResult<ServiceResponse<UserVerifyDTO>>> Verify(string token)
     {
         ServiceResponse<UserVerifyDTO> response = await _userService.Verify(token);
@@ -82,6 +83,42 @@ public class UserController : ControllerBase
         }
 
         return Ok(response);
+    }
+
+    [HttpGet("verify")]
+    public async Task<ContentResult> VerifyNew(string token)
+    {
+        ServiceResponse<UserVerifyDTO> response = await _userService.Verify(token);
+
+        string content = await System.IO.File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\VerifyEmailRegistration\\VerifyResponse.html"));
+
+        if (!response.Success)
+        {
+            content = content.Replace("#Response#", "Neúspešna registrácia");
+            content = content.Replace("#Message#", $"{response.Message}");
+
+            if (response.ExceptionMessage.Length > 0)
+            {
+                content = content.Replace("#Exception#", $"{response.ExceptionMessage}");
+            }
+            else
+            {
+                content = content.Replace("#Exception#", "");
+            }
+        }
+        else
+        {
+            content = content.Replace("#Response#", "Úspešna registrácia");
+            content = content.Replace("#Message#", $"{response.Message}");
+            content = content.Replace("#Exception#", "");
+        }
+
+        return new ContentResult
+        {
+            ContentType = "text/html",
+            StatusCode = response.Success ? (int)HttpStatusCode.OK : (int)HttpStatusCode.BadRequest,
+            Content = content
+        };
     }
 
     [HttpPost("forgot-password")]
@@ -122,7 +159,7 @@ public class UserController : ControllerBase
         return Ok(responseUserService);
     }
 
-    [HttpGet("reset-password")]
+    [HttpGet("reset-password_bkp")]
     public async Task<ActionResult<ServiceResponse<UserResetPasswordDTO>>> ResetPassword(string resetToken)
     {
         ServiceResponse<UserResetPasswordDTO> response = await _userService.ResetPassword(resetToken);
@@ -135,6 +172,43 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("reset-password")]
+    public async Task<ContentResult> ResetPasswordNew(string resetToken)
+    {
+        ServiceResponse<UserResetPasswordDTO> response = await _userService.ResetPassword(resetToken);
+
+        string content = await System.IO.File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\ResetPasword\\ResetPasswordResponse.html"));
+
+        if (!response.Success)
+        {
+            content = content.Replace("#Response#", "Neuspešná zmena hesla");
+            content = content.Replace("#Message#", $"{response.Message}");
+
+            if (response.ExceptionMessage.Length > 0)
+            {
+                content = content.Replace("#Exception#", $"{response.ExceptionMessage}");
+            }
+            else
+            {
+                content = content.Replace("#Exception#", "");
+            }
+        }
+        else
+        {
+            content = content.Replace("#Response#", "Úspešna zmena hesla");
+            content = content.Replace("#Message#", $"{response.Message}");
+            content = content.Replace("#Exception#", "");
+        }
+
+        return new ContentResult
+        {
+            ContentType = "text/html",
+            StatusCode = response.Success ? (int)HttpStatusCode.OK : (int)HttpStatusCode.BadRequest,
+            Content = content
+        };
+    }
+}
+
     //https://youtu.be/2Q9Uh-5O8Sk?t=2038 -- toto video je na vybudovanie API bez JWT
 
     //.net 7 API - treba pozorne pocuvat trosku vynechava kod a mam ho doimplementovat
@@ -146,4 +220,3 @@ public class UserController : ControllerBase
     // vytvaranie JWT tokenu https://www.youtube.com/watch?v=v7q3pEK1EA0&ab_channel=PatrickGod .net 6 API
 
     // posielanie mailu z .net API 6 https://www.youtube.com/watch?v=PvO_1T0FS_A&ab_channel=PatrickGod
-}

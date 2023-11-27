@@ -49,6 +49,7 @@ public partial class LoginView : ContentPage
     {
         NavigationPage.SetHasNavigationBar(this, false);
         NavigationPage.SetBackButtonTitle(this, null);
+        NavigationPage.SetHasBackButton(this, false);
         Shell.SetTabBarIsVisible(this, false);
     }
 
