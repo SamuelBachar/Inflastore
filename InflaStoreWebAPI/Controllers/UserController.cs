@@ -62,6 +62,8 @@ public class UserController : ControllerBase
 
         if (!responseEmailService.Success)
         {
+            await _userService.DeleteRegistrationAttempt(responseUserService.Data.Email);
+
             responseUserService.Success = false;
             responseUserService.Message = responseEmailService.Message;
             responseUserService.ExceptionMessage = responseEmailService.ExceptionMessage;
@@ -146,6 +148,8 @@ public class UserController : ControllerBase
             responseUserService.Success = false;
             responseUserService.Message = responseEmailService.Message;
             responseUserService.ExceptionMessage = responseEmailService.ExceptionMessage;
+
+            await _userService.DeleteForgetPasswordAttempt(responseUserService.Data.Email);
 
             return BadRequest(responseUserService);
         }

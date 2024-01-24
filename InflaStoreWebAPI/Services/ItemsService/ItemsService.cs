@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace InflaStoreWebAPI.Services.ItemsService
 {
     public class ItemsService : IItemsService
     {
         private readonly DataContext _context;
+
+        private List<Item> _listItems = new List<Item>();
 
         public ItemsService(DataContext context)
         {

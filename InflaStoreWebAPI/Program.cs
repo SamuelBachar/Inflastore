@@ -22,6 +22,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using InflaStoreWebAPI.Services.ClubCardService;
 using InflaStoreWebAPI.Services.CategoryService;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 builder.Services.AddDbContext<DataContext>();
 
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
@@ -64,7 +66,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false, // for development common isue and problem with https https://youtu.be/Y-MjCw6thao?t=2307 vysvetluje preco ale v produkci to MUSI BYT TRUE !!! 
         ValidateAudience = false, // to iste ako vyssie
-        RequireExpirationTime = false, // vysvetlenie preco false https://youtu.be/Y-MjCw6thao?t=2368 ---> tu refresh token https://www.youtube.com/watch?v=2_H0Zj-C8EM&ab_channel=MohamadLawand
+        RequireExpirationTime = false, // needs to be updated when refresh token is implemented // vysvetlenie preco false https://youtu.be/Y-MjCw6thao?t=2368 ---> tu refresh token https://www.youtube.com/watch?v=2_H0Zj-C8EM&ab_channel=MohamadLawand
         ValidateLifetime = true // validating lifetime of token we are sending, if we send token with existence of 1 minute he can calculate if it is already expired or not
     };
 });
@@ -79,7 +81,10 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IClubCardService, ClubCardService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
+builder.Services.AddOutputCache();
+
 var app = builder.Build();
+app.UseOutputCache();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

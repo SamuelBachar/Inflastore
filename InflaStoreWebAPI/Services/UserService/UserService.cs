@@ -188,30 +188,31 @@ namespace InflaStoreWebAPI.Services.UserService
             {
                 User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.Email == forgotPasswordRequest.Email);
 
-                if (userDB == null)
+                if (userDB != null)
+                {
+
+                    /* Temporary storing new password into database
+                       After reset-password is sent and processed without error this password will replace password 
+                       in PasswordHashWithSalt column (means reseting of password will occur)
+                     */
+
+                    userDB.TempResetPasswordHashWithSalt = CreatePasswordHashWithSalt(forgotPasswordRequest.Password);
+
+                    userDB.PasswordResetToken = CreateRandomToken();
+                    userDB.ResetTokenExpires = DateTime.Now.AddDays(1);
+
+                    await _context.SaveChangesAsync();
+
+                    UserForgotPasswordDTO forgotPasswordDTO = _mapper.Map<UserForgotPasswordDTO>(userDB);
+                    serviceResponse.Data = forgotPasswordDTO;
+                    serviceResponse.Message = $"Do vášho e-mailu {forgotPasswordDTO.Email} sme odoslali správu pomocou ktorej si môžete obnoviť heslo do 24 hodín.";
+                }
+                else
                 {
                     serviceResponse.Success = false;
                     serviceResponse.Message = "Účet pre daný e-mail nebol nájdení";
-                    return serviceResponse;
                 }
 
-                /* Temporary storing new password into database
-                   After reset-password is sent and processed without error this password will replace password 
-                   in PasswordHashWithSalt column (means reseting of password will occur)
-                 */
-
-                userDB.TempResetPasswordHashWithSalt = CreatePasswordHashWithSalt(forgotPasswordRequest.Password);
-
-                userDB.PasswordResetToken = CreateRandomToken();
-                userDB.ResetTokenExpires = DateTime.Now.AddDays(1);
-
-                await _context.SaveChangesAsync();
-
-                UserForgotPasswordDTO forgotPasswordDTO = _mapper.Map<UserForgotPasswordDTO>(userDB);
-                serviceResponse.Data = forgotPasswordDTO;
-                serviceResponse.Message = $"Do vášho e-mailu {forgotPasswordDTO.Email} sme odoslali správu pomocou ktorej si môžete obnoviť heslo do 24 hodín.";
-
-                return serviceResponse;
             }
             catch (Exception ex)
             {
@@ -219,7 +220,6 @@ namespace InflaStoreWebAPI.Services.UserService
                 serviceResponse.Success = false;
                 serviceResponse.Message = "Nastala chyba počas ukladania údajov potrebných pre obnovenú hesla";
                 serviceResponse.ExceptionMessage = $"{ex.Message} {(ex.InnerException != null ? ex.InnerException.Message : "")}";
-                return serviceResponse;
             }
             finally // todo
             {
@@ -228,6 +228,8 @@ namespace InflaStoreWebAPI.Services.UserService
                     // logger
                 }
             }
+
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<UserResetPasswordDTO>> ResetPassword(string resetToken)
@@ -312,5 +314,24 @@ namespace InflaStoreWebAPI.Services.UserService
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
         #endregion
+
+        public async Task DeleteRegistrationAttempt(string email)
+        {
+            await _context.Users.Where(u => u.Email == email).ExecuteDeleteAsync();
+        }
+
+        public async Task DeleteForgetPasswordAttempt(string email)
+        {
+            User? userDB = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (userDB != null)
+            {
+                userDB.TempResetPasswordHashWithSalt = null;
+                userDB.PasswordResetToken = null;
+                userDB.ResetTokenExpires = null;
+
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
