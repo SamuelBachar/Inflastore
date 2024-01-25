@@ -37,8 +37,6 @@ public partial class CategoryPickerView : ContentPage
     {
         base.OnAppearing();
 
-        CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
-
         _categories.Clear();
 
         foreach (CategoryDTO category in await _categoryRepository.GetAllCategories())
@@ -52,51 +50,12 @@ public partial class CategoryPickerView : ContentPage
         this.Content = this.MainControlWrapper;
     }
 
-    private async void CategoriesCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        if (e.CurrentSelection?[0] is CategoryDTO category)
-        {
-            await Shell.Current.GoToAsync(nameof(ItemPicker),
-            new Dictionary<string, object>
-            {
-                ["Category"] = category,
-                ["ItemRepo"] = _itemRepo,
-                ["UnitRepo"] = _unitRepo,
-                ["CartRepo"] = _savedCartRepo
-            });
-        }
+        base.OnNavigatedTo(args);
+        CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
     }
-
-    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
-    {
-        if (e.Parameter is CategoryDTO category)
-        {
-            await Shell.Current.GoToAsync(nameof(ItemPicker),
-            new Dictionary<string, object>
-            {
-                ["Category"] = category,
-                ["ItemRepo"] = _itemRepo,
-                ["UnitRepo"] = _unitRepo,
-                ["CartRepo"] = _savedCartRepo
-            });
-        }
-    }
-
-    private async void TapGestureRecognizer_Tapped_1(object sender, TappedEventArgs e)
-    {
-        if (e.Parameter is CategoryDTO category)
-        {
-            await Shell.Current.GoToAsync(nameof(ItemPicker),
-            new Dictionary<string, object>
-            {
-                ["Category"] = category,
-                ["ItemRepo"] = _itemRepo,
-                ["UnitRepo"] = _unitRepo,
-                ["CartRepo"] = _savedCartRepo
-            });
-        }
-    }
-
+  
     private async void TapGestureRecognizer_Tapped123(object sender, TappedEventArgs e)
     {
         if (e.Parameter is CategoryDTO category)

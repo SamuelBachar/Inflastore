@@ -126,7 +126,6 @@ public static class MauiProgram
 
         // Views models
         builder.Services.AddSingleton<LogOutViewModel>();
-        builder.Services.AddSingleton<CartViewModel>();
         builder.Services.AddSingleton<SavedCartDetailViewModel>();
         builder.Services.AddSingleton<NavigationShopViewModel>();
         builder.Services.AddSingleton<SavedCardDetailViewModel>();
@@ -137,16 +136,20 @@ public static class MauiProgram
         // Transients views
         builder.Services.AddTransient<RegisterView>();
         builder.Services.AddTransient<ForgotPasswordView>();
-        builder.Services.AddTransient<CartView>();
         builder.Services.AddTransient<NavigationView>();
         builder.Services.AddTransient<PriceComparerDetailView>();
         builder.Services.AddTransient<NotKnownCardView>();
-        builder.Services.AddTransient<SavedCartDetailView>(); // CarT
-        builder.Services.AddTransient<SavedCardDetailView>(); // CarD
+        builder.Services.AddTransient<SavedCartDetailView>(); // Car-T-
+        builder.Services.AddTransient<SavedCardDetailView>(); // Car-D-
+        builder.Services.AddTransient<CartViewSaveCart>();
 
         // test
         builder.Services.AddSingleton<ItemPicker>();
         builder.Services.AddSingleton<CategoryPickerView>();
+
+        builder.Services.AddSingleton<CartViewModel>();
+        builder.Services.AddTransient<CartView>();
+
 
         return builder.Build();
 	}

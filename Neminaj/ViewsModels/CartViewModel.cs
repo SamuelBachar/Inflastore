@@ -23,7 +23,6 @@ public partial class CartViewModel : ObservableObject
 
     public CartViewModel()
     {
-
     }
 
     public void DeleteChoosenItem(int idInList)

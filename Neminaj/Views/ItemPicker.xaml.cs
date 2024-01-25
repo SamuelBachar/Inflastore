@@ -38,8 +38,6 @@ public partial class ItemPicker : ContentPage
         this.Appearing += (s, e) => { this.Content = _popUpIndic; };
         CartView.On_CartView_ItemRemovedFromList += async (s, e) => { await CartCounterControlView.DecreaseShoppingCartCounter(); };
         ObservableItemsChoosed.CollectionChanged += ItemsChoosedCollection_Changed;
-
-        CartCounterControlView.Init(CartRepo, ObservableItemsChoosed);
     }
 
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
@@ -61,6 +59,8 @@ public partial class ItemPicker : ContentPage
             listItems = listItems.Where(item => item.Category_Id == _itemPickerViewModel.Category.Id).ToList();
 
             this.listItem.ItemsSource = listItems.OrderBy(n => n.Name);
+
+            CartCounterControlView.Init(CartRepo, ObservableItemsChoosed);
         }
         else
         {

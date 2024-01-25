@@ -98,7 +98,12 @@ public partial class CartView : ContentPage
     {
         if (Connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            await this.ShowPopupAsync(new CartViewSaveCartPopUp(CartViewModel.GetItemChoosens().ToList(), CartViewModel, this));
+            await Shell.Current.GoToAsync(nameof(CartViewSaveCart),
+            new Dictionary<string, object>
+            {
+                ["ObservableItemsChoosed"] = this.CartViewModel.ObservableItemsChoosed,
+                [nameof(SavedCartRepository)] = this.CartViewModel.SavedCartRepository
+            });
         }
         else
         {

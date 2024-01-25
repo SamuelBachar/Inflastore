@@ -14,9 +14,8 @@
                         Grid.Row="0"
                         ItemsSource="{Binding _categories}"
                         ItemsLayout="VerticalGrid, 3"
-                        SelectionMode="Single"
-                        SelectionChanged="CategoriesCollectionView_SelectionChanged">
-            <CollectionView.ItemTemplate>
+                        SelectionMode="Single">
+                <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:CategoryDTO">
                     <Border BackgroundColor="{StaticResource Primary}"
                             StrokeShape="RoundRectangle 5"

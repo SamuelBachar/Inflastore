@@ -426,7 +426,6 @@ public partial class PriceComparerView : ContentPage
 
             if (item != null)
             {
-
                 item.FinalName = args.FinalName;
                 item.CntOfItems = args.Count;
 

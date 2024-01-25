@@ -1,30 +1,29 @@
-﻿using CommunityToolkit.Maui.Views;
-using Neminaj.Models;
-using Neminaj.Repositories;
-using Neminaj.Views;
+﻿using Neminaj.Models;
 using Neminaj.ViewsModels;
 
-namespace Neminaj.ContentViews;
+namespace Neminaj.Views;
 
-public partial class CartViewSaveCartPopUp : Popup
+public partial class CartViewSaveCart : ContentPage
 {
     List<ItemChoosen> ListItems { get; set; }
-    CartViewModel CartViewModel { get; set; }
+    CartViewModel _cartViewModel { get; set; }
 
-    CartView CartView { get; set; }
-
-    public CartViewSaveCartPopUp(List<ItemChoosen> listItems, CartViewModel cartViewModel, CartView cartView)
+    public CartViewSaveCart(CartViewModel cartViewModel)
     {
-        ListItems = listItems;
-        CartViewModel = cartViewModel;
-        CartView = cartView;
-
+        _cartViewModel = cartViewModel;
         InitializeComponent();
+    }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        ListItems = _cartViewModel.GetItemChoosens().ToList();
     }
 
     private void Cancel_Button_Clicked(object sender, EventArgs e)
     {
-        this.Close();
+        //this.Close();
     }
 
     private async void SaveCart_Button_Clicked(object sender, EventArgs e)
@@ -38,15 +37,14 @@ public partial class CartViewSaveCartPopUp : Popup
         {
             bool success = true;
 
-            if (!await CartViewModel.InsertNewCart(new SavedCart { Name = CartListName.Text, Note = CartListNote.Text })) // TODO test ... delete ! to test it easily
+            if (!await _cartViewModel.InsertNewCart(new SavedCart { Name = CartListName.Text, Note = CartListNote.Text })) // TODO test ... delete ! to test it easily
             {
-                this.Close();
-                await CartView.DisplayAlert("Chyba ukladania zoznamu", "Pri ukladaní zoznamu nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
+                await this.DisplayAlert("Chyba ukladania zoznamu", "Pri ukladaní zoznamu nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
                 success = false;
             }
             else
             {
-                List<SavedCart> listSavedCarts = await CartViewModel.GetAllSavedCartsAsync();
+                List<SavedCart> listSavedCarts = await _cartViewModel.GetAllSavedCartsAsync();
                 int idLastSavedCart = listSavedCarts.Last().Id;
 
                 List<SavedCartItem> listSavedCartItems = new List<SavedCartItem>();
@@ -54,30 +52,21 @@ public partial class CartViewSaveCartPopUp : Popup
                 foreach (ItemChoosen item in ListItems)
                     listSavedCartItems.Add(new SavedCartItem { Item_Id = item.Id, SavedCart_Id = idLastSavedCart, CntOfItem = item.CntOfItems });
 
-                if (!await CartViewModel.InsertNewCartItems(listSavedCartItems)) // TODO test ... delete ! to test it easily
+                if (!await _cartViewModel.InsertNewCartItems(listSavedCartItems)) // TODO test ... delete ! to test it easily
                 {
-                    this.Close();
-                    await CartView.DisplayAlert("Chyba ukladania položky", "Pri ukladaní jednej z položiek nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
+                    await this.DisplayAlert("Chyba ukladania položky", "Pri ukladaní jednej z položiek nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
                     success = false;
                 }
             }
 
             if (success)
             {
-                this.BtnCancel.IsEnabled = false;
                 this.BtnSave.IsEnabled = false;
 
                 this.LblListSaved.Text = "Zoznam uložení";
                 this.LblListSaved.TextColor = Colors.Green;
-                await Task.Delay(1000);
-                this.Close();
             }
         }
-    }
-
-    private void CartListNote_TextChanged(object sender, TextChangedEventArgs e)
-    {
-
     }
 
     private void CartListName_TextChanged(object sender, TextChangedEventArgs e)
