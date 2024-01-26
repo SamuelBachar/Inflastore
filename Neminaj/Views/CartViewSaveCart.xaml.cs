@@ -35,6 +35,8 @@ public partial class CartViewSaveCart : ContentPage
         }
         else
         {
+            CartListName.IsEnabled = false;
+
             bool success = true;
 
             if (!await _cartViewModel.InsertNewCart(new SavedCart { Name = CartListName.Text, Note = CartListNote.Text })) // TODO test ... delete ! to test it easily
@@ -44,15 +46,22 @@ public partial class CartViewSaveCart : ContentPage
             }
             else
             {
-                List<SavedCart> listSavedCarts = await _cartViewModel.GetAllSavedCartsAsync();
-                int idLastSavedCart = listSavedCarts.Last().Id;
+                int idLastSavedCart = await _cartViewModel.GetLastCartIndex();
 
-                List<SavedCartItem> listSavedCartItems = new List<SavedCartItem>();
+                if (idLastSavedCart != -1)
+                {
+                    List<SavedCartItem> listSavedCartItems = new List<SavedCartItem>();
 
-                foreach (ItemChoosen item in ListItems)
-                    listSavedCartItems.Add(new SavedCartItem { Item_Id = item.Id, SavedCart_Id = idLastSavedCart, CntOfItem = item.CntOfItems });
+                    foreach (ItemChoosen item in ListItems)
+                        listSavedCartItems.Add(new SavedCartItem { Item_Id = item.Id, SavedCart_Id = idLastSavedCart, CntOfItem = item.CntOfItems });
 
-                if (!await _cartViewModel.InsertNewCartItems(listSavedCartItems)) // TODO test ... delete ! to test it easily
+                    if (!await _cartViewModel.InsertNewCartItems(listSavedCartItems)) // TODO test ... delete ! to test it easily
+                    {
+                        await this.DisplayAlert("Chyba ukladania položky", "Pri ukladaní jednej z položiek nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
+                        success = false;
+                    }
+                }
+                else
                 {
                     await this.DisplayAlert("Chyba ukladania položky", "Pri ukladaní jednej z položiek nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
                     success = false;
@@ -62,6 +71,8 @@ public partial class CartViewSaveCart : ContentPage
             if (success)
             {
                 this.BtnSave.IsEnabled = false;
+                this.CartListName.IsEnabled = false; // Also close keyboard
+                this.CartListNote.IsEnabled = false;
 
                 this.LblListSaved.Text = "Zoznam uložení";
                 this.LblListSaved.TextColor = Colors.Green;

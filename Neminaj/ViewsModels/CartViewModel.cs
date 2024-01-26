@@ -58,4 +58,9 @@ public partial class CartViewModel : ObservableObject
     {
         return await SavedCartRepository.InsertNewCartItems(listSavedCartItems);
     }
+
+    public async Task<int> GetLastCartIndex()
+    {
+        return await SavedCartRepository.GetLastCartIndex();
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Neminaj.Models;
+﻿using Neminaj.ContentViews;
+using Neminaj.Models;
 using Neminaj.Repositories;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ public partial class CartListView : ContentPage
 
     public List<ItemChoosen> ListCartItemChoosen { get; set; }
 
+    PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam nákupné zoznamy ...");
+
     ItemPicker MainPage;
 
     public CartListView(SavedCartRepository savedCartRepository, ItemRepository itemRepository, UnitRepository unitRepository, ItemPicker mainPage)
@@ -29,11 +32,13 @@ public partial class CartListView : ContentPage
         ItemRepo = itemRepository;
         MainPage = mainPage;
         UnitRepo = unitRepository;
-        this.Appearing += async (s, e) => { await GetSavedCarts(); };
+        this.Appearing += (s, e) => { this.Content = _popUpIndic; };
     }
 
-    private async Task GetSavedCarts()
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
+        base.OnNavigatedTo(args);
+
         ListSavedCarts = await SavedCartRepo.GetAllSavedCartsAsync();
         
         if (ListSavedCarts.Count == 0)
@@ -153,6 +158,7 @@ public partial class CartListView : ContentPage
                 }
 
                 MainPage.SetChoosenItems(listItemsFromSavedCart);
+                this.Content = MainScrollView;
             }
         }
         else
