@@ -487,6 +487,7 @@ public partial class PriceComparerView : ContentPage
                         Grid.SetRow(ListViewElements[i].ImageEmptyCart, 1);
 
                         ListViewElements[i].MainGrid.ViewGrid.Add(ListViewElements[i].ImageEmptyCart, row: 1);
+                        ListViewElements[i].ImageEmptyCart.IsVisible = true;
                     }
                     else
                     {
@@ -591,6 +592,7 @@ public partial class PriceComparerView : ContentPage
             // program execution may crash or take a different path, this way you are guaranteed execution
 
             TurnOffActivityIndicator();
+            ComparePrices();
             semaphoreFillPrices.Release();
         }
     }
@@ -1036,13 +1038,13 @@ public partial class PriceComparerView : ContentPage
         Grid.SetColumnSpan(pe.BtnBack, viewLayoutInfo.GridCntCols + 1);
         pe.MainGrid.ViewGrid.Add(pe.BtnBack, column: 0, row: 6);
 
-        pe.BtnCompare = new Button();
-        pe.BtnCompare.Text = Texts.Compare;
-        pe.BtnCompare.HorizontalOptions = LayoutOptions.Center;
-        pe.BtnCompare.VerticalOptions = LayoutOptions.Center;
-        pe.BtnCompare.Clicked += Button_Compare_Clicked;
-        Grid.SetColumnSpan(pe.BtnCompare, viewLayoutInfo.GridCntCols + 1);
-        pe.MainGrid.ViewGrid.Add(pe.BtnCompare, column: 0, row: 6);
+        //pe.BtnCompare = new Button();
+        //pe.BtnCompare.Text = Texts.Compare;
+        //pe.BtnCompare.HorizontalOptions = LayoutOptions.Center;
+        //pe.BtnCompare.VerticalOptions = LayoutOptions.Center;
+        //pe.BtnCompare.Clicked += Button_Compare_Clicked;
+        //Grid.SetColumnSpan(pe.BtnCompare, viewLayoutInfo.GridCntCols + 1);
+        //pe.MainGrid.ViewGrid.Add(pe.BtnCompare, column: 0, row: 6);
 
         pe.BtnNext = new Button();
         pe.BtnNext.Text = Texts.Next;
@@ -1140,7 +1142,8 @@ public partial class PriceComparerView : ContentPage
         return retVal;
     }
 
-    private void Button_Compare_Clicked(object sender, EventArgs e)
+    //private void Button_Compare_Clicked(object sender, EventArgs e)
+    private void ComparePrices()
     {
         for (int viewIndex = 0; viewIndex < PageLayoutInfo.CntOfViewsInPage; viewIndex++)
         {
