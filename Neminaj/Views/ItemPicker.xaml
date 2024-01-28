@@ -6,19 +6,17 @@
              xmlns:controls="clr-namespace:Neminaj.ContentViews">
 
     <ContentPage.Content>
-        <ScrollView x:Name="MainControlWrapper">
-            <Grid
-                        Padding="5"
-        RowDefinitions="Auto, 0.15*, *"
-        ColumnDefinitions="*, *" >
-                <VerticalStackLayout Grid.ColumnSpan="2" Spacing="20">
-                    <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalOptions="Fill">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10, 10, 10, 10"/>
-                        </Border.StrokeShape>
-                        <SearchBar x:Name="SearchBar" IsEnabled="True" Placeholder="Hľadaj položku" TextChanged="SearchBar_TextChanged" HorizontalOptions="Fill" />
-                    </Border>
-                    <CollectionView
+        <Grid RowDefinitions="Auto, *, Auto" ColumnDefinitions="*" x:Name="MainControlWrapper">
+            <Border Grid.Row="0" Grid.Column="0" HorizontalOptions="Fill">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10, 10, 10, 10"/>
+                </Border.StrokeShape>
+                <SearchBar x:Name="SearchBar" IsEnabled="True" Placeholder="Hľadaj položku" TextChanged="SearchBar_TextChanged" HorizontalOptions="Fill" />
+            </Border>
+            <ScrollView Grid.Row="1" Grid.Column="0">
+                <Grid Padding="5" RowDefinitions="Auto, 0.15*, *"  ColumnDefinitions="*, *" >
+                    <VerticalStackLayout Grid.ColumnSpan="2" Spacing="20">
+                        <CollectionView
                                 x:Name="listItem"
                                 Grid.Row="1"
                                 Grid.Column="0"
@@ -27,21 +25,22 @@
                                 SelectionMode="Single"
                                 VerticalScrollBarVisibility="Always"
                                 SelectionChanged="listItem_SelectionChanged">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *" RowSpacing="15">
-                                    <HorizontalStackLayout Grid.Row="0">
-                                        <Image Grid.Row="0" Grid.Column="0" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="dotnet_bot.png"/>
-                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap"></Label>
-                                    </HorizontalStackLayout>
-                                    <Line  Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-                <controls:CartCounterControlView Grid.Row="2" Grid.Column="1" HorizontalOptions="End" x:Name="CartCounterControlView" />
-            </Grid>
-        </ScrollView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *" RowSpacing="15">
+                                        <HorizontalStackLayout Grid.Row="0">
+                                            <Image Grid.Row="0" Grid.Column="0" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="dotnet_bot.png"/>
+                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap"></Label>
+                                        </HorizontalStackLayout>
+                                        <Line  Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Grid>
+             </ScrollView>
+            <controls:CartCounterControlView Grid.Row="2" Grid.Column="0" HorizontalOptions="End" VerticalOptions="End" x:Name="CartCounterControlView" />
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

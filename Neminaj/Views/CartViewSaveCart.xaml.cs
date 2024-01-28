@@ -46,22 +46,15 @@ public partial class CartViewSaveCart : ContentPage
             }
             else
             {
-                int idLastSavedCart = await _cartViewModel.GetLastCartIndex();
+                List<SavedCart> listSavedCart = await _cartViewModel.GetAllSavedCartsAsync();
+                int idLastSavedCart = listSavedCart.Last().Id;
 
-                if (idLastSavedCart != -1)
-                {
-                    List<SavedCartItem> listSavedCartItems = new List<SavedCartItem>();
+                List<SavedCartItem> listSavedCartItems = new List<SavedCartItem>();
 
-                    foreach (ItemChoosen item in ListItems)
-                        listSavedCartItems.Add(new SavedCartItem { Item_Id = item.Id, SavedCart_Id = idLastSavedCart, CntOfItem = item.CntOfItems });
+                foreach (ItemChoosen item in ListItems.OrderBy(item => item.Name))
+                    listSavedCartItems.Add(new SavedCartItem { Item_Id = item.Id, SavedCart_Id = idLastSavedCart, CntOfItem = item.CntOfItems });
 
-                    if (!await _cartViewModel.InsertNewCartItems(listSavedCartItems)) // TODO test ... delete ! to test it easily
-                    {
-                        await this.DisplayAlert("Chyba ukladania položky", "Pri ukladaní jednej z položiek nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
-                        success = false;
-                    }
-                }
-                else
+                if (!await _cartViewModel.InsertNewCartItems(listSavedCartItems)) // TODO test ... delete ! to test it easily
                 {
                     await this.DisplayAlert("Chyba ukladania položky", "Pri ukladaní jednej z položiek nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
                     success = false;

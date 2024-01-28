@@ -58,7 +58,7 @@ public partial class SettingsView : ContentPage
         ConnectivityService = connectivityService;
 
         //this.Loaded += async (s, e) => { await BuildPage(); };
-        
+
         this.Disappearing += async (s, e) => { await SettingsView_OnDisappearing(); };
     }
 
@@ -141,21 +141,15 @@ public partial class SettingsView : ContentPage
             // START: Create MAIN GRID of View ///
             Grid gridMain = new Grid
             {
-                // Fix column definition
                 ColumnDefinitions =
-            {
-                new ColumnDefinition(GridLength.Star),
-                //new ColumnDefinition(GridLength.Star),
-                //new ColumnDefinition(GridLength.Star),
-                //new ColumnDefinition(GridLength.Star),
-                //new ColumnDefinition(GridLength.Star),
-                //new ColumnDefinition(GridLength.Star),
-            },
-                RowDefinitions =
-            {
-                new RowDefinition(GridLength.Auto), // for Grid Customers
-                new RowDefinition(GridLength.Auto), // for Distance (km) within which to search shops navigation
-            }
+                {
+                    new ColumnDefinition(GridLength.Star),
+                },
+                 RowDefinitions =
+                {
+                    new RowDefinition(GridLength.Auto), // for Grid Customers
+                    new RowDefinition(GridLength.Auto), // for Distance (km) within which to search shops navigation
+                }
             };
 
             gridMain.Margin = 10;
@@ -173,14 +167,14 @@ public partial class SettingsView : ContentPage
             {
                 // Fix column definition
                 ColumnDefinitions =
-            {
-                new ColumnDefinition(GridLength.Star), // chkBox
-                new ColumnDefinition(GridLength.Star), // Image
-                new ColumnDefinition(GridLength.Star), // chkBox
-                new ColumnDefinition(GridLength.Star), // Image
-                new ColumnDefinition(GridLength.Star), // chkBox
-                new ColumnDefinition(GridLength.Star), // Image
-            }
+                {
+                      new ColumnDefinition(GridLength.Star), // chkBox
+                      new ColumnDefinition(GridLength.Star), // Image
+                      new ColumnDefinition(GridLength.Star), // chkBox
+                      new ColumnDefinition(GridLength.Star), // Image
+                      new ColumnDefinition(GridLength.Star), // chkBox
+                      new ColumnDefinition(GridLength.Star), // Image
+                }
             };
 
             gridCustomers.ColumnSpacing = 5;

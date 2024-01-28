@@ -13,13 +13,4 @@
 
         <Button Grid.Row="1"  Grid.Column="0" x:Name="btnNavigate" Text="Navigovať" IsEnabled="False" Clicked="btnNavigate_Clicked" />
     </Grid>
-
-    <!--<Grid>
-        <googleMaps:Map 
-            x:Name="googleMaps"
-            MapType="Street"
-            MyLocationEnabled="True"
-            >
-        </googleMaps:Map>
-    </Grid>-->
 </ContentPage>

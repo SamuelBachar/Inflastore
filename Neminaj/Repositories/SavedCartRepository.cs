@@ -1,5 +1,4 @@
-﻿using Android.Widget;
-using Neminaj.Models;
+﻿using Neminaj.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,22 +91,6 @@ public class SavedCartRepository
         }
 
         return false;
-    }
-
-    public async Task<int> GetLastCartIndex()
-    {
-        try
-        {
-            await SQLConnection.InitAsync();
-
-            return await SQLConnection.m_ConnectionAsync.Table<SavedCartItem>().CountAsync();
-        }
-        catch (Exception ex)
-        {
-            SQLConnection.StatusMessage = $"Failed to load last index table : SavedCartItems. {ex.Message}";
-        }
-
-        return -1;
     }
     
 }

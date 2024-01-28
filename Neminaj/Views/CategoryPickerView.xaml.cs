@@ -30,12 +30,12 @@ public partial class CategoryPickerView : ContentPage
         _unitRepo = unitRepo;
         _savedCartRepo = cartRepo;
 
-        this.Loaded += (s, e) => { this.Content = _popUpIndic; };
+        this.Appearing += (s, e) => { this.Content = _popUpIndic; };
     }
 
-    protected override async void OnAppearing()
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        base.OnAppearing();
+        base.OnNavigatedTo(args);
 
         _categories.Clear();
 
@@ -47,13 +47,9 @@ public partial class CategoryPickerView : ContentPage
         if (this.CategoriesCollectionView.SelectedItems.Count != 0)
             this.CategoriesCollectionView.SelectedItems.Clear();
 
-        this.Content = this.MainControlWrapper;
-    }
-
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        base.OnNavigatedTo(args);
         CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
+
+        this.Content = this.MainControlWrapper;
     }
   
     private async void TapGestureRecognizer_Tapped123(object sender, TappedEventArgs e)
