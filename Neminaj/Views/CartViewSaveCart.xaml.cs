@@ -67,7 +67,7 @@ public partial class CartViewSaveCart : ContentPage
                 this.CartListName.IsEnabled = false; // Also close keyboard
                 this.CartListNote.IsEnabled = false;
 
-                this.LblListSaved.Text = "Zoznam uložení";
+                this.LblListSaved.Text = "Zoznam uložený";
                 this.LblListSaved.TextColor = Colors.Green;
             }
         }

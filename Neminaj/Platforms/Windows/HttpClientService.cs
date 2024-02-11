@@ -12,6 +12,6 @@ public partial class HttpClientService : IPlatformHttpMessageHandler
 {
     public partial HttpMessageHandler GetPlatformSpecificHttpMessageHandler()
     {
-        return null;
+        return new HttpClientHandler();
     }
 }

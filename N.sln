@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neminaj", "Neminaj\Neminaj.csproj", "{D7A2AD87-8B78-4F4C-B7EB-ADE3DE084CBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "N", "Neminaj\N.csproj", "{D7A2AD87-8B78-4F4C-B7EB-ADE3DE084CBA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InflaStoreWebAPI", "InflaStoreWebAPI\InflaStoreWebAPI.csproj", "{72FF2501-9AB9-4553-9E90-1469A453FCF6}"
 EndProject

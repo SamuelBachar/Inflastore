@@ -27,12 +27,10 @@
                                 SelectionChanged="listItem_SelectionChanged">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *" RowSpacing="15">
-                                        <HorizontalStackLayout Grid.Row="0">
-                                            <Image Grid.Row="0" Grid.Column="0" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="dotnet_bot.png"/>
-                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="WordWrap"></Label>
-                                        </HorizontalStackLayout>
-                                        <Line  Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>
+                                    <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, *" RowSpacing="15">
+                                        <Image Grid.Row="0" Grid.Column="0" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="dotnet_bot.png"/>
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" LineBreakMode="WordWrap" FontAutoScalingEnabled="True" HorizontalOptions="Start" VerticalOptions="Center"></Label>
+                                        <Line  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

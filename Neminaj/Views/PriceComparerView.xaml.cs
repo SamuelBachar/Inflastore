@@ -182,13 +182,11 @@ public class ViewElements
         public const double RowSpacing = 10.0d;
 
         public GridLength FirstRowHeight { get; set; } = GridLength.Auto; // Images of companies
-        public GridLength SecondRowHeight { get; set; } = new GridLength(0.7, GridUnitType.Star);// list views
-        public GridLength ThirdRowHeight { get; set; } = GridLength.Auto; // Spolu
-        public GridLength FourthRowHeight { get; set; } = GridLength.Auto; // Spolu s kartou
-        public GridLength FifthRowHeight { get; set; } = GridLength.Auto; // Navigate Buttons
-        public GridLength SixthRowHeight { get; set; } = GridLength.Auto; // Kombinacia najlacnejsi obchod
-
-        public GridLength SeventhRowHeight { get; set; } = GridLength.Auto; // Spat Porovnaj Dalsi
+        public GridLength SecondRowHeight { get; set; } = new GridLength(0.7, GridUnitType.Star); // ListView - prices of products
+        public GridLength ThirdRowHeight { get; set; } = GridLength.Auto; // Summary together, Summary together with cards (for each company)
+        public GridLength FourthRowHeight { get; set; } = GridLength.Auto; // Navigation buttons (for each company)
+        public GridLength FifthRowHeight { get; set; } = GridLength.Auto; // COMBINATION: Summary all companies price , Summary all companies price with card, Detail, Navigation for all companies
+        public GridLength SixthRowHeight { get; set; } = GridLength.Auto; // Back and Next buttons -> Navigation between pages
 
 
         public GridLength FirstColumnWidth { get; set; } = new GridLength(0.5, GridUnitType.Star);
@@ -435,6 +433,8 @@ public partial class PriceComparerView : ContentPage
         }
 
         TurnOffActivityIndicator();
+
+        ComparePrices();
     }
 
     private void BuildPage(object sender, EventArgs e)
@@ -669,7 +669,6 @@ public partial class PriceComparerView : ContentPage
         pe.MainGrid.ViewGrid.RowDefinitions.Add(new RowDefinition() { Height = pe.MainGrid.FourthRowHeight });
         pe.MainGrid.ViewGrid.RowDefinitions.Add(new RowDefinition() { Height = pe.MainGrid.FifthRowHeight });
         pe.MainGrid.ViewGrid.RowDefinitions.Add(new RowDefinition() { Height = pe.MainGrid.SixthRowHeight });
-        pe.MainGrid.ViewGrid.RowDefinitions.Add(new RowDefinition() { Height = pe.MainGrid.SeventhRowHeight });
 
         // 3. Set Column definitions
         pe.MainGrid.ViewGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = pe.MainGrid.FirstColumnWidth });
@@ -850,82 +849,96 @@ public partial class PriceComparerView : ContentPage
             RowDefinitions =
             {
                 new RowDefinition(GridLength.Auto),
-                new RowDefinition(GridLength.Auto),
-                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Star),
             },
 
             ColumnDefinitions =
             {
                 new ColumnDefinition(GridLength.Star),
                 new ColumnDefinition(GridLength.Star),
-                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(new GridLength(0.7, GridUnitType.Star))
             },
 
-            RowSpacing = 5
+            RowSpacing = 5,
+            ColumnSpacing = 5
         };
 
         Grid.SetColumnSpan(grid, viewLayoutInfo.GridCntCols + 1);
 
         Label lblShopCombination = new Label();
-        lblShopCombination.Text = "Najlacnejší nákup (nákup vo viacerých obchodoch):";
+        lblShopCombination.Text = Texts.CheapestPriceLabel;
         lblShopCombination.FontAttributes = FontAttributes.Bold;
         lblShopCombination.HorizontalOptions = LayoutOptions.Start;
         lblShopCombination.VerticalOptions = LayoutOptions.Center;
-        Grid.SetColumnSpan(lblShopCombination, viewLayoutInfo.GridCntCols + 1);
+        Grid.SetColumnSpan(lblShopCombination, 2);
         Grid.SetColumn(lblShopCombination, 0);
         Grid.SetRow(lblShopCombination, 0);
         grid.Add(lblShopCombination);
 
+        Button btnDetails = new Button();
+        btnDetails.Text = Texts.Detail;
+        btnDetails.HorizontalOptions = LayoutOptions.End;
+        btnDetails.VerticalOptions = LayoutOptions.Center;
+        btnDetails.Clicked += async (s, e) => { await BtnDetails_Clicked(s, e); };
+        Grid.SetColumn(btnDetails, 2);
+        Grid.SetRow(btnDetails, 0);
+        grid.Add(btnDetails);
+
+        HorizontalStackLayout horizCombPriceNoDiscount = new HorizontalStackLayout();
+        horizCombPriceNoDiscount.Spacing = 5;
+        horizCombPriceNoDiscount.HorizontalOptions = LayoutOptions.Start;
+        horizCombPriceNoDiscount.VerticalOptions = LayoutOptions.Center;
+        Grid.SetColumn(horizCombPriceNoDiscount, 0);
+        Grid.SetRow(horizCombPriceNoDiscount, 1);
+
         pe.SummaryLabelCheapestPrice = new Label();
         pe.SummaryLabelCheapestPrice.Text = Texts.Summary;
         pe.SummaryLabelCheapestPrice.FontAttributes = FontAttributes.Bold;
-        pe.SummaryLabelCheapestPrice.HorizontalOptions = LayoutOptions.Start;
+        pe.SummaryLabelCheapestPrice.HorizontalOptions = LayoutOptions.Center;
         pe.SummaryLabelCheapestPrice.VerticalOptions = LayoutOptions.Center;
-        Grid.SetColumn(pe.SummaryLabelCheapestPrice, 0);
-        Grid.SetRow(pe.SummaryLabelCheapestPrice, 1);
-        grid.Add(pe.SummaryLabelCheapestPrice);
+        pe.SummaryLabelCheapestPrice.TextColor = Colors.Blue;
+
+        horizCombPriceNoDiscount.Add(pe.SummaryLabelCheapestPrice);
 
         pe.SummaryLabelCheapestPriceValue = new Label();
         pe.SummaryLabelCheapestPriceValue.FontAttributes = FontAttributes.Bold;
-        pe.SummaryLabelCheapestPriceValue.HorizontalOptions = LayoutOptions.Center;
+        //pe.SummaryLabelCheapestPriceValue.HorizontalOptions = LayoutOptions.Center;
         pe.SummaryLabelCheapestPriceValue.VerticalOptions = LayoutOptions.Center;
-        Grid.SetColumn(pe.SummaryLabelCheapestPriceValue, 1);
-        Grid.SetRow(pe.SummaryLabelCheapestPriceValue, 1);
-        grid.Add(pe.SummaryLabelCheapestPriceValue);
+        horizCombPriceNoDiscount.Add(pe.SummaryLabelCheapestPriceValue);
+
+        grid.Add(horizCombPriceNoDiscount);
+
+        HorizontalStackLayout horizCombPriceDiscount = new HorizontalStackLayout();
+        horizCombPriceDiscount.HorizontalOptions = LayoutOptions.Start;
+        horizCombPriceDiscount.Spacing = 5;
+        horizCombPriceDiscount.VerticalOptions = LayoutOptions.Center;
+        Grid.SetColumn(horizCombPriceDiscount, 1);
+        Grid.SetRow(horizCombPriceDiscount, 1);
 
         pe.SummaryLabelCheapestPriceDiscount = new Label();
         pe.SummaryLabelCheapestPriceDiscount.Text = Texts.SummaryWithCard;
         pe.SummaryLabelCheapestPriceDiscount.FontAttributes = FontAttributes.Bold;
         pe.SummaryLabelCheapestPriceDiscount.HorizontalOptions = LayoutOptions.Start;
         pe.SummaryLabelCheapestPriceDiscount.VerticalOptions = LayoutOptions.Center;
-        Grid.SetColumn(pe.SummaryLabelCheapestPriceDiscount, 0);
-        Grid.SetRow(pe.SummaryLabelCheapestPriceDiscount, 2);
-        grid.Add(pe.SummaryLabelCheapestPriceDiscount);
+        pe.SummaryLabelCheapestPriceDiscount.TextColor = Colors.Green;
+
+        horizCombPriceDiscount.Add(pe.SummaryLabelCheapestPriceDiscount);
 
         pe.SummaryLabelCheapestPriceDiscountValue = new Label();
         pe.SummaryLabelCheapestPriceDiscountValue.FontAttributes = FontAttributes.Bold;
-        pe.SummaryLabelCheapestPriceDiscountValue.HorizontalOptions = LayoutOptions.Center;
+        //pe.SummaryLabelCheapestPriceDiscountValue.HorizontalOptions = LayoutOptions.Center;
         pe.SummaryLabelCheapestPriceDiscountValue.VerticalOptions = LayoutOptions.Center;
-        Grid.SetColumn(pe.SummaryLabelCheapestPriceDiscountValue, 1);
-        Grid.SetRow(pe.SummaryLabelCheapestPriceDiscountValue, 2);
-        grid.Add(pe.SummaryLabelCheapestPriceDiscountValue);
+        horizCombPriceDiscount.Add(pe.SummaryLabelCheapestPriceDiscountValue);
 
-        Button btnDetails = new Button();
-        btnDetails.Text = Texts.Detail;
-        btnDetails.HorizontalOptions = LayoutOptions.Center;
-        btnDetails.VerticalOptions = LayoutOptions.Center;
-        btnDetails.Clicked += async (s, e) => { await BtnDetails_Clicked(s, e); };
-        Grid.SetColumn(btnDetails, 2);
-        Grid.SetRow(btnDetails, 1);
-        grid.Add(btnDetails);
+        grid.Add(horizCombPriceDiscount);
 
         Button btnNavigateAllShops = new Button();
         btnNavigateAllShops.Text = Texts.Navigate;
-        btnNavigateAllShops.HorizontalOptions = LayoutOptions.Center;
+        btnNavigateAllShops.HorizontalOptions = LayoutOptions.End;
         btnNavigateAllShops.VerticalOptions = LayoutOptions.Center;
         btnNavigateAllShops.Clicked += async (s, e) => { await BtnNavigate_Clicked(s, e); };
         Grid.SetColumn(btnNavigateAllShops, 2);
-        Grid.SetRow(btnNavigateAllShops, 2);
+        Grid.SetRow(btnNavigateAllShops, 1);
         grid.Add(btnNavigateAllShops);
 
         pe.BtnNavigateAllShops = btnNavigateAllShops;
@@ -937,7 +950,7 @@ public partial class PriceComparerView : ContentPage
     {
         int collOfset = 1;
 
-        Grid tempGrid = new Grid();
+        Grid tempGrid = new Grid() { ColumnSpacing = 5 };
         Grid.SetColumnSpan(tempGrid, viewLayoutInfo.GridCntCols + 1);
         tempGrid.AddRowDefinition(new RowDefinition(GridLength.Auto));
 
@@ -1036,7 +1049,7 @@ public partial class PriceComparerView : ContentPage
         pe.BtnBack.IsEnabled = false;
         pe.BtnBack.Clicked += Button_Back_Clicked;
         Grid.SetColumnSpan(pe.BtnBack, viewLayoutInfo.GridCntCols + 1);
-        pe.MainGrid.ViewGrid.Add(pe.BtnBack, column: 0, row: 6);
+        pe.MainGrid.ViewGrid.Add(pe.BtnBack, column: 0, row: 5);
 
         //pe.BtnCompare = new Button();
         //pe.BtnCompare.Text = Texts.Compare;
@@ -1044,7 +1057,7 @@ public partial class PriceComparerView : ContentPage
         //pe.BtnCompare.VerticalOptions = LayoutOptions.Center;
         //pe.BtnCompare.Clicked += Button_Compare_Clicked;
         //Grid.SetColumnSpan(pe.BtnCompare, viewLayoutInfo.GridCntCols + 1);
-        //pe.MainGrid.ViewGrid.Add(pe.BtnCompare, column: 0, row: 6);
+        //pe.MainGrid.ViewGrid.Add(pe.BtnCompare, column: 0, row: 5);
 
         pe.BtnNext = new Button();
         pe.BtnNext.Text = Texts.Next;
@@ -1053,7 +1066,7 @@ public partial class PriceComparerView : ContentPage
         pe.BtnNext.IsEnabled = (pageLayoutInfo.CntOfViewsInPage > 1);
         pe.BtnNext.Clicked += Button_Next_Clicked;
         Grid.SetColumnSpan(pe.BtnNext, viewLayoutInfo.GridCntCols + 1);
-        pe.MainGrid.ViewGrid.Add(pe.BtnNext, column: 0, row: 6);
+        pe.MainGrid.ViewGrid.Add(pe.BtnNext, column: 0, row: 5);
     }
 
     private async Task FillPrices(ViewElements pe,

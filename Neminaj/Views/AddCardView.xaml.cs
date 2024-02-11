@@ -40,7 +40,7 @@ public partial class AddCardView : ContentPage
 
         NotKnownCardView.On_NotKnownCardView_BtnAddCard_Clicked += On_NotKnownCardView_BtnAddCard_Clicked;
 
-        BarcodeScanner.Mobile.Methods.SetSupportBarcodeFormat(BarcodeScanner.Mobile.BarcodeFormats.All);
+        //BarcodeScanner.Mobile.Methods.SetSupportBarcodeFormat(BarcodeScanner.Mobile.BarcodeFormats.All);
     }
 
     private async Task NavigationView_Appearing(object sender, EventArgs e)

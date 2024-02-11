@@ -1,4 +1,4 @@
-﻿#if (ANDROID || IOS) && !MACCATALYST
+﻿#if (ANDROID || IOS || WINDOWS) && !MACCATALYST
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
@@ -10,7 +10,7 @@ using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Diagnostics;
 
-#if (ANDROID || IOS) && !MACCATALYST
+#if (ANDROID || IOS || WINDOWS) && !MACCATALYST
 using Map = Microsoft.Maui.ApplicationModel.Map;
 #endif
 
@@ -104,9 +104,11 @@ public partial class NavigationView : ContentPage
                 await FindClosestShops();
             }
         }
+
+        //await FindClosestShops(); TODO WINDOWS
     }
 
-#if (ANDROID || IOS) && !MACCATALYST
+#if (ANDROID || IOS || WINDOWS) && !MACCATALYST
     public void CreateActivityIndicator()
     {
         ActivityIndicator = new ActivityIndicator

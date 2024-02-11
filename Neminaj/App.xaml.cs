@@ -18,8 +18,9 @@ public partial class App : Application
 
         // Important only light mode activate
         Application.Current.UserAppTheme = AppTheme.Light;
+
         this.RequestedThemeChanged += (s, e) => {
-            Application.Current.UserAppTheme = AppTheme.Light; 
+            Application.Current.UserAppTheme = AppTheme.Light;
         };
 
         MainPage = new AppShell();
