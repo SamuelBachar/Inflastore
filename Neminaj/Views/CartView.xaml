@@ -19,11 +19,11 @@
                 <DataTemplate>
                     <Frame>
                         <Frame.Content>
-                            <Grid ColumnDefinitions="0.5*, *, 0.5*,0.5*" RowDefinitions="Auto">
-                                <Label Grid.Column="0" Grid.ColumnSpan="2" FontAttributes="Bold" FontSize="14" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" VerticalTextAlignment="End" />
-                                <Entry Grid.Column="2" x:Name="EntryCntOfItem" Text="{Binding CntOfItems}" VerticalOptions="Center" VerticalTextAlignment="Center" HorizontalOptions="Start" TextChanged="EntryCntOfItem_TextChanged" ClassId="{Binding IdInList}"></Entry>
-                                <Label Grid.Column="2" Text="{Binding UnitTag}" VerticalTextAlignment="End" VerticalOptions="Center" HorizontalOptions="End"/>
-                                <ImageButton Grid.Column="3" HeightRequest="30" WidthRequest="30" ClassId="{Binding IdInList}" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.png" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Grid ColumnDefinitions="*, 0.15*, 0.15*, 0.15*, Auto" RowDefinitions="Auto">
+                                <Label Grid.Row="0" Grid.Column="0" FontAttributes="Bold" FontSize="14" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" VerticalTextAlignment="End" />
+                                <Entry x:Name="EntryCntOfItem" Text="{Binding CntOfItems}" Grid.Column="1" Grid.ColumnSpan="2" Keyboard="Numeric" VerticalOptions="Center" VerticalTextAlignment="Center" TextChanged="EntryCntOfItem_TextChanged" ClassId="{Binding IdInList}"></Entry>
+                                <Label Text="{Binding UnitTag}" VerticalOptions="Center" Grid.Column="3" HorizontalOptions="Start"/>
+                                <ImageButton Grid.Row="0" Grid.Column="4" HeightRequest="30" WidthRequest="30" ClassId="{Binding IdInList}" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.png" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="End"/>
                             </Grid>
                         </Frame.Content>
                     </Frame>
