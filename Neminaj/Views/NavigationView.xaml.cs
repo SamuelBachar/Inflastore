@@ -10,7 +10,9 @@ using Neminaj.ViewsModels;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Diagnostics;
+#if WINDOWS
 using Windows.Devices.Geolocation;
+#endif
 
 
 #if (ANDROID || IOS || WINDOWS) && !MACCATALYST

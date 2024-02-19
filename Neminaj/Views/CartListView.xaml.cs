@@ -56,7 +56,11 @@ public partial class CartListView : ContentPage
         }
         else
         {
+#if WINDOWS
+            this.listViewSavedCarts.ItemsSource = ListSavedCarts;
+#else
             this.listViewSavedCarts.ItemsSource = ListSavedCarts.OrderBy(n => n.Name);
+#endif
             this.Content = MainScrollView;
         }
     }
@@ -90,80 +94,94 @@ public partial class CartListView : ContentPage
             else
             {
                 ListSavedCarts.Remove(savedCardToDelete);
+#if WINDOWS
+                this.listViewSavedCarts.ItemsSource = ListSavedCarts;
+#else
                 this.listViewSavedCarts.ItemsSource = ListSavedCarts.OrderBy(n => n.Name);
+#endif
             }
         }
     }
 
     private async void PredvolitCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
-        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+        try
         {
-            int cartId = int.Parse(((CheckBox)(sender)).ClassId);
-
-            bool IsCartPicked = false;
-
-            foreach (SavedCart savedCart in ListSavedCarts)
+            if (Connectivity.NetworkAccess == NetworkAccess.Internet)
             {
-                if (savedCart.Id == cartId)
+                int cartId = int.Parse(((CheckBox)(sender)).ClassId);
+
+                bool IsCartPicked = false;
+
+                foreach (SavedCart savedCart in ListSavedCarts)
                 {
-                    savedCart.IsChecked = e.Value;
-                    IsCartPicked = e.Value;
+                    if (savedCart.Id == cartId)
+                    {
+                        savedCart.IsChecked = e.Value;
+                        IsCartPicked = e.Value;
+                    }
+                    else
+                    {
+                        savedCart.IsChecked = false;
+                    }
                 }
-                else
+#if WINDOWS
+                this.listViewSavedCarts.ItemsSource = ListSavedCarts;
+#else
+                this.listViewSavedCarts.ItemsSource = ListSavedCarts.OrderBy(n => n.Name);
+#endif
+
+                if (IsCartPicked)
                 {
-                    savedCart.IsChecked = false;
+                    // Get items from saved cart
+                    List<SavedCartItem> savedCartItems = await SavedCartRepo.GetAllSavedCartItemsAsync(cartId);
+
+                    // Get Name and Unit_Id
+                    List<Item> listItemsFromCard = await ItemRepo.GetSpecificItemsAsync(savedCartItems.Select(savedCart => savedCart.Item_Id).ToList());
+
+                    // Get unit Tag
+                    List<Unit> listUnits = await UnitRepo.GetSpecificUnits(listItemsFromCard.Select(item => item.Unit_Id).ToList());
+
+                    List<ItemChoosen> listItemsFromSavedCart = new List<ItemChoosen>();
+
+                    int idInListHelp = 0;
+
+                    foreach (SavedCartItem cartItem in savedCartItems)
+                    {
+                        Item item = listItemsFromCard.Where(item => item.Id == cartItem.Item_Id).First();
+                        Unit unit = listUnits.Where(unit => item.Unit_Id == unit.Id).First();
+
+                        string name = item.Name;
+                        string finalName = $"{cartItem.CntOfItem}x {item.Name}";
+                        string unitTag = unit.Tag;
+                        int cntOfItem = cartItem.CntOfItem;
+                        int idInList = idInListHelp;
+
+                        listItemsFromSavedCart.Add(new ItemChoosen
+                        {
+                            Id = item.Id,
+                            IdInList = idInListHelp,
+                            Name = name,
+                            FinalName = finalName,
+                            CntOfItems = cartItem.CntOfItem,
+                            UnitTag = unitTag
+                        });
+
+                        idInListHelp++;
+                    }
+
+                    MainPage.SetChoosenItems(listItemsFromSavedCart);
+                    this.Content = MainScrollView;
                 }
             }
-
-            this.listViewSavedCarts.ItemsSource = ListSavedCarts.OrderBy(n => n.Name);
-
-            if (IsCartPicked)
+            else
             {
-                // Get items from saved cart
-                List<SavedCartItem> savedCartItems = await SavedCartRepo.GetAllSavedCartItemsAsync(cartId);
-
-                // Get Name and Unit_Id
-                List<Item> listItemsFromCard = await ItemRepo.GetSpecificItemsAsync(savedCartItems.Select(savedCart => savedCart.Item_Id).ToList());
-
-                // Get unit Tag
-                List<Unit> listUnits = await UnitRepo.GetSpecificUnits(listItemsFromCard.Select(item => item.Unit_Id).ToList());
-
-                List<ItemChoosen> listItemsFromSavedCart = new List<ItemChoosen>();
-
-                int idInListHelp = 0;
-
-                foreach (SavedCartItem cartItem in savedCartItems)
-                {
-                    Item item = listItemsFromCard.Where(item => item.Id == cartItem.Item_Id).First();
-                    Unit unit = listUnits.Where(unit => item.Unit_Id == unit.Id).First();
-
-                    string name = item.Name;
-                    string finalName = $"{cartItem.CntOfItem}x {item.Name}";
-                    string unitTag = unit.Tag;
-                    int cntOfItem = cartItem.CntOfItem;
-                    int idInList = idInListHelp;
-
-                    listItemsFromSavedCart.Add(new ItemChoosen
-                    {
-                        Id = item.Id,
-                        IdInList = idInListHelp,
-                        Name = name,
-                        FinalName = finalName,
-                        CntOfItems = cartItem.CntOfItem,
-                        UnitTag = unitTag
-                    });
-
-                    idInListHelp++;
-                }
-
-                MainPage.SetChoosenItems(listItemsFromSavedCart);
-                this.Content = MainScrollView;
+                await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné predvoliť nákupný zoznam", "Zavrieť");
             }
         }
-        else
+        catch (Exception ex)
         {
-            await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné predvoliť nákupný zoznam", "Zavrieť");
+            await this.DisplayAlert("Chyba", $"Chyba načítania zoznamu\r\nNačítanie zoznamu zlyhalo s chybou: {ex.Message}", "Zavrieť");
         }
     }
 

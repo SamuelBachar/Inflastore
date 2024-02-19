@@ -26,7 +26,7 @@
         <Tab Title="Zoznamy" Icon="carts_list.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:CartListView}" Route="CartListView"/>
         </Tab>
-        <Tab Title="Karty" Icon="club_cards.png">
+        <Tab Title="Karty" Icon="club_cards.png" IsVisible="{OnIdiom Phone='true', Tablet='true', Desktop='false'}">
             <ShellContent ContentTemplate="{DataTemplate localViews:CardsView}" Route="CardsView"/>
         </Tab>
         <Tab Title="Nastavenia" Icon="settings.png">

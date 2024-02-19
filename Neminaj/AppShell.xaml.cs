@@ -33,9 +33,18 @@ public partial class AppShell : Shell
         {
             var navigation = Shell.Current.Navigation;
             var pages = navigation.NavigationStack;
+
             for (var i = pages.Count - 1; i >= 1; i--)
             {
-                navigation.RemovePage(pages[i]);
+                try
+                {
+                    navigation.RemovePage(pages[i]);
+                }
+                catch (Exception ex)
+                {
+                    i = pages.Count;
+                    continue;
+                }
             }
         }
     }
