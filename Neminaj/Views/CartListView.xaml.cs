@@ -23,9 +23,13 @@ public partial class CartListView : ContentPage
 
     ItemPicker MainPage;
 
+#if WINDOWS
+    int _lastCheckedCardId = -1;
+#endif
+
     public CartListView(SavedCartRepository savedCartRepository, ItemRepository itemRepository, UnitRepository unitRepository, ItemPicker mainPage)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         this.BindingContext = this;
 
         SavedCartRepo = savedCartRepository;
@@ -40,7 +44,7 @@ public partial class CartListView : ContentPage
         base.OnNavigatedTo(args);
 
         ListSavedCarts = await SavedCartRepo.GetAllSavedCartsAsync();
-        
+
         if (ListSavedCarts.Count == 0)
         {
             this.Content = new Label
@@ -94,6 +98,7 @@ public partial class CartListView : ContentPage
             else
             {
                 ListSavedCarts.Remove(savedCardToDelete);
+
 #if WINDOWS
                 this.listViewSavedCarts.ItemsSource = ListSavedCarts;
 #else
@@ -107,9 +112,14 @@ public partial class CartListView : ContentPage
     {
         try
         {
-            if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+            int cartId = int.Parse(((CheckBox)(sender)).ClassId);
+#if WINDOWS
+            if (cartId != _lastCheckedCardId)
             {
-                int cartId = int.Parse(((CheckBox)(sender)).ClassId);
+                _lastCheckedCardId = cartId;
+#endif
+            if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+            { 
 
                 bool IsCartPicked = false;
 
@@ -126,7 +136,7 @@ public partial class CartListView : ContentPage
                     }
                 }
 #if WINDOWS
-                this.listViewSavedCarts.ItemsSource = ListSavedCarts;
+                this.listViewSavedCarts.ItemsSource = ListSavedCarts.ToList();
 #else
                 this.listViewSavedCarts.ItemsSource = ListSavedCarts.OrderBy(n => n.Name);
 #endif
@@ -178,6 +188,9 @@ public partial class CartListView : ContentPage
             {
                 await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné predvoliť nákupný zoznam", "Zavrieť");
             }
+            #if WINDOWS
+            }
+            #endif
         }
         catch (Exception ex)
         {
@@ -227,7 +240,7 @@ public partial class CartListView : ContentPage
             }
 
         });
-       
+
         return listItemsFromSavedCart;
     }
 }
