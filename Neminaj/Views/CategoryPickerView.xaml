@@ -14,14 +14,14 @@
                 <CollectionView x:Name="CategoriesCollectionView"
                         Grid.Row="0"
                         ItemsSource="{Binding _categories}"
-                        ItemsLayout="VerticalGrid, 3"
+                        ItemsLayout="{OnIdiom Phone='VerticalGrid, 3', Tablet='VerticalGrid, 3', Desktop='VerticalGrid, 4'}"
                         SelectionMode="Single">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="model:CategoryDTO">
                             <Border BackgroundColor="{StaticResource Primary}"
                             StrokeShape="RoundRectangle 5"
                             Margin="5">
-                                <Grid RowDefinitions="100, 40">
+                                <Grid RowDefinitions="{OnIdiom Phone='100, 40', Tablet='100, 40', Desktop='256, 80'}">
                                     <Image Grid.Row="0"
                                      Source="{Binding ImageUrl}"
                                      BackgroundColor="White"
@@ -35,7 +35,7 @@
                                    TextColor="White"/>
                                 </Grid>
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped123" CommandParameter="{Binding .}" />
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
                             </Border>
                         </DataTemplate>

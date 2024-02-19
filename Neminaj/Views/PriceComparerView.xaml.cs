@@ -91,6 +91,11 @@ public class CustomCell : ViewCell
         LblName.HorizontalOptions = LayoutOptions.Start;
         LblName.VerticalTextAlignment = TextAlignment.Start;
         LblName.HorizontalTextAlignment = TextAlignment.Start;
+#if ANDROID || IOS
+        LblName.FontSize *= 1.0;
+#else
+        LblName.FontSize *= 1.5;
+#endif
         StackLayout.VerticalOptions = LayoutOptions.Fill;
         StackLayout.HorizontalOptions = LayoutOptions.Start;
         StackLayout.Add(LblName);
@@ -106,6 +111,11 @@ public class CustomCell : ViewCell
                 LblPrice1 = new Label();
                 LblPrice1.VerticalOptions = LayoutOptions.Center;
                 LblPrice1.HorizontalOptions = LayoutOptions.Center;
+#if ANDROID || IOS
+                LblPrice1.FontSize *= 1.0;
+#else
+                LblPrice1.FontSize *= 2.0;
+#endif
                 GridCellView.Add(LblPrice1, colOffset);
             }
             else if (i == 1)
@@ -113,6 +123,11 @@ public class CustomCell : ViewCell
                 LblPrice2 = new Label();
                 LblPrice2.VerticalOptions = LayoutOptions.Center;
                 LblPrice2.HorizontalOptions = LayoutOptions.Center;
+#if ANDROID || IOS
+                LblPrice2.FontSize *= 1.0;
+#else
+                LblPrice2.FontSize *= 2.0;
+#endif
                 GridCellView.Add(LblPrice2, colOffset);
             }
             else if (i == 2)
@@ -120,6 +135,11 @@ public class CustomCell : ViewCell
                 LblPrice3 = new Label();
                 LblPrice3.VerticalOptions = LayoutOptions.Center;
                 LblPrice3.HorizontalOptions = LayoutOptions.Center;
+#if ANDROID || IOS
+                LblPrice3.FontSize *= 1.0;
+#else
+                LblPrice3.FontSize *= 2.0;
+#endif
                 GridCellView.Add(LblPrice3, colOffset);
             }
 
@@ -477,7 +497,7 @@ public partial class PriceComparerView : ContentPage
                     {
                         ListViewElements[i].ImageEmptyCart = new Image
                         {
-                            Source = ImageSource.FromFile("cart_empty.svg"),
+                            Source = "cart_empty.png",
                             Aspect = Aspect.AspectFit,
                             HorizontalOptions = LayoutOptions.Center,
                             VerticalOptions = LayoutOptions.Center,
@@ -703,10 +723,16 @@ public partial class PriceComparerView : ContentPage
 
         Label lblItem = new Label()
         {
-            Text = "Položka",
+            Text = Texts.ItemPriceComparer,
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.Center
         };
+
+#if ANDROID || IOS
+        lblItem.FontSize *= 1.0;
+#else
+        lblItem.FontSize *= 2.0;
+#endif
 
         tempGrid.Add(lblItem, 0, 0);
 
@@ -743,8 +769,13 @@ public partial class PriceComparerView : ContentPage
             Image img = new Image
             {
                 Source = companyUrl,
+#if ANDROID || IOS
                 WidthRequest = 50,
                 HeightRequest = 50,
+#else
+                WidthRequest = 128,
+                HeightRequest = 128,
+#endif
                 Aspect = Aspect.AspectFit,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
@@ -820,7 +851,12 @@ public partial class PriceComparerView : ContentPage
             lblSummary.HorizontalOptions = LayoutOptions.Start;
             lblSummary.VerticalOptions = LayoutOptions.Center;
 
-            //pe.MainGrid.ViewGrid.Add(lblSummary, column: 0, row: row + i);
+#if ANDROID || IOS
+            lblSummary.FontSize *= 1.0;
+#else
+            lblSummary.FontSize *= 2.0;
+#endif
+
             tempGrid.Add(lblSummary, column: 0, row: row);
 
             for (int j = 0; j < viewLayoutInfo.GridCntCols; j++)
@@ -828,7 +864,13 @@ public partial class PriceComparerView : ContentPage
                 Label lblSummaryResult = new Label();
                 lblSummaryResult.HorizontalOptions = LayoutOptions.Center;
                 lblSummaryResult.VerticalOptions = LayoutOptions.Center;
-                //pe.MainGrid.ViewGrid.Add(lblSummaryResult, column: collOfset, row: row + i);
+
+#if ANDROID || IOS
+                lblSummaryResult.FontSize *= 1.0;
+#else
+                lblSummaryResult.FontSize *= 2.0;
+#endif
+
                 tempGrid.Add(lblSummaryResult, column: collOfset, row: row);
 
                 if (i == 0)
@@ -870,6 +912,11 @@ public partial class PriceComparerView : ContentPage
         lblShopCombination.FontAttributes = FontAttributes.Bold;
         lblShopCombination.HorizontalOptions = LayoutOptions.Start;
         lblShopCombination.VerticalOptions = LayoutOptions.Center;
+#if ANDROID || IOS
+        lblShopCombination.FontSize *= 1.0;
+#else
+        lblShopCombination.FontSize *= 2.0;
+#endif
         Grid.SetColumnSpan(lblShopCombination, 2);
         Grid.SetColumn(lblShopCombination, 0);
         Grid.SetRow(lblShopCombination, 0);
@@ -885,7 +932,11 @@ public partial class PriceComparerView : ContentPage
         grid.Add(btnDetails);
 
         HorizontalStackLayout horizCombPriceNoDiscount = new HorizontalStackLayout();
+#if ANDROID || IOS
         horizCombPriceNoDiscount.Spacing = 5;
+#else
+        horizCombPriceNoDiscount.Spacing = 25;
+#endif
         horizCombPriceNoDiscount.HorizontalOptions = LayoutOptions.Start;
         horizCombPriceNoDiscount.VerticalOptions = LayoutOptions.Center;
         Grid.SetColumn(horizCombPriceNoDiscount, 0);
@@ -897,20 +948,33 @@ public partial class PriceComparerView : ContentPage
         pe.SummaryLabelCheapestPrice.HorizontalOptions = LayoutOptions.Center;
         pe.SummaryLabelCheapestPrice.VerticalOptions = LayoutOptions.Center;
         pe.SummaryLabelCheapestPrice.TextColor = Colors.Blue;
+#if ANDROID || IOS
+        pe.SummaryLabelCheapestPrice.FontSize *= 1.0;
+#else
+        pe.SummaryLabelCheapestPrice.FontSize *= 2.0;
+#endif
 
         horizCombPriceNoDiscount.Add(pe.SummaryLabelCheapestPrice);
 
         pe.SummaryLabelCheapestPriceValue = new Label();
         pe.SummaryLabelCheapestPriceValue.FontAttributes = FontAttributes.Bold;
-        //pe.SummaryLabelCheapestPriceValue.HorizontalOptions = LayoutOptions.Center;
         pe.SummaryLabelCheapestPriceValue.VerticalOptions = LayoutOptions.Center;
+#if ANDROID || IOS
+        pe.SummaryLabelCheapestPriceValue.FontSize *= 1.0;
+#else
+        pe.SummaryLabelCheapestPriceValue.FontSize *= 2.0;
+#endif
         horizCombPriceNoDiscount.Add(pe.SummaryLabelCheapestPriceValue);
 
         grid.Add(horizCombPriceNoDiscount);
 
         HorizontalStackLayout horizCombPriceDiscount = new HorizontalStackLayout();
         horizCombPriceDiscount.HorizontalOptions = LayoutOptions.Start;
+#if ANDROID || IOS
         horizCombPriceDiscount.Spacing = 5;
+#else
+        horizCombPriceDiscount.Spacing = 25;
+#endif
         horizCombPriceDiscount.VerticalOptions = LayoutOptions.Center;
         Grid.SetColumn(horizCombPriceDiscount, 1);
         Grid.SetRow(horizCombPriceDiscount, 1);
@@ -921,13 +985,22 @@ public partial class PriceComparerView : ContentPage
         pe.SummaryLabelCheapestPriceDiscount.HorizontalOptions = LayoutOptions.Start;
         pe.SummaryLabelCheapestPriceDiscount.VerticalOptions = LayoutOptions.Center;
         pe.SummaryLabelCheapestPriceDiscount.TextColor = Colors.Green;
+#if ANDROID || IOS
+        pe.SummaryLabelCheapestPriceDiscount.FontSize *= 1.0;
+#else
+        pe.SummaryLabelCheapestPriceDiscount.FontSize *= 2.0;
+#endif
 
         horizCombPriceDiscount.Add(pe.SummaryLabelCheapestPriceDiscount);
 
         pe.SummaryLabelCheapestPriceDiscountValue = new Label();
         pe.SummaryLabelCheapestPriceDiscountValue.FontAttributes = FontAttributes.Bold;
-        //pe.SummaryLabelCheapestPriceDiscountValue.HorizontalOptions = LayoutOptions.Center;
         pe.SummaryLabelCheapestPriceDiscountValue.VerticalOptions = LayoutOptions.Center;
+#if ANDROID || IOS
+        pe.SummaryLabelCheapestPriceDiscountValue.FontSize *= 1.0;
+#else
+        pe.SummaryLabelCheapestPriceDiscountValue.FontSize *= 2.0;
+#endif
         horizCombPriceDiscount.Add(pe.SummaryLabelCheapestPriceDiscountValue);
 
         grid.Add(horizCombPriceDiscount);

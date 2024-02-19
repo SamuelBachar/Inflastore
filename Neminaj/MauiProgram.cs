@@ -12,6 +12,7 @@ using Syncfusion.Maui.Core.Hosting;
 using BarcodeScanner.Mobile;
 
 using ZXing.Net.Maui.Controls;
+using CommunityToolkit.Maui.Maps;
 
 
 namespace Neminaj;
@@ -24,6 +25,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiMaps()
+            .UseMauiCommunityToolkitMaps("FEq6oJaEfpIe3r3vDRPJ~T0WPrk9hOMYR0PV4kh3Stw~AhdnGP1LYApqIX77mp-7TPk4pJ38hClOgAC4Nax4MfMDZrcr97HjIJLbm4E_aMbg")
             .UseBarcodeReader()
             .ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
@@ -115,6 +117,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<SettingsView>();
         builder.Services.AddSingleton<ChooseCardView>();
         builder.Services.AddSingleton<AddCardView>();
+        builder.Services.AddSingleton<ItemPicker>();
+        builder.Services.AddSingleton<CategoryPickerView>();
 
         // Views models
         builder.Services.AddSingleton<LogOutViewModel>();
@@ -124,6 +128,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<NotKnownCardViewModel>();
         builder.Services.AddSingleton<PriceComparerDetailViewModel>();
         builder.Services.AddSingleton<ItemPickerViewModel>();
+        builder.Services.AddSingleton<CartViewModel>();
 
         // Transients views
         builder.Services.AddTransient<RegisterView>();
@@ -134,12 +139,6 @@ public static class MauiProgram
         builder.Services.AddTransient<SavedCartDetailView>(); // Car-T-
         builder.Services.AddTransient<SavedCardDetailView>(); // Car-D-
         builder.Services.AddTransient<CartViewSaveCart>();
-
-        // test
-        builder.Services.AddSingleton<ItemPicker>();
-        builder.Services.AddSingleton<CategoryPickerView>();
-
-        builder.Services.AddSingleton<CartViewModel>();
         builder.Services.AddTransient<CartView>();
 
 

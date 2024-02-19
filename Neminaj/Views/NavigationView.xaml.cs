@@ -1,4 +1,5 @@
 ﻿#if (ANDROID || IOS || WINDOWS) && !MACCATALYST
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
@@ -9,6 +10,8 @@ using Neminaj.ViewsModels;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Diagnostics;
+using Windows.Devices.Geolocation;
+
 
 #if (ANDROID || IOS || WINDOWS) && !MACCATALYST
 using Map = Microsoft.Maui.ApplicationModel.Map;
@@ -49,42 +52,77 @@ public partial class NavigationView : ContentPage
     List<Pin> _listPins { get; set; } = new List<Pin>();
 
     public NavigationView(NavigationShopViewModel navigShopViewModel)
-    { 
+    {
         BindingContext = navigShopViewModel;
         this.NavigationShopViewModel = navigShopViewModel;
         this.Geolocation = NavigationShopViewModel.GeoLocation;
-        this.Appearing +=  async (s ,e) => { await NavigationView_Appearing(s, e); };
+        this.Appearing += async (s, e) => { await NavigationView_Appearing(s, e); };
     }
 
     private async Task NavigationView_Appearing(object sender, EventArgs e)
     {
-        PermissionStatus status = PermissionStatus.Unknown;
-
-        status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-
-        if (status != PermissionStatus.Granted)
+        if (DeviceInfo.Idiom == DeviceIdiom.Desktop)
         {
-            if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
+#if WINDOWS
+            GeolocationAccessStatus accessStatus = await Geolocator.RequestAccessAsync();
+
+            if (accessStatus == GeolocationAccessStatus.Allowed)
+            {
+                InitializeComponent();
+                IsInitialized = true;
+                await FindClosestShops();
+            }
+            else if (accessStatus == GeolocationAccessStatus.Denied ||
+                     accessStatus == GeolocationAccessStatus.Unspecified)
             {
                 await DisplayAlert("GPS povolenie",
-                    "V minulosti bolo zamietnuté aplikácii používať navigáciu.\r\n" +
-                    "Prosím povoľte v nastaveniach telefónu Navigáciu / GPS pre Inflastore"
-                    , "Ok");
+                        "Aplikácia nemá povolenie pre používanie GPS.\r\n" +
+                        "Prosím povoľte v nastaveniach počítača Navigáciu / GPS pre Inflastore \r\n" +
+                        "Návod pre povolenie Navigácie / GPS nájdete tu: "
+                        , "Ok");
                 return;
             }
+#endif
+        }
+        else
+        {
+            PermissionStatus status = PermissionStatus.Unknown;
 
-            // Android - hlaska sa zobrazi ak uzivatel v minulosti nepovolil navigaciu
-            if (Permissions.ShouldShowRationale<Permissions.LocationWhenInUse>())
-            {
-                await DisplayAlert("GPS povolenie",
-                                   "Inflastore vie nájsť obchody vo vašej blízkosti. Prosím povoľte v nasledujúcej výzve prístup k Navigácii / GPS"
-                                  , "Ok");
-            }
-
-            status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+            status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
 
             if (status != PermissionStatus.Granted)
-                return;
+            {
+                if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
+                {
+                    await DisplayAlert("GPS povolenie",
+                        "V minulosti bolo zamietnuté aplikácii používať navigáciu.\r\n" +
+                        "Prosím povoľte v nastaveniach telefónu Navigáciu / GPS pre Inflastore"
+                        , "Ok");
+                    return;
+                }
+
+                // Android - hlaska sa zobrazi ak uzivatel v minulosti nepovolil navigaciu
+                if (Permissions.ShouldShowRationale<Permissions.LocationWhenInUse>())
+                {
+                    await DisplayAlert("GPS povolenie",
+                                       "Inflastore vie nájsť obchody vo vašej blízkosti. Prosím povoľte v nasledujúcej výzve prístup k Navigácii / GPS"
+                                      , "Ok");
+                }
+
+                status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+
+                if (status != PermissionStatus.Granted)
+                    return;
+                else
+                {
+                    if (!IsInitialized)
+                    {
+                        InitializeComponent();
+                        IsInitialized = true;
+                        await FindClosestShops();
+                    }
+                }
+            }
             else
             {
                 if (!IsInitialized)
@@ -95,17 +133,6 @@ public partial class NavigationView : ContentPage
                 }
             }
         }
-        else
-        {
-            if (!IsInitialized)
-            {
-                InitializeComponent();
-                IsInitialized = true;
-                await FindClosestShops();
-            }
-        }
-
-        //await FindClosestShops(); TODO WINDOWS
     }
 
 #if (ANDROID || IOS || WINDOWS) && !MACCATALYST
@@ -169,23 +196,22 @@ public partial class NavigationView : ContentPage
 
         try
         {
-            //var location = await this.Geolocation.GetLastKnownLocationAsync();
-
-            //if (location == null)
-            //{
-                var location = await this.Geolocation.GetLocationAsync( new GeolocationRequest 
+            var location = await this.Geolocation.GetLastKnownLocationAsync();
+            if (location == null)
+            {
+                location = await this.Geolocation.GetLocationAsync(new GeolocationRequest
                 {
                     DesiredAccuracy = GeolocationAccuracy.Medium,
                     Timeout = TimeSpan.FromSeconds(30)
-                }); 
-            //}
+                });
+            }
 
             // Find closest  shops within range
             foreach (NavigationShopData navShopData in listNavShopData)
             {
                 double tempDistance = location.CalculateDistance(new Location(navShopData.Latitude, navShopData.Longtitude), DistanceUnits.Kilometers);
 
-                if ( tempDistance <= distanceWithin)
+                if (tempDistance <= distanceWithin)
                 {
                     listNearestShops.Add(new FoundedShop
                     {
@@ -202,19 +228,8 @@ public partial class NavigationView : ContentPage
             {
                 listNearestShops.OrderBy(adr => adr.Distance);
 
-                //await this.NavigationShopViewModel.OpenMapWithChoosenCompanies(listNearestShops);
-
                 foreach (FoundedShop shop in listNearestShops)
                 {
-                    //googleMaps.Pins.Add(
-                    //    new Maui.GoogleMaps.Pin
-                    //    {
-                    //        Label = shop.CompanyName,
-                    //        Address = shop.FullAddress,
-                    //        Type = Maui.GoogleMaps.PinType.Place,
-                    //        Position = new Maui.GoogleMaps.Position(shop.Latitude, shop.Longtitude)
-
-                    //    });
                     Pin pin = new Pin()
                     {
                         Label = shop.CompanyName,
@@ -226,39 +241,41 @@ public partial class NavigationView : ContentPage
                     pin.InfoWindowClicked += Pin_InfoWindowClicked;
 
                     _listPins.Add(pin);
+#if ANDOROID || IOS || WINDOWS
                     mappy.Pins.Add(pin);
+#endif
                 }
 
                 if (listNearestShops.Count > 1) // atleast 2 Shops navigation
                 {
-
                     FoundedShop nearestShop = listNearestShops.OrderBy(shop => shop.Distance).First();
-
+#if ANDOROID || IOS || WINDOWS
                     mappy.MoveToRegion(new MapSpan(new Location(nearestShop.Latitude, nearestShop.Longtitude), 0.075, 0.075));
-                    //googleMaps.MoveToRegion(new Maui.GoogleMaps.MapSpan(new Maui.GoogleMaps.Position(nearestShop.Latitude, nearestShop.Longtitude), nearestShop.Latitude, nearestShop.Longtitude));
+#else
+                    await this.NavigationShopViewModel.OpenMapWithChoosenCompanies(nearestShop);
+#endif
                 }
                 else // Single shop navigation
                 {
+#if ANDOROID || IOS || WINDOWS
                     mappy.MoveToRegion(new MapSpan(new Location(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), 0.05, 0.05));
-                    //googleMaps.MoveToRegion(new Maui.GoogleMaps.MapSpan(new Maui.GoogleMaps.Position(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), listNearestShops[0].Latitude, listNearestShops[0].Longtitude));
-
-                    //await Map.Default.OpenAsync(listNearestShops[0].Latitude, listNearestShops[0].Longtitude, new MapLaunchOptions { Name = "Test" });
+#else
+                    await this.NavigationShopViewModel.OpenMapWithChoosenCompanies(listNearestShops[0]);
+#endif
                 }
-
-                // Todo zobrazit dole button a po kliknuti na PIN nechat zobrazit Navigovat -> co mi spusti Map.Default
             }
             else
             {
                 await DisplayAlert("Nenajdené obchody",
                     $"Vo Vami nastavenej vzdialenosti vyhľadávania: {distanceWithin} km, sa nenašli žiadne obchody.\r\n" +
                      "Nastavenie vzdialenosti vyhľadávania nájdete v nastaveniach aplikácii",
-                     "Zavrieť") ;
+                     "Zavrieť");
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Unable to query location: {ex.Message}");
-            await DisplayAlert("Navigácia chyba", "Pri vyhľadávaní lokácií nastala chyba: " + SQLConnection.StatusMessage, "Zavrieť");
+            await DisplayAlert("Navigácia chyba", $"Pri vyhľadávaní lokácií nastala chyba: {SQLConnection.StatusMessage} - {ex.Message}" , "Zavrieť");
         }
     }
 
@@ -282,4 +299,4 @@ public partial class NavigationView : ContentPage
         await Map.Default.OpenAsync(_lastClickedLocation.Latitude, _lastClickedLocation.Longitude, new MapLaunchOptions { Name = _lastClickedAddress });
     }
 #endif
-}
+        }

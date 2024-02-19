@@ -57,16 +57,16 @@ public partial class NavigationShopViewModel : ObservableObject
         return await CompanyRepository.GetSpecificCompaniesAsync(ListCompaniesIds);
     }
 
-    public async Task OpenMapWithChoosenCompanies(List<FoundedShop> listFoundedShops)
+    public async Task OpenMapWithChoosenCompanies(FoundedShop foundedShop)
     {
         await Map.OpenAsync(
-        listFoundedShops[0].Latitude, 
-        listFoundedShops[0].Longtitude, 
+        foundedShop.Latitude,
+        foundedShop.Longtitude, 
 
         new MapLaunchOptions
         {
-            Name = listFoundedShops[0].FullAddress,
-            NavigationMode = NavigationMode.None
+            Name = $"{foundedShop.CompanyName} - {foundedShop.FullAddress}",
+            NavigationMode = NavigationMode.Driving
         });
     }
 }

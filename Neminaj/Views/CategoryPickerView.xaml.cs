@@ -37,22 +37,23 @@ public partial class CategoryPickerView : ContentPage
     {
         base.OnNavigatedTo(args);
 
-        _categories.Clear();
-
-        foreach (CategoryDTO category in await _categoryRepository.GetAllCategories())
+        if (_categories.Count == 0)
         {
-            _categories.Add(category);
-        }
+            foreach (CategoryDTO category in await _categoryRepository.GetAllCategories())
+            {
+                _categories.Add(category);
+            }
 
-        if (this.CategoriesCollectionView.SelectedItems.Count != 0)
-            this.CategoriesCollectionView.SelectedItems.Clear();
+            if (this.CategoriesCollectionView.SelectedItems.Count != 0)
+                this.CategoriesCollectionView.SelectedItems.Clear();
+        }
 
         CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
 
         this.Content = this.MainControlWrapper;
     }
-  
-    private async void TapGestureRecognizer_Tapped123(object sender, TappedEventArgs e)
+
+    private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
         if (e.Parameter is CategoryDTO category)
         {

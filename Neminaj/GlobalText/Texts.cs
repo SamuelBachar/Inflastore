@@ -22,5 +22,7 @@ public class Texts
     public static string Back = "Späť";
     public static string Compare = "Porovnaj";
     public static string Next = "Ďalej";
+
+    public static string ItemPriceComparer = "Polôžka";
 }
 

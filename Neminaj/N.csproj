@@ -138,6 +138,7 @@
 		<PackageReference Include="Camera.MAUI" Version="1.4.4" />
 		<PackageReference Include="ColorPicker.Maui" Version="1.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui.Maps" Version="1.0.4" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
