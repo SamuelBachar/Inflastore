@@ -13,6 +13,10 @@ public class Item
 
     public string Name { get; set; }
 
+    public string ImageUrl { get; set; }
+
+    public string Path { get; set; }
+
     public int Unit_Id { get; set; }
 
     public int Category_Id { get; set; }

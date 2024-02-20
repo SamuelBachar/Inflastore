@@ -9,6 +9,7 @@
     <Grid RowDefinitions="*, Auto" ColumnDefinitions="*,*,*,*">
 
         <CollectionView
+            ItemsLayout="{OnIdiom Phone='VerticalGrid, 1', Tablet='VerticalGrid, 1', Desktop='VerticalGrid, 2'}"
             Grid.Row="0"
             Grid.ColumnSpan="4"
             x:Name="listItemChoosen"

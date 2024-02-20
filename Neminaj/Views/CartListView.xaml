@@ -7,6 +7,7 @@
         <VerticalStackLayout>
             <Grid Padding="5" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto, 50, 50">
                 <CollectionView x:Name="listViewSavedCarts"
+                ItemsLayout="{OnIdiom Phone='VerticalGrid, 1', Tablet='VerticalGrid, 1', Desktop='VerticalGrid, 2'}"
                 SelectionMode="None"
                 VerticalScrollBarVisibility="Always"
                 Grid.ColumnSpan="5">

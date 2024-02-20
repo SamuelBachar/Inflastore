@@ -17,6 +17,7 @@
                 <Grid Padding="5" RowDefinitions="Auto, 0.15*, *"  ColumnDefinitions="*, *" >
                     <VerticalStackLayout Grid.ColumnSpan="2" Spacing="20">
                         <CollectionView
+                                ItemsLayout="{OnIdiom Phone='VerticalGrid, 1', Tablet='VerticalGrid, 1', Desktop='VerticalGrid, 2'}"
                                 x:Name="listItem"
                                 Grid.Row="1"
                                 Grid.Column="0"
@@ -28,7 +29,7 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, *" RowSpacing="15">
-                                        <Image Grid.Row="0" Grid.Column="0" HeightRequest="75" WidthRequest="75" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="dotnet_bot.png"/>
+                                        <Image Grid.Row="0" Grid.Column="0" HeightRequest="{OnIdiom Phone='75', Tablet='75', Desktop='128'}" WidthRequest="{OnIdiom Phone='75', Tablet='75', Desktop='128'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ImageUrl}"/>
                                         <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" LineBreakMode="WordWrap" FontAutoScalingEnabled="True" HorizontalOptions="Start" VerticalOptions="Center"></Label>
                                         <Line  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>
                                     </Grid>

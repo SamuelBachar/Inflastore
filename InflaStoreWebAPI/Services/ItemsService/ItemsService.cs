@@ -16,12 +16,22 @@ namespace InflaStoreWebAPI.Services.ItemsService
 
         public async Task<List<Item>> GetAllItemsAsync()
         {
-            return await _context.Items.ToListAsync();
+            List<Item> listItems = await _context.Items.ToListAsync();
+
+            foreach (Item item in listItems)
+            {
+                item.ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Items/{item.Category_Id}/{item.Path}";
+            }
+
+            return listItems;
         }
 
         public async Task<List<Item>> GetSpecificItemsAsync(List<int> listIds)
         {
-            return await _context.Items.Where(item => listIds.Contains(item.Id)).ToListAsync();
+            List<Item> listItem = await _context.Items.Where(item => listIds.Contains(item.Id)).ToListAsync();
+
+            listItem.ForEach(item => item.ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Items/{item.Category_Id}/{item.Path}");
+            return listItem;
         }
     }
 }
