@@ -74,7 +74,7 @@ public partial class ItemPicker : ContentPage
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            ObservableItemsChoosed[e.NewStartingIndex].FinalName = $"{ObservableItemsChoosed[e.NewStartingIndex].CntOfItems}x {ObservableItemsChoosed[e.NewStartingIndex].Name}";
+            ObservableItemsChoosed[e.NewStartingIndex].FinalName = $"{ObservableItemsChoosed[e.NewStartingIndex].CntOfItems}x {ObservableItemsChoosed[e.NewStartingIndex].Name} {ObservableItemsChoosed[e.NewStartingIndex].UnitTag}";
         }
     }
 

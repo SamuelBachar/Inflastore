@@ -198,15 +198,11 @@ public partial class NavigationView : ContentPage
 
         try
         {
-            var location = await this.Geolocation.GetLastKnownLocationAsync();
-            if (location == null)
+            var location = await this.Geolocation.GetLocationAsync(new GeolocationRequest
             {
-                location = await this.Geolocation.GetLocationAsync(new GeolocationRequest
-                {
-                    DesiredAccuracy = GeolocationAccuracy.Medium,
-                    Timeout = TimeSpan.FromSeconds(30)
-                });
-            }
+                DesiredAccuracy = GeolocationAccuracy.Medium,
+                Timeout = TimeSpan.FromSeconds(30)
+            });
 
             // Find closest  shops within range
             foreach (NavigationShopData navShopData in listNavShopData)
@@ -243,7 +239,7 @@ public partial class NavigationView : ContentPage
                     pin.InfoWindowClicked += Pin_InfoWindowClicked;
 
                     _listPins.Add(pin);
-#if ANDOROID || IOS || WINDOWS
+#if ANDROID || IOS || WINDOWS
                     mappy.Pins.Add(pin);
 #endif
                 }
@@ -251,7 +247,7 @@ public partial class NavigationView : ContentPage
                 if (listNearestShops.Count > 1) // atleast 2 Shops navigation
                 {
                     FoundedShop nearestShop = listNearestShops.OrderBy(shop => shop.Distance).First();
-#if ANDOROID || IOS || WINDOWS
+#if ANDROID || IOS || WINDOWS
                     mappy.MoveToRegion(new MapSpan(new Location(nearestShop.Latitude, nearestShop.Longtitude), 0.075, 0.075));
 #else
                     await this.NavigationShopViewModel.OpenMapWithChoosenCompanies(nearestShop);
@@ -259,7 +255,7 @@ public partial class NavigationView : ContentPage
                 }
                 else // Single shop navigation
                 {
-#if ANDOROID || IOS || WINDOWS
+#if ANDROID || IOS || WINDOWS
                     mappy.MoveToRegion(new MapSpan(new Location(listNearestShops[0].Latitude, listNearestShops[0].Longtitude), 0.05, 0.05));
 #else
                     await this.NavigationShopViewModel.OpenMapWithChoosenCompanies(listNearestShops[0]);

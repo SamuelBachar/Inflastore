@@ -162,7 +162,7 @@ public partial class CartListView : ContentPage
                         Unit unit = listUnits.Where(unit => item.Unit_Id == unit.Id).First();
 
                         string name = item.Name;
-                        string finalName = $"{cartItem.CntOfItem}x {item.Name}";
+                        string finalName = $"{cartItem.CntOfItem}x {item.Name} {unit.Tag}";
                         string unitTag = unit.Tag;
                         int cntOfItem = cartItem.CntOfItem;
                         int idInList = idInListHelp;
@@ -221,7 +221,7 @@ public partial class CartListView : ContentPage
                 Unit unit = listUnits.Where(unit => item.Unit_Id == unit.Id).First();
 
                 string name = item.Name;
-                string finalName = $"{cartItem.CntOfItem}x {item.Name}";
+                string finalName = $"{cartItem.CntOfItem}x {item.Name} {unit.Tag}";
                 string unitTag = unit.Tag;
                 int cntOfItem = cartItem.CntOfItem;
                 int idInList = idInListHelp;

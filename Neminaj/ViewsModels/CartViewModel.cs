@@ -35,7 +35,7 @@ public partial class CartViewModel : ObservableObject
 
     public void ChangeFinalNameOfItem(ItemChoosen item)
     {
-        item.FinalName = $"{item.CntOfItems}x {item.Name}";
+        item.FinalName = $"{item.CntOfItems}x {item.Name} {item.UnitTag}";
         //ObservableItemsChoosed[idInList].FinalName = $"{ObservableItemsChoosed[idInList].CntOfItems}x {ObservableItemsChoosed[idInList].Name}";
     }
 

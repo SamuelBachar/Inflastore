@@ -1204,31 +1204,6 @@ public partial class PriceComparerView : ContentPage
         }
     }
 
-    private string GetCorrectCompanyLogoFileName(string arg_Name)
-    {
-        string retVal = "";
-
-        if (arg_Name == "Billa")
-            retVal = "billa_logo.png";
-        else if (arg_Name == "Lidl")
-            retVal = "lidl_logo.png";
-        else if (arg_Name == "Tesco")
-            retVal = "tesco_logo1.png";
-        else if (arg_Name == "Kaufland")
-            retVal = "kaufland_logo.png";
-        else if (arg_Name == "Test")
-            retVal = "dotnet_bot.svg";
-        else if (arg_Name == "Test1")
-            retVal = "dotnet_bot.svg";
-        else if (arg_Name == "Test2")
-            retVal = "dotnet_bot.svg";
-        else if (arg_Name == "Test3")
-            retVal = "dotnet_bot.svg";
-
-        return retVal;
-    }
-
-    //private void Button_Compare_Clicked(object sender, EventArgs e)
     private void ComparePrices()
     {
         for (int viewIndex = 0; viewIndex < PageLayoutInfo.CntOfViewsInPage; viewIndex++)
@@ -1368,7 +1343,6 @@ public partial class PriceComparerView : ContentPage
             summaryPrice += smallestPriceInRow;
             summaryPriceDiscount += smallestPriceDiscountInRow;
         }
-
 
         for (int viewIndex = 0; viewIndex < PageLayoutInfo.CntOfViewsInPage; viewIndex++)
         {
