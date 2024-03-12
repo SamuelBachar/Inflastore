@@ -259,22 +259,6 @@ public partial class SettingsView : ContentPage
 
                     gridCustomers.Add(image, col + 1, row);
 
-                    // From byte array
-                    //var stream = new MemoryStream(ListComp[helpCounter].Image);
-                    //{
-                    //    Image image = new Image
-                    //    {
-
-                    //        Source = ImageSource.FromStream(() => stream),
-
-                    //        Aspect = Aspect.AspectFit,
-                    //        HorizontalOptions = LayoutOptions.StartAndExpand
-                    //    };
-
-                    //    ListImage.Add(image);
-                    //    gridCustomers.Add(image, col + 1, row);
-                    //}
-
                     helpCounter++;
                 }
 
@@ -303,11 +287,6 @@ public partial class SettingsView : ContentPage
             {
                 new ColumnDefinition(GridLength.Star),
                 new ColumnDefinition(GridLength.Auto),
-                //new ColumnDefinition(), // To fit parent grid layout
-                //new ColumnDefinition(), // To fit parent grid layout
-                //new ColumnDefinition(), // To fit parent grid layout
-                //new ColumnDefinition(), // To fit parent grid layout
-                //new ColumnDefinition() // To fit parent grid layout
             },
                 RowDefinitions =
             {

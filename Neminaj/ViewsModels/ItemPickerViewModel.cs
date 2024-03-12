@@ -13,6 +13,8 @@ namespace Neminaj.ViewsModels;
 [QueryProperty(nameof(ItemRepo), nameof(ItemRepo))]
 [QueryProperty(nameof(UnitRepo), nameof(UnitRepo))]
 [QueryProperty(nameof(CartRepo), nameof(CartRepo))]
+[QueryProperty(nameof(CompanyRepo), nameof(CompanyRepo))]
+[QueryProperty(nameof(ItemPriceRepo), nameof(ItemPriceRepo))]
 
 public partial class ItemPickerViewModel : ObservableObject
 {
@@ -27,6 +29,12 @@ public partial class ItemPickerViewModel : ObservableObject
 
     [ObservableProperty]
     public SavedCartRepository cartRepo;
+
+    [ObservableProperty]
+    public CompanyRepository companyRepo;
+
+    [ObservableProperty]
+    public ItemPriceRepository itemPriceRepo;
 
     public ItemPickerViewModel()
     {

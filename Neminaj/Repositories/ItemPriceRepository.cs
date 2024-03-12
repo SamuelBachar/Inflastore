@@ -64,7 +64,7 @@ public class ItemPriceRepository
     {
         if (_listItemsPrices != null)
         {
-            return _listItemsPrices.Where(item => listItemIds.Contains(item.Id) && listCompIds.Contains(item.Company_Id)).ToList();
+            return _listItemsPrices.Where(item => listItemIds.Contains(item.Item_Id) && listCompIds.Contains(item.Company_Id)).ToList();
         }
         else
         {

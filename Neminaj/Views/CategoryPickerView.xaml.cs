@@ -17,9 +17,15 @@ public partial class CategoryPickerView : ContentPage
 
     SavedCartRepository _savedCartRepo { get; set; } = null;
 
-    PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam polôžky ...");
+    CompanyRepository _companyRepo { get; set; } = null;
 
-    public CategoryPickerView(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo, CategoryRepository categoryRepository)
+    ItemPriceRepository _itemPriceRepo { get; set; } = null;
+
+    bool AppDataLoaded { get; set; } = false;
+
+    PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam polôžky, ceny a obchody ...");
+
+    public CategoryPickerView(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo, CategoryRepository categoryRepository, CompanyRepository companyRepository, ItemPriceRepository itemPriceRepository)
     {
         InitializeComponent();
 
@@ -29,6 +35,8 @@ public partial class CategoryPickerView : ContentPage
         _itemRepo = itemRepo;
         _unitRepo = unitRepo;
         _savedCartRepo = cartRepo;
+        _companyRepo = companyRepository;
+        _itemPriceRepo = itemPriceRepository;
 
         this.Appearing += (s, e) => { this.Content = _popUpIndic; };
     }
@@ -50,6 +58,17 @@ public partial class CategoryPickerView : ContentPage
 
         CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
 
+        if (!AppDataLoaded)
+        {
+            await _itemRepo.GetAllItemsAsync();
+            await _itemPriceRepo.GetAllItemPricesAsync();
+            await _unitRepo.GetAllUnitsAsync();
+            await _companyRepo.GetAllCompaniesAsync();
+
+            AppDataLoaded = true;
+        }
+
+
         this.Content = this.MainControlWrapper;
     }
 
@@ -63,7 +82,9 @@ public partial class CategoryPickerView : ContentPage
                 ["Category"] = category,
                 ["ItemRepo"] = _itemRepo,
                 ["UnitRepo"] = _unitRepo,
-                ["CartRepo"] = _savedCartRepo
+                ["CartRepo"] = _savedCartRepo,
+                ["CompanyRepo"] = _companyRepo,
+                ["ItemPriceRepo"] = _itemPriceRepo
             });
         }
     }
