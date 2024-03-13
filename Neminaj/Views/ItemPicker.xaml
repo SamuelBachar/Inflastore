@@ -13,46 +13,39 @@
                 </Border.StrokeShape>
                 <SearchBar x:Name="SearchBar" IsEnabled="True" Placeholder="Hľadaj položku" TextChanged="SearchBar_TextChanged" HorizontalOptions="Fill" />
             </Border>
-            <ScrollView Grid.Row="1" Grid.Column="0">
-                <Grid Padding="5" RowDefinitions="Auto, 0.15*, *"  ColumnDefinitions="*, *" >
-                    <VerticalStackLayout Grid.ColumnSpan="2" Spacing="20">
-                        <CollectionView
+            <CollectionView Grid.Row="1" Grid.Column="0"
                                 ItemsLayout="{OnIdiom Phone='VerticalGrid, 1', Tablet='VerticalGrid, 1', Desktop='VerticalGrid, 2'}"
                                 x:Name="listItem"
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
                                 BackgroundColor="Transparent"
                                 SelectionMode="Single"
                                 VerticalScrollBarVisibility="Always"
-                                SelectionChanged="listItem_SelectionChanged">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid RowDefinitions="*, *, 2" ColumnDefinitions="{OnIdiom Phone='96, *', Tablet='96, *', Desktop='128, *'}" RowSpacing="5">
-                                        <Image Grid.Row="0" Grid.Column="0" HeightRequest="{OnIdiom Phone='96', Tablet='96', Desktop='128'}" WidthRequest="{OnIdiom Phone='96', Tablet='96', Desktop='128'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ImageUrl}"/>
-                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" LineBreakMode="WordWrap" FontAutoScalingEnabled="True" HorizontalOptions="Start" VerticalOptions="Center"></Label>
-                                        <Grid x:Name="GridItemPrices" Grid.Row="1" Grid.Column="1" RowDefinitions="*, *" ColumnDefinitions="{OnIdiom Phone='48, *, *, 48, *, *', Tablet='48, *, *, 48, *, *', Desktop='64, *, *, 64, *, *'}">
-                                            <Image Grid.Row="0" Grid.Column="0" HeightRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" WidthRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ListPricesPerCompanies[0].CompanyImgUrl}"/>
-                                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding ListPricesPerCompanies[0].Price}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                            <Label Grid.Row="0" Grid.Column="2" Text="{Binding ListPricesPerCompanies[0].PriceDiscount}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                            <Image Grid.Row="0" Grid.Column="3" HeightRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" WidthRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ListPricesPerCompanies[1].CompanyImgUrl}"/>
-                                            <Label Grid.Row="0" Grid.Column="4" Text="{Binding ListPricesPerCompanies[1].Price}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                            <Label Grid.Row="0" Grid.Column="5" Text="{Binding ListPricesPerCompanies[1].PriceDiscount}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                            <Image Grid.Row="1" Grid.Column="0" HeightRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" WidthRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ListPricesPerCompanies[2].CompanyImgUrl}"/>
-                                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding ListPricesPerCompanies[2].Price}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                            <Label Grid.Row="1" Grid.Column="2" Text="{Binding ListPricesPerCompanies[2].PriceDiscount}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                            <Image Grid.Row="1" Grid.Column="3" HeightRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" WidthRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ListPricesPerCompanies[3].CompanyImgUrl}"/>
-                                            <Label Grid.Row="1" Grid.Column="4" Text="{Binding ListPricesPerCompanies[3].Price}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                            <Label Grid.Row="1" Grid.Column="5" Text="{Binding ListPricesPerCompanies[3].PriceDiscount}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                        </Grid>
-                                        <Line  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>
-                                    </Grid>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </VerticalStackLayout>
-                </Grid>
-             </ScrollView>
+                                SelectionChanged="listItem_SelectionChanged"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="FillAndExpand">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid RowDefinitions="136, *, 2" ColumnDefinitions="{OnIdiom Phone='128, *', Tablet='96, *', Desktop='128, *'}" RowSpacing="5">
+                            <Image Grid.Row="0" Grid.Column="0" HeightRequest="{OnIdiom Phone='128', Tablet='96', Desktop='128'}" WidthRequest="{OnIdiom Phone='128', Tablet='96', Desktop='128'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ImageUrl}"/>
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Name}" LineBreakMode="WordWrap" FontAutoScalingEnabled="True" HorizontalOptions="Start" VerticalOptions="Center"></Label>
+                            <Grid x:Name="GridItemPrices" Grid.Row="1" Grid.Column="1" RowDefinitions="*, *" ColumnDefinitions="{OnIdiom Phone='56, *, *, 56, *, *', Tablet='48, *, *, 48, *, *', Desktop='64, *, *, 64, *, *'}">
+                                <!--<Image Grid.Row="0" Grid.Column="0" HeightRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" WidthRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ListPricesPerCompanies[0].CompanyImgUrl}"/> -->
+                                <!--<Label Grid.Row="0" Grid.Column="1" Text="{Binding ListPricesPerCompanies[0].Price}" HorizontalOptions="Center" VerticalOptions="Center" /> -->
+                                <!--<Label Grid.Row="0" Grid.Column="2" Text="{Binding ListPricesPerCompanies[0].PriceDiscount}" HorizontalOptions="Center" VerticalOptions="Center" /> -->
+                                <!--<Image Grid.Row="0" Grid.Column="3" HeightRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" WidthRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ListPricesPerCompanies[1].CompanyImgUrl}"/>-->
+                                <!--<Label Grid.Row="0" Grid.Column="4" Text="{Binding ListPricesPerCompanies[1].Price}" HorizontalOptions="Center" VerticalOptions="Center" />-->
+                                <!--<Label Grid.Row="0" Grid.Column="5" Text="{Binding ListPricesPerCompanies[1].PriceDiscount}" HorizontalOptions="Center" VerticalOptions="Center" />-->
+                                <!--<Image Grid.Row="1" Grid.Column="0" HeightRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" WidthRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ListPricesPerCompanies[2].CompanyImgUrl}"/>-->
+                                <!--<Label Grid.Row="1" Grid.Column="1" Text="{Binding ListPricesPerCompanies[2].Price}" HorizontalOptions="Center" VerticalOptions="Center" />-->
+                                <!--<Label Grid.Row="1" Grid.Column="2" Text="{Binding ListPricesPerCompanies[2].PriceDiscount}" HorizontalOptions="Center" VerticalOptions="Center" />-->
+                                <!--<Image Grid.Row="1" Grid.Column="3" HeightRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" WidthRequest="{OnIdiom Phone='48', Tablet='48', Desktop='64'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ListPricesPerCompanies[3].CompanyImgUrl}"/>-->
+                                <!--<Label Grid.Row="1" Grid.Column="4" Text="{Binding ListPricesPerCompanies[3].Price}" HorizontalOptions="Center" VerticalOptions="Center" />-->
+                                <!--<Label Grid.Row="1" Grid.Column="5" Text="{Binding ListPricesPerCompanies[3].PriceDiscount}" HorizontalOptions="Center" VerticalOptions="Center" />-->
+                            </Grid>
+                            <Line  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="DarkSlateGrey"></Line>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
             <controls:CartCounterControlView Grid.Row="2" Grid.Column="0" HorizontalOptions="End" VerticalOptions="End" x:Name="CartCounterControlView" />
         </Grid>
     </ContentPage.Content>
