@@ -5,6 +5,7 @@ using Neminaj.Models;
 using Neminaj.Repositories;
 using Neminaj.ViewsModels;
 using System.Collections.ObjectModel;
+using static Xamarin.Google.Crypto.Tink.Shaded.Protobuf.Internal;
 
 namespace Neminaj.Views;
 
@@ -38,7 +39,7 @@ public partial class CartView : ContentPage
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
-        listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens();
+        listItemChoosen.ItemsSource = CartViewModel.GetItemChoosens().OrderBy(item => item.Company_Id);
     }
 
     private async void Delete_Clicked(object sender, EventArgs e)
@@ -47,12 +48,12 @@ public partial class CartView : ContentPage
         {
             await semaphoreDeleteItem.WaitAsync();
 
-            int idInList = int.Parse(((Microsoft.Maui.Controls.ImageButton)(sender)).ClassId);
+            ItemChoosen itemChoosen = (ItemChoosen)((Microsoft.Maui.Controls.ImageButton)(sender)).CommandParameter;
 
-            if (_lastDeletedItemId != idInList)
+            if (_lastDeletedItemId != itemChoosen.IdInList)
             {
-                _lastDeletedItemId = idInList;
-                CartViewModel.DeleteChoosenItem(idInList);
+                _lastDeletedItemId = itemChoosen.IdInList;
+                CartViewModel.DeleteChoosenItem(itemChoosen);
 
                 // Make sure someone is listening to event
                 if (On_CartView_ItemRemovedFromList != null)
@@ -71,22 +72,38 @@ public partial class CartView : ContentPage
 
     private void EntryCntOfItem_TextChanged(object sender, TextChangedEventArgs e)
     {
-        int idInList = 0;
-
-        if (int.TryParse(((Entry)sender).ClassId, out idInList))
+        try
         {
-            ItemChoosen itemChoosen = CartViewModel.GetItemChoosens().Where(item => item.IdInList == idInList).First();
+            int idInList = 0;
 
-            CartViewModel.ChangeFinalNameOfItem(itemChoosen);
-
-            // Make sure someone is listening to event
-            if (OnItemCountOf_Changed != null)
+            if (int.TryParse(((Entry)sender).ClassId, out idInList))
             {
-                int cntOfItem = itemChoosen.CntOfItems;
-                string finalName = itemChoosen.FinalName;
-                ItemCountOf_Changed_EventArgs args = new ItemCountOf_Changed_EventArgs(idInList, cntOfItem, finalName);
-                OnItemCountOf_Changed(this, args);
+                ItemChoosen itemChoosen = CartViewModel.GetItemChoosens().Where(item => item.IdInList == idInList).First();
+                CartViewModel.ChangeFinalNameOfItem(itemChoosen);
+
+                // Make sure someone is listening to event
+                if (OnItemCountOf_Changed != null)
+                {
+                    int cntOfItem = itemChoosen.CntOfItems;
+                    string finalName = itemChoosen.FinalName;
+                    ItemCountOf_Changed_EventArgs args = new ItemCountOf_Changed_EventArgs(idInList, cntOfItem, finalName);
+                    OnItemCountOf_Changed(this, args);
+                }
+
+                // Calculate Price and PriceDiscount
+
+                itemChoosen.PriceCartCalc = (float.Parse(itemChoosen.PriceCartOrig) * itemChoosen.CntOfItems).ToString("0.00");
+                itemChoosen.PriceDiscountCalc = (float.Parse(itemChoosen.PriceDiscountOrig) * itemChoosen.CntOfItems).ToString("0.00");
+
+                // Find Text Labels and set new text
+                Grid temp = ((Grid)((Entry)sender).Parent).Children.Where(child => child is Grid).Cast<Grid>().First();
+                ((Label)temp.Children[1]).Text = $"Cena: {itemChoosen.PriceCartCalc}";
+                ((Label)temp.Children[2]).Text = $"Cena so zľavou: {itemChoosen.PriceDiscountCalc}";
             }
+        }
+        finally
+        {
+            //semaphoreDeleteItem.Release();
         }
     }
 

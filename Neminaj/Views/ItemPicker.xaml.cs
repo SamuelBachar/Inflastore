@@ -12,6 +12,7 @@ namespace Neminaj.Views;
 
 public class PricesPerCompany
 {
+    public int Company_Id { get; set; }
     public string CompanyImgUrl { get; set; }
 
     public string Price { get; set; }
@@ -21,6 +22,7 @@ public class PricesPerCompany
 
 public class ItemPickerModel : Item
 {
+    public List<bool> ListVisibleRows { get; set; } = new List<bool>() { false, false, false, false };
     public List<PricesPerCompany> ListPricesPerCompanies { get; set; } = new List<PricesPerCompany>();
 }
 
@@ -57,7 +59,6 @@ public partial class ItemPicker : ContentPage
 
     bool WasLoaded { get; set; } = false;
 
-    private bool Rotate = true;
     public ItemPicker(ItemPickerViewModel itemPickerViewModel)
     {
         InitializeComponent();
@@ -106,7 +107,6 @@ public partial class ItemPicker : ContentPage
                 foreach (Item item in listItemsPerCategory)
                 {
                     ItemPickerModel itemPickerModel = new ItemPickerModel();
-
                     itemPickerModel.Id = item.Id;
                     itemPickerModel.Name = item.Name;
                     itemPickerModel.ImageUrl = item.ImageUrl;
@@ -121,15 +121,20 @@ public partial class ItemPicker : ContentPage
                         pricesPerCompany.Price = itemPrice.Price.ToString("0.00");
                         pricesPerCompany.PriceDiscount = itemPrice.PriceDiscount.ToString("0.00"); // todo otestovat ze ked neni ziadna cena co je za hodnotu
                         pricesPerCompany.CompanyImgUrl = _listCompany.Where(comp => comp.Id == itemPrice.Company_Id).First().Url;
+                        pricesPerCompany.Company_Id = itemPrice.Company_Id;
 
                         itemPickerModel.ListPricesPerCompanies.Add(pricesPerCompany);
                     }
 
+                    // Set rows visibility
+                    int cntRows = (itemPickerModel.ListPricesPerCompanies.Count / 2) + (itemPickerModel.ListPricesPerCompanies.Count % 2);
+                    for (int i = 0; (i < cntRows && i < itemPickerModel.ListVisibleRows.Count); i++)
+                    {
+                        itemPickerModel.ListVisibleRows[i] = true;
+                    }
+
                     _listItemPickerModel.Add(itemPickerModel);
                 }
-
-                //CreateGridItemPrice(_listItemPickerModel.OrderBy(n => n.Name).ToList(), _listIdsSavedAndChoosedCompanies.Count);
-
             });
 
             this.listItem.ItemsSource = _listItemPickerModel.OrderBy(n => n.Name);
@@ -207,7 +212,7 @@ public partial class ItemPicker : ContentPage
     {
         if (Connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            Item item = ((Item)e.CurrentSelection.First());
+            ItemPickerModel item = ((ItemPickerModel)e.CurrentSelection.First());
             int idInList = ObservableItemsChoosed.Count == 0 ? 0 : ObservableItemsChoosed.Last().IdInList + 1;
 
             ObservableItemsChoosed.Add(new ItemChoosen
@@ -216,7 +221,7 @@ public partial class ItemPicker : ContentPage
                 IdInList = idInList,
                 Name = item.Name,
                 CntOfItems = 1,
-                UnitTag = _listUnits.First(u => u.Id == item.Unit_Id).Tag
+                UnitTag = _listUnits.First(u => u.Id == item.Unit_Id).Tag,
             });
 
             await CartCounterControlView.IncreaseShoppingCartCounter();
@@ -227,62 +232,37 @@ public partial class ItemPicker : ContentPage
         }
     }
 
-    private void CreateGridItemPrice(List<ItemPickerModel> listItemPickerModel, int companyCount)
+    private async void Button_Clicked(object sender, EventArgs e)
     {
-        // Add Rows ////
-        int cntRows = (companyCount / 2) + (companyCount % 2);
-        
-        for (int i = 0; i < cntRows; i++)
+        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
         {
-            _gridItemPrice.AddRowDefinition(new RowDefinition(GridLength.Star));
-        }
-        ///////////////
+            Button clickedButton = ((Button)sender);
 
-        // Add Columns ////
-        DeviceIdiom currIdiom = DeviceInfo.Current.Idiom;
-        double compImgWidth = 0.0d;
+            ItemPickerModel itemModel = (ItemPickerModel)clickedButton.CommandParameter;
+            int idInList = ObservableItemsChoosed.Count == 0 ? 0 : ObservableItemsChoosed.Last().IdInList + 1;
+            PricesPerCompany pricesPerCompany = itemModel.ListPricesPerCompanies.Where(ppc => ppc.Company_Id == int.Parse(clickedButton.ClassId)).First();
 
-        if ((currIdiom == DeviceIdiom.Phone) || (currIdiom == DeviceIdiom.Tablet))
-        {
-            compImgWidth = 48.0d;
-        }
-        else
-        {
-            compImgWidth = 64.0d;
-        }
+            ObservableItemsChoosed.Add(new ItemChoosen
+            {
+                Id = itemModel.Id,
+                IdInList = idInList,
+                Name = itemModel.Name,
+                CntOfItems = 1,
+                UnitTag = _listUnits.First(u => u.Id == itemModel.Unit_Id).Tag,
+                ItemImgUrl = itemModel.ImageUrl,
+                Company_Id = pricesPerCompany.Company_Id,
+                CompanyImgUrl = pricesPerCompany.CompanyImgUrl,
+                PriceCartOrig = pricesPerCompany.Price,
+                PriceDiscountOrig = pricesPerCompany.PriceDiscount,
+                PriceCartCalc = pricesPerCompany.Price,
+                PriceDiscountCalc = pricesPerCompany.PriceDiscount,
+            });
 
-        int cntCols = 0;
-        if (companyCount == 1)
-        {
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(new GridLength(compImgWidth)));
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(GridLength.Star));
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(GridLength.Star));
-            cntCols = 1;
+            await CartCounterControlView.IncreaseShoppingCartCounter();
         }
         else
         {
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(new GridLength(compImgWidth)));
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(GridLength.Star));
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(GridLength.Star));
-
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(new GridLength(compImgWidth)));
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(GridLength.Star));
-            _gridItemPrice.AddColumnDefinition(new ColumnDefinition(GridLength.Star));
-            cntCols = 2;
+            await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné pridať položku", "Zavrieť");
         }
-
-        //foreach (ListPricesPerCompanies)
-
-        //for (int iRow = 0; iRow < cntRows; iRow++)
-        //{
-        //    for (int iCol = 0; iCol < cntCols; iCol++)
-        //    {
-        //        Image image = new Image();
-        //        image.SetBinding(Image.SourceProperty, )
-        //                Label.Ro
-
-        //    }
-        //}
-        
     }
 }

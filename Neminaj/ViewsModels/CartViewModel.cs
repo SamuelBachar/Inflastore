@@ -25,12 +25,9 @@ public partial class CartViewModel : ObservableObject
     {
     }
 
-    public void DeleteChoosenItem(int idInList)
+    public void DeleteChoosenItem(ItemChoosen itemChoosen)
     {
-        if (ObservableItemsChoosed.Where(item => item.IdInList == idInList).Count() > 0)
-        {
-            ObservableItemsChoosed.Remove(ObservableItemsChoosed.Where(item => item.IdInList == idInList).First());
-        }
+        ObservableItemsChoosed.Remove(itemChoosen);
     }
 
     public void ChangeFinalNameOfItem(ItemChoosen item)

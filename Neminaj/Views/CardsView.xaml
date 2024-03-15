@@ -5,7 +5,7 @@
              x:Class="Neminaj.Views.CardsView"
              Title="Klubové karty">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Pridať" IconImageSource="add_symbol.png" Clicked="ToolbarCardAdd_Clicked" />
+        <ToolbarItem Text="Pridať" IconImageSource="add_symbol_card_view.svg" Clicked="ToolbarCardAdd_Clicked" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>

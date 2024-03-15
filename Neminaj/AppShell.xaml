@@ -13,8 +13,8 @@
 
     <ShellContent
         Title=""
-        ContentTemplate="{DataTemplate localViews:LoginView}"
-        Route="LoginView" />
+        ContentTemplate="{DataTemplate localViews:CategoryPickerView}"
+        Route="CategoryPickerView" />
 
     <TabBar x:Name="MenuTapBar">
         <Tab Title="Nákup" Icon="cart.png">

@@ -20,11 +20,21 @@
                 <DataTemplate>
                     <Frame>
                         <Frame.Content>
-                            <Grid ColumnDefinitions="*, 0.15*, 0.15*, 0.15*, Auto" RowDefinitions="Auto">
-                                <Label Grid.Row="0" Grid.Column="0" FontAttributes="Bold" FontSize="14" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" VerticalTextAlignment="End" />
-                                <Entry x:Name="EntryCntOfItem" Text="{Binding CntOfItems}" Grid.Column="1" Grid.ColumnSpan="2" Keyboard="Numeric" VerticalOptions="Center" VerticalTextAlignment="Center" TextChanged="EntryCntOfItem_TextChanged" ClassId="{Binding IdInList}"></Entry>
-                                <Label Text="{Binding UnitTag}" VerticalOptions="Center" Grid.Column="3" HorizontalOptions="Start"/>
-                                <ImageButton Grid.Row="0" Grid.Column="4" HeightRequest="30" WidthRequest="30" ClassId="{Binding IdInList}" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.png" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="End"/>
+                            <Grid ColumnDefinitions="72, *, 0.5*, 0.15*, 0.25*" RowDefinitions="Auto, Auto, *" RowSpacing="5">
+                                <Image Grid.Row="0" Grid.Column="0" HeightRequest="{OnIdiom Phone='64', Tablet='64', Desktop='96'}" WidthRequest="{OnIdiom Phone='64', Tablet='64', Desktop='96'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ItemImgUrl}" />
+                                <Label Grid.Row="0" Grid.Column="1" FontAttributes="Bold" FontSize="14" Text="{Binding Name}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" VerticalTextAlignment="End" />
+                                <Entry Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" x:Name="EntryCntOfItem" Text="{Binding CntOfItems}" Keyboard="Numeric" ReturnType="Done" VerticalOptions="Center" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center" TextChanged="EntryCntOfItem_TextChanged" ClassId="{Binding IdInList}" ReturnCommandParameter="{Binding .}"></Entry>
+                                <Label Grid.Row="0" Grid.Column="3" Text="{Binding UnitTag}" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                <ImageButton Grid.Row="0" Grid.Column="4" HeightRequest="30" WidthRequest="30" CommandParameter="{Binding .}" CornerRadius="10" BackgroundColor="Orange" Source="recycle_bin.png" Clicked="Delete_Clicked" VerticalOptions="Center" HorizontalOptions="End"/>
+
+                                <Line  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" BackgroundColor="DarkSlateGrey"></Line>
+
+                                <Grid ColumnDefinitions="72,0.8*,*" RowDefinitions="*" Grid.Row="2" Grid.ColumnSpan="5">
+                                    <Image Grid.Row="0" Grid.Column="0" HeightRequest="{OnIdiom Phone='32', Tablet='40', Desktop='96'}" WidthRequest="{OnIdiom Phone='32', Tablet='40', Desktop='96'}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding CompanyImgUrl}" />
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding PriceCartCalc, StringFormat='\Cena: {0\}'}" HorizontalOptions="Start" VerticalOptions="Center" />
+                                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding PriceDiscountCalc, StringFormat='\Cena so zľavou: {0\}'}" HorizontalOptions="Start" VerticalOptions="Center"/>
+                                </Grid>
+
                             </Grid>
                         </Frame.Content>
                     </Frame>

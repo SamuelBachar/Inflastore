@@ -49,27 +49,27 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddDbContext<DataContext>();
 
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(jwt =>
-{
-    //var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value); // orig vo videu https://youtu.be/Y-MjCw6thao?t=2126
-    var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value!);
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//}).AddJwtBearer(jwt =>
+//{
+//    //var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value); // orig vo videu https://youtu.be/Y-MjCw6thao?t=2126
+//    var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value!);
 
-    jwt.SaveToken = true;
-    jwt.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false, // for development common isue and problem with https https://youtu.be/Y-MjCw6thao?t=2307 vysvetluje preco ale v produkci to MUSI BYT TRUE !!! 
-        ValidateAudience = false, // to iste ako vyssie
-        RequireExpirationTime = false, // needs to be updated when refresh token is implemented // vysvetlenie preco false https://youtu.be/Y-MjCw6thao?t=2368 ---> tu refresh token https://www.youtube.com/watch?v=2_H0Zj-C8EM&ab_channel=MohamadLawand
-        ValidateLifetime = true // validating lifetime of token we are sending, if we send token with existence of 1 minute he can calculate if it is already expired or not
-    };
-});
+//    jwt.SaveToken = true;
+//    jwt.TokenValidationParameters = new TokenValidationParameters()
+//    {
+//        ValidateIssuerSigningKey = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(key),
+//        ValidateIssuer = false, // for development common isue and problem with https https://youtu.be/Y-MjCw6thao?t=2307 vysvetluje preco ale v produkci to MUSI BYT TRUE !!! 
+//        ValidateAudience = false, // to iste ako vyssie
+//        RequireExpirationTime = false, // needs to be updated when refresh token is implemented // vysvetlenie preco false https://youtu.be/Y-MjCw6thao?t=2368 ---> tu refresh token https://www.youtube.com/watch?v=2_H0Zj-C8EM&ab_channel=MohamadLawand
+//        ValidateLifetime = true // validating lifetime of token we are sending, if we send token with existence of 1 minute he can calculate if it is already expired or not
+//    };
+//});
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -94,17 +94,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles(); // ked chcem aj cez url ziskat obsah vo wwwroot priecinku
-
-// problem s 
-//app.UseFileServer(new FileServerOptions
-//{
-//    FileProvider = new PhysicalFileProvider
-//    (
-//        Path.Combine(Directory.GetCurrentDirectory(), "StaticFile")
-//    ),
-
-//    RequestPath = "/StaticFile"
-//});
 
 #if !DEBUG
 app.UseHttpsRedirection();
