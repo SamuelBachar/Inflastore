@@ -16,13 +16,11 @@ public class CardData
     public bool IsKnownCard { get; set; }
 }
 
-public class ClubCardRepository
+public class ClubCardRepository : ParentRepository<CardData>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
     private List<ClubCardDTO> _listClubCard { get; set; } = null;
-
-    List<CardData> FilteredItems = new List<CardData>();
 
     public ClubCardRepository(IHttpClientFactory httpClientFactory)
     {
@@ -32,7 +30,7 @@ public class ClubCardRepository
 
     public async Task<List<ClubCardDTO>> GetAllClubCards()
     {
-        if (_listClubCard != null)
+        if (_listClubCard != null && !base.GetUpdatedNeeded())
         {
             return _listClubCard;
         }
@@ -69,7 +67,7 @@ public class ClubCardRepository
 
     public async Task<List<ClubCardDTO>> GetSpecificClubCardAsync(List<int> listCompaniesIds)
     {
-        if (_listClubCard != null)
+        if (_listClubCard != null && !base.GetUpdatedNeeded())
         {
             return _listClubCard.Where(card => listCompaniesIds.Contains(card.Company_Id)).ToList();
         }
@@ -107,7 +105,7 @@ public class ClubCardRepository
         {
             listCardDatas.ForEach(async (card) =>
             {
-                string strWithoutDiac = await removeDiacritics(card.Name);
+                string strWithoutDiac = await base.RemoveDiacritics(card.Name);
 
                 if (strWithoutDiac.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))
                     FilteredItems.Add(card);
@@ -115,34 +113,5 @@ public class ClubCardRepository
         });
 
         return FilteredItems;
-    }
-
-    public async Task<string> removeDiacritics(string text)
-    {
-        string result = string.Empty;
-
-        await Task.Run(() =>
-        {
-            string formD = text.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder();
-
-            foreach (char ch in formD)
-            {
-                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(ch);
-                if (uc != UnicodeCategory.NonSpacingMark)
-                {
-                    sb.Append(ch);
-                }
-            }
-
-            result = sb.ToString().Normalize(NormalizationForm.FormC);
-        });
-
-        return result;
-    }
-
-    public void ClearFilteredList()
-    {
-        FilteredItems.Clear();
     }
 }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Neminaj.Repositories
 {
-    public class SavedCardRepository
+    public class SavedCardRepository : ParentRepository<SavedCard>
     {
-        List<SavedCard> FilteredItems = new List<SavedCard>();
+        //List<SavedCard> FilteredItems = new List<SavedCard>();
         public SavedCardRepository()
         {
                 
@@ -112,42 +112,13 @@ namespace Neminaj.Repositories
 
             listItem.ForEach(async (card) =>
             {
-                string strWithoutDiac = await removeDiacritics(card.CardName);
+                string strWithoutDiac = await base.RemoveDiacritics(card.CardName);
 
-                if (strWithoutDiac.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))
+                if (strWithoutDiac.Contains(filterText, StringComparison.OrdinalIgnoreCase))
                     FilteredItems.Add(card);
             });
 
             return FilteredItems;
-        }
-
-        public async Task<string> removeDiacritics(string text)
-        {
-            string result = string.Empty;
-
-            await Task.Run(() =>
-            {
-                string formD = text.Normalize(NormalizationForm.FormD);
-                StringBuilder sb = new StringBuilder();
-
-                foreach (char ch in formD)
-                {
-                    UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(ch);
-                    if (uc != UnicodeCategory.NonSpacingMark)
-                    {
-                        sb.Append(ch);
-                    }
-                }
-
-                result = sb.ToString().Normalize(NormalizationForm.FormC);
-            });
-
-            return result;
-        }
-
-        public void ClearFilteredList()
-        {
-            FilteredItems.Clear();
         }
     }
 }

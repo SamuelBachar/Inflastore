@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Neminaj.Repositories;
 
-public class CategoryRepository
+public class CategoryRepository : ParentRepository<CategoryDTO>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
@@ -26,7 +26,7 @@ public class CategoryRepository
 
     public async Task<List<CategoryDTO>> GetAllCategories()
     {
-        if (_listCategory != null)
+        if (_listCategory != null && !base.GetUpdatedNeeded())
         {
             return _listCategory;
         }
@@ -67,7 +67,7 @@ public class CategoryRepository
 
     public async Task<List<CategoryDTO>> GetSpecificCategoriesAsync(List<int> listCategoryIds)
     {
-        if (_listCategory != null)
+        if (_listCategory != null && !base.GetUpdatedNeeded())
         {
             return _listCategory.Where(category => listCategoryIds.Contains(category.Id)).ToList();
         }

@@ -167,15 +167,14 @@ public partial class ItemPicker : ContentPage
             List<int> listItemsIds = listItems.Select(item => item.Id).ToList();
             List<ItemPickerModel> listItemPickerModel = _listItemPickerModel.Where(itemPicker => listItemsIds.Contains(itemPicker.Id)).ToList();
 
-            listItem.ItemsSource = new ObservableCollection<ItemPickerModel>(listItemPickerModel);
+            listItem.ItemsSource = new ObservableCollection<ItemPickerModel>(listItemPickerModel.OrderBy(item => item.Name));
             _itemRepo.ClearFilteredList();
         }
 
         if (text.Length == 0)
         {
             _itemRepo.ClearFilteredList();
-            List<Item> listItems = await _itemRepo.GetAllItemsAsync();
-            listItem.ItemsSource = new ObservableCollection<ItemPickerModel>(_listItemPickerModel);
+            listItem.ItemsSource = new ObservableCollection<ItemPickerModel>(_listItemPickerModel.OrderBy(item => item.Name));
         }
     }
 
@@ -206,30 +205,6 @@ public partial class ItemPicker : ContentPage
 
         ObservableItemsChoosed.CollectionChanged += ItemsChoosedCollection_Changed;
         CartCounterControlView.SetShoppingCartCounter(ObservableItemsChoosed.Count);
-    }
-
-    private async void listItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
-        {
-            ItemPickerModel item = ((ItemPickerModel)e.CurrentSelection.First());
-            int idInList = ObservableItemsChoosed.Count == 0 ? 0 : ObservableItemsChoosed.Last().IdInList + 1;
-
-            ObservableItemsChoosed.Add(new ItemChoosen
-            {
-                Id = item.Id,
-                IdInList = idInList,
-                Name = item.Name,
-                CntOfItems = 1,
-                UnitTag = _listUnits.First(u => u.Id == item.Unit_Id).Tag,
-            });
-
-            await CartCounterControlView.IncreaseShoppingCartCounter();
-        }
-        else
-        {
-            await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné pridať položku", "Zavrieť");
-        }
     }
 
     private async void Button_Clicked(object sender, EventArgs e)

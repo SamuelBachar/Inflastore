@@ -19,7 +19,6 @@
                                 BackgroundColor="Transparent"
                                 SelectionMode="None"
                                 VerticalScrollBarVisibility="Always"
-                                SelectionChanged="listItem_SelectionChanged"
                                 VerticalOptions="FillAndExpand"
                                 HorizontalOptions="FillAndExpand">
                 <CollectionView.ItemTemplate>

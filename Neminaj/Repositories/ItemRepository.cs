@@ -6,9 +6,9 @@ using Item = SharedTypesLibrary.Models.API.DatabaseModels.Item;
 
 namespace Neminaj.Repositories;
 
-public class ItemRepository
+public class ItemRepository : ParentRepository<Item>
 {
-    List<Item> FilteredItems = new List<Item>();
+    //List<Item> FilteredItems = new List<Item>();
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
@@ -23,7 +23,7 @@ public class ItemRepository
 
     public async Task<List<Item>> GetAllItemsAsync()
     {
-        if (_listItem != null)
+        if (_listItem != null && !base.GetUpdatedNeeded())
         {
             return _listItem;
         }
@@ -66,7 +66,7 @@ public class ItemRepository
 
     public async Task<List<Item>> GetSpecificItemsAsync(List<int> listItemIds)
     {
-        if (_listItem != null)
+        if (_listItem != null && !base.GetUpdatedNeeded())
         {
             return _listItem.Where(item => listItemIds.Contains(item.Id)).ToList();
         }
@@ -104,20 +104,7 @@ public class ItemRepository
 
         try
         {
-            var response = await _httpClient.GetAsync("api/Items/GetAllItems");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-
-                if (!string.IsNullOrEmpty(content))
-                {
-                    listItem = JsonSerializer.Deserialize<List<Item>>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-                }
-            }
+            listItem = await GetAllItemsAsync();
 
         }
         catch (Exception ex)
@@ -127,42 +114,13 @@ public class ItemRepository
 
         listItem.ForEach(async (item) =>
         {
-            string strWithoutDiac = await removeDiacritics(item.Name);
+            string strWithoutDiac = await base.RemoveDiacritics(item.Name);
 
             if (strWithoutDiac.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))
                 FilteredItems.Add(item);
         });
 
         return FilteredItems;
-    }
-
-    public async Task<string> removeDiacritics(string text)
-    {
-        string result = string.Empty;
-
-        await Task.Run(() =>
-        {
-            string formD = text.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder();
-
-            foreach (char ch in formD)
-            {
-                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(ch);
-                if (uc != UnicodeCategory.NonSpacingMark)
-                {
-                    sb.Append(ch);
-                }
-            }
-
-            result = sb.ToString().Normalize(NormalizationForm.FormC);
-        });
-
-        return result;
-    }
-
-    public void ClearFilteredList()
-    {
-        FilteredItems.Clear();
     }
 
     public async Task AddNewItemAsync(string name)

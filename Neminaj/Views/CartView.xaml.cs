@@ -5,7 +5,6 @@ using Neminaj.Models;
 using Neminaj.Repositories;
 using Neminaj.ViewsModels;
 using System.Collections.ObjectModel;
-using static Xamarin.Google.Crypto.Tink.Shaded.Protobuf.Internal;
 
 namespace Neminaj.Views;
 

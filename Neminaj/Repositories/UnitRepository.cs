@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Neminaj.Repositories;
 
-public class UnitRepository
+public class UnitRepository : ParentRepository<Unit>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
@@ -25,7 +25,7 @@ public class UnitRepository
 
     public async Task<List<Unit>> GetAllUnitsAsync()
     {
-        if (_listUnits != null)
+        if (_listUnits != null && !base.GetUpdatedNeeded())
         {
             return _listUnits;
         }
@@ -63,7 +63,7 @@ public class UnitRepository
 
     public async Task<List<Unit>> GetSpecificUnits(List<int> listUnitIds)
     {
-        if (_listUnits != null)
+        if (_listUnits != null && !base.GetUpdatedNeeded())
         {
             return _listUnits.Where(unit => listUnitIds.Contains(unit.Id)).ToList();
         }

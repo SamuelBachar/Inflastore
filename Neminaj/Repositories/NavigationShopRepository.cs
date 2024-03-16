@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Neminaj.Repositories;
 
-public class NavigationShopRepository
+public class NavigationShopRepository : ParentRepository<NavigationShopData>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
@@ -25,7 +25,7 @@ public class NavigationShopRepository
 
     public async Task<List<NavigationShopData>> GetAllNavigShopDataAsync()
     {
-        if (_listNavigShopData != null)
+        if (_listNavigShopData != null && !base.GetUpdatedNeeded())
         {
             return _listNavigShopData;
         }
@@ -63,7 +63,7 @@ public class NavigationShopRepository
 
     public async Task<List<NavigationShopData>> GetSpecificCompaniesNavigShopsDataAsync(List<int> listCompaniesIds)
     {
-        if (_listNavigShopData != null)
+        if (_listNavigShopData != null && !base.GetUpdatedNeeded())
         {
             return _listNavigShopData.Where(navigShopData => listCompaniesIds.Contains(navigShopData.Company_Id)).ToList();
         }

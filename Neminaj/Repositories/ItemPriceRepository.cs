@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Neminaj.Repositories;
 
-public class ItemPriceRepository
+public class ItemPriceRepository : ParentRepository<ItemPrice>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
@@ -25,7 +25,7 @@ public class ItemPriceRepository
 
     public async Task<List<ItemPrice>> GetAllItemPricesAsync()
     {
-        if (_listItemsPrices != null)
+        if (_listItemsPrices != null && !base.GetUpdatedNeeded())
         {
             return _listItemsPrices;
         }
@@ -62,7 +62,7 @@ public class ItemPriceRepository
 
     public async Task<List<ItemPrice>> GetPriceItemsFilteredAsync(List<int> listCompIds, List<int> listItemIds)
     {
-        if (_listItemsPrices != null)
+        if (_listItemsPrices != null && !base.GetUpdatedNeeded())
         {
             return _listItemsPrices.Where(item => listItemIds.Contains(item.Item_Id) && listCompIds.Contains(item.Company_Id)).ToList();
         }

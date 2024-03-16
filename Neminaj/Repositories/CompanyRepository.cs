@@ -11,7 +11,7 @@ using SharedTypesLibrary.Models.API.DatabaseModels;
 
 namespace Neminaj.Repositories;
 
-public class CompanyRepository
+public class CompanyRepository : ParentRepository<CompanyDTO>
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
@@ -25,7 +25,7 @@ public class CompanyRepository
 
     public async Task<List<CompanyDTO>> GetAllCompaniesAsync()
     {
-        if (_listCompanies != null)
+        if (_listCompanies != null && !base.GetUpdatedNeeded())
         {
             return _listCompanies;
         }
@@ -62,7 +62,7 @@ public class CompanyRepository
 
     public async Task<List<CompanyDTO>> GetSpecificCompaniesAsync(List<int> listCompaniesIds)
     {
-        if (_listCompanies != null)
+        if (_listCompanies != null && !base.GetUpdatedNeeded())
         {
             return _listCompanies.Where(item => listCompaniesIds.Contains(item.Id)).ToList();
         }
