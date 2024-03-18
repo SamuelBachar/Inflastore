@@ -66,6 +66,7 @@ public partial class CategoryPickerView : ContentPage
             await _companyRepo.GetAllCompaniesAsync();
 
             AppDataLoaded = true;
+            _popUpIndic.SetLblPopUp("Načítavam dáta");
         }
 
 

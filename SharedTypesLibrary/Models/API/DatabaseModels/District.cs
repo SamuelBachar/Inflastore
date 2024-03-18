@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedTypesLibrary.Models.API.DatabaseModels;
 
-public class Region
+public class District
 {
     public int Id { get; set; }
 

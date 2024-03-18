@@ -9,4 +9,9 @@ public partial class PopUpActivityIndicator : ContentView
 		this.ActivityIndicator.IsRunning = true;
 		this.lblPopUp.Text = text;
 	}
+
+	public void SetLblPopUp(string text)
+	{
+        this.lblPopUp.Text = text;
+    }
 }

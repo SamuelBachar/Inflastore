@@ -9,7 +9,8 @@ public partial class AppShell : Shell
 	{
 		InitializeComponent();
 
-		Routing.RegisterRoute(nameof(CartView), typeof(CartView));
+        Routing.RegisterRoute(nameof(FirstStartUpView), typeof(FirstStartUpView));
+        Routing.RegisterRoute(nameof(CartView), typeof(CartView));
         Routing.RegisterRoute(nameof(SavedCartDetailView), typeof(SavedCartDetailView));
         Routing.RegisterRoute(nameof(NavigationView), typeof(NavigationView));
         Routing.RegisterRoute(nameof(AddCardView), typeof(AddCardView));
@@ -22,6 +23,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(ItemPicker), typeof(ItemPicker));
         Routing.RegisterRoute(nameof(LogOutView), typeof(LogOutView));
         Routing.RegisterRoute(nameof(CartViewSaveCart), typeof(CartViewSaveCart));
+        Routing.RegisterRoute(nameof(CategoryPickerView), typeof(CategoryPickerView));
     }
 
     // Code for closing of opened nested pages after clicking tap bar item

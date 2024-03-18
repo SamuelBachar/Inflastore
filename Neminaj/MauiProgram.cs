@@ -108,6 +108,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<CategoryRepository>();
 
         // Views
+        builder.Services.AddSingleton<FirstStartUpView>();
         builder.Services.AddSingleton<LoginView>();
         builder.Services.AddSingleton<LogOutView>();
         builder.Services.AddSingleton<PriceComparerView>();
