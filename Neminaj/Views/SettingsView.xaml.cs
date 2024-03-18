@@ -77,7 +77,6 @@ public partial class SettingsView : ContentPage
     {
         if (PageBuilded)
         {
-
             await SettingsService.Save(nameof(slider), slider.Value);
 
             foreach (CompanyCheckboxesState compChkBoxState in ListCompanyCheckboxesState)
@@ -87,7 +86,6 @@ public partial class SettingsView : ContentPage
 
             if (!await ISettingsService.ContainsStatic("SettingsAtLeastOnceSaved"))
                 await SettingsService.Save("SettingsAtLeastOnceSaved", true);
-
         }
     }
 
@@ -329,7 +327,7 @@ public partial class SettingsView : ContentPage
             };
 
             slider.ValueChanged += this.Slider_ValueChanged;
-            slider.Value = await SettingsService.Get<double>(nameof(slider), 10.0d);
+            slider.Value = await SettingsService.Get<double>(nameof(Slider), 10.0d);
             //Grid.SetColumnSpan(slider, 5);
             gridDistance.Add(slider, 0, 1);
 

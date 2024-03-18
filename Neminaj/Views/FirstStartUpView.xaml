@@ -45,24 +45,31 @@
 
         <!-- Region a District -->
         <Frame Grid.Row="4" Grid.Column="0">
-                <Grid RowDefinitions="Auto, *, *" ColumnDefinitions="*">
-                    <Label Grid.Row="0" Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center" Text="Výber okresu pre presné ceny"/>
 
-                    <Frame Grid.Row="1" Grid.Column="0" ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
+            <Grid RowDefinitions="Auto, *,*" ColumnDefinitions="*">
+                <Label Text="Výber okresu pre presné ceny" Grid.Row="0" Grid.Column="0" />
+
+                <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+
+                    <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Start">
                         <Image Source="slovakia_map.png" HeightRequest="20" WidthRequest="20" />
                     </Frame>
-                    <Frame Grid.Row="1" Grid.Column="0" HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
+                    <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
                         <Picker x:Name="RegionPicker" Title="Zvoľte kraj" Margin="20,0,0,0" TextColor="Black" VerticalOptions="Center" SelectedIndexChanged="RegionPicker_SelectedIndexChanged" />
                     </Frame>
+                </StackLayout>
 
-                    <Frame Grid.Row="2" Grid.Column="0" ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Fill">
+                <StackLayout Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+                    <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Start">
                         <Image Source="slovakia_map.png" HeightRequest="20" WidthRequest="20" />
                     </Frame>
-                    <Frame Grid.Row="2" Grid.Column="0" HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
+                    <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
                         <Picker x:Name="DistrictPicker" Title="Zvoľte okres" Margin="20,0,0,0" TextColor="Black" VerticalOptions="Center" SelectedIndexChanged="DistrictPicker_SelectedIndexChanged" />
                     </Frame>
-                </Grid>
+                </StackLayout>
+            </Grid>
         </Frame>
+
 
         <!-- Button -->
         <Button Grid.Row="5" Grid.Column="0" x:Name="BtnConfirm" Text="Potvrdiť" HorizontalOptions="Center" VerticalOptions="Center" Clicked="BtnConfirmed_Clicked" />

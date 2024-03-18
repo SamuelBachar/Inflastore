@@ -157,7 +157,7 @@ public partial class FirstStartUpView : ContentPage
     {
         if (WasFirstStartUp)
         {
-            await _settingsService.Save(nameof(this.Slider), Slider.Value);
+            await _settingsService.Save(nameof(Slider), Slider.Value);
 
             foreach (CompanySettingModel compSetModel in _listCompanySettings)
             {
@@ -166,6 +166,10 @@ public partial class FirstStartUpView : ContentPage
 
             if (!await ISettingsService.ContainsStatic("SettingsAtLeastOnceSaved"))
                 await _settingsService.Save("SettingsAtLeastOnceSaved", true);
+
+            District choosenDistrict = (District)this.DistrictPicker.SelectedItem;
+
+            await _settingsService.Save(nameof(District), choosenDistrict.Id);
         }
     }
 
@@ -210,13 +214,13 @@ public partial class FirstStartUpView : ContentPage
             1,
             new List<District>()
             {
-                new District { Id = 1, Name = "Dunajská Streda" },
-                new District { Id = 2, Name = "Galanta"},
-                new District { Id = 3, Name = "Hlohovec"},
-                new District { Id = 4, Name = "Piešťany"},
-                new District { Id = 5, Name = "Senica"},
-                new District { Id = 6, Name = "Skalica"},
-                new District { Id = 7, Name = "Trnava"},
+                new District { Id = 9, Name = "Dunajská Streda" },
+                new District { Id = 10, Name = "Galanta"},
+                new District { Id = 11, Name = "Hlohovec"},
+                new District { Id = 12, Name = "Piešťany"},
+                new District { Id = 13, Name = "Senica"},
+                new District { Id = 14, Name = "Skalica"},
+                new District { Id = 15, Name = "Trnava"},
             }
         );
 
@@ -226,15 +230,15 @@ public partial class FirstStartUpView : ContentPage
             2,
             new List<District>()
             {
-                new District { Id = 1, Name = "Bánovce nad Bebravou" },
-                new District { Id = 2, Name = "Ilava"},
-                new District { Id = 3, Name = "Myjava"},
-                new District { Id = 4, Name = "Nové Mesto nad Váhom"},
-                new District { Id = 5, Name = "Partizánske"},
-                new District { Id = 6, Name = "Považská Bystrica"},
-                new District { Id = 7, Name = "Prievidza"},
-                new District { Id = 8, Name = "Púchov"},
-                new District { Id = 9, Name = "Trenčín"},
+                new District { Id = 16, Name = "Bánovce nad Bebravou" },
+                new District { Id = 17, Name = "Ilava"},
+                new District { Id = 18, Name = "Myjava"},
+                new District { Id = 19, Name = "Nové Mesto nad Váhom"},
+                new District { Id = 20, Name = "Partizánske"},
+                new District { Id = 21, Name = "Považská Bystrica"},
+                new District { Id = 22, Name = "Prievidza"},
+                new District { Id = 23, Name = "Púchov"},
+                new District { Id = 24, Name = "Trenčín"},
             }
         );
 
