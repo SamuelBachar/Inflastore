@@ -2,8 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Neminaj.Views.FirstStartUpView"
+             xmlns:control="clr-namespace:Neminaj.ContentViews"
              Title="FirstStartUpView">
-    <Grid RowDefinitions="Auto, Auto, *, 0.25*, *, Auto" ColumnDefinitions="*" RowSpacing="10" Margin="5">
+    <Grid RowDefinitions="Auto, Auto, *, Auto" ColumnDefinitions="*" RowSpacing="10" Margin="5">
 
         <!-- Label 1 -->
         <Label Grid.Row="0" Grid.Column="0" Text="Prvotné nastavenie" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
@@ -11,67 +12,10 @@
         <!-- Label 2 -->
         <Label Grid.Row="1" Grid.Column="0" Text="(Nastavenie je možné neskôr zmeniť v MENU aplikácii)" FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center"/>
 
-        <!-- Companies -->
-        <Frame Grid.Row="2" Grid.Column="0">
-            <Grid RowDefinitions="Auto, *" ColumnDefinitions="*">
-                <Label Grid.Row="0" Grid.Column="0" Text="Výber porovnávaných reťazcov" HorizontalOptions="Start" VerticalOptions="Center" />
-                <CollectionView Grid.Row="1" Grid.Column="0" ItemsLayout="{OnIdiom Phone='VerticalGrid, 2', Tablet='VerticalGrid, 3', Desktop='VerticalGrid, 3'}"
-                            x:Name="listCompanySetting"
-                            BackgroundColor="Transparent"
-                            SelectionMode="None"
-                            VerticalScrollBarVisibility="Always"
-                            VerticalOptions="FillAndExpand"
-                            HorizontalOptions="FillAndExpand">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid RowDefinitions="{OnIdiom Phone='96', Tablet='128', Desktop='136'}" ColumnDefinitions="{OnIdiom Phone='96, *', Tablet='128, *', Desktop='136, *'}" RowSpacing="5">
-                                <Image Grid.Row="0" Grid.Column="0" HeightRequest="{OnIdiom Phone='80', Tablet='96', Desktop='128'}" WidthRequest="{OnIdiom Phone='80', Tablet='96', Desktop='128'}" Aspect="AspectFit" HorizontalOptions="Start" VerticalOptions="Center" Source="{Binding ImageUrl}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding IsChecked}" AutomationId="{Binding Id}" CheckedChanged="CheckBox_CheckedChanged"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Grid>
-        </Frame>
-
-        <!-- Distance -->
-        <Frame Grid.Row="3" Grid.Column="0">
-            <Grid RowDefinitions="Auto, *" ColumnDefinitions="*, Auto">
-                <Label Grid.Row="0" Grid.Column="0" Text="Hladať obchody v okruhu km" HorizontalOptions="Start" VerticalOptions="Center" />
-                <Slider Grid.Row="1" Grid.Column="0" x:Name="Slider" Maximum="100.0" Value="10.0" HorizontalOptions="FillAndExpand" VerticalOptions="Center" ValueChanged="Slider_ValueChanged" />
-                <Label x:Name="LabelKm" Grid.Row="1" Grid.Column="1" Text="10.0" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
-            </Grid>
-        </Frame>
-
-        <!-- Region a District -->
-        <Frame Grid.Row="4" Grid.Column="0">
-
-            <Grid RowDefinitions="Auto, *,*" ColumnDefinitions="*">
-                <Label Text="Výber okresu pre presné ceny" Grid.Row="0" Grid.Column="0" />
-
-                <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-
-                    <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Start">
-                        <Image Source="slovakia_map.png" HeightRequest="20" WidthRequest="20" />
-                    </Frame>
-                    <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
-                        <Picker x:Name="RegionPicker" Title="Zvoľte kraj" Margin="20,0,0,0" TextColor="Black" VerticalOptions="Center" SelectedIndexChanged="RegionPicker_SelectedIndexChanged" />
-                    </Frame>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
-                    <Frame ZIndex="1" HasShadow="True" BorderColor="White" HeightRequest="56" WidthRequest="56" CornerRadius="28" HorizontalOptions="Start">
-                        <Image Source="slovakia_map.png" HeightRequest="20" WidthRequest="20" />
-                    </Frame>
-                    <Frame HeightRequest="45" Margin="-20,0,0,0" Padding="0" HasShadow="True" BorderColor="White" HorizontalOptions="FillAndExpand">
-                        <Picker x:Name="DistrictPicker" Title="Zvoľte okres" Margin="20,0,0,0" TextColor="Black" VerticalOptions="Center" SelectedIndexChanged="DistrictPicker_SelectedIndexChanged" />
-                    </Frame>
-                </StackLayout>
-            </Grid>
-        </Frame>
-
+        <!-- Zoznam obchodov, vzdialenost, kraj a okres -->
+        <control:SettingsContentView Grid.Row="2" Grid.Column="0" x:Name="SettingsContentView"/>
 
         <!-- Button -->
-        <Button Grid.Row="5" Grid.Column="0" x:Name="BtnConfirm" Text="Potvrdiť" HorizontalOptions="Center" VerticalOptions="Center" Clicked="BtnConfirmed_Clicked" />
+        <Button Grid.Row="3" Grid.Column="0" x:Name="BtnConfirm" Text="Potvrdiť" HorizontalOptions="Center" VerticalOptions="Center" Clicked="BtnConfirmed_Clicked" />
     </Grid>
 </ContentPage>

@@ -23,7 +23,7 @@ public class SettingsService : ISettingsService
 
     public Task Save<T>(string key, T value) // todo make async
     { 
-        Preferences.Default.Set(key, value);
+        Preferences.Default.Set<T>(key, value);
         return Task.CompletedTask;
     }
 
