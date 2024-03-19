@@ -194,6 +194,9 @@
 	  <MauiXaml Update="ContentViews\PriceComparerPopUpDetails.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="ContentViews\SettingsContentView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\AddCardView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

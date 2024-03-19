@@ -374,7 +374,7 @@ public partial class PriceComparerView : ContentPage
         if (SettingsView != null)
         {
             this.ListComp = await CompanyRepository.GetAllCompaniesAsync();
-            List<int> listIdsCheckedCompanies = SettingsView.GetListIdsCheckedCompanies();
+            List<int> listIdsCheckedCompanies = await SettingsView.GetListIdsCheckedCompanies();
             this.ListComp = this.ListComp.Where(com => listIdsCheckedCompanies.Contains(com.Id)).ToList();
 
             TurnOnActivityIndicator();

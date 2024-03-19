@@ -1,50 +1,50 @@
-﻿using Microsoft.Maui.Controls;
-using Neminaj.Interfaces;
+﻿using Neminaj.Interfaces;
 using Neminaj.Repositories;
+using Region = SharedTypesLibrary.Models.API.DatabaseModels.Region;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using SharedTypesLibrary.DTOs.API;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Region = SharedTypesLibrary.Models.API.DatabaseModels.Region;
+using Neminaj.Views;
+using System.Timers;
 using Neminaj.Events;
-using Neminaj.Services;
 
+namespace Neminaj.ContentViews;
 
-namespace Neminaj.Views;
-
-public class CompanySettingModel
+public partial class SettingsContentView : ContentView
 {
-    public string CompanyName { get; set; }
-    public int Id { get; set; }
-    public bool IsChecked { get; set; } = true;
-    public string ImageUrl { get; set; }
-}
+    public delegate void CheckBoxCompany_Changed(object sender, CompanyCheckBoxChanged_EventArgs e);
+    public static event CheckBoxCompany_Changed OnCheckBoxCompanyContentView_Changed;
 
-public partial class FirstStartUpView : ContentPage
-{
-    readonly ISettingsService _settingsService = null;
-    readonly IConnectivity _connectivityService = null;
+    private CompanyRepository _companyRepo { get; set; } = null;
+    private ISettingsService _settingsService { get; set; } = null;
 
     List<CompanyDTO> _listCompany = new List<CompanyDTO>();
     List<CompanySettingModel> _listCompanySettings { get; set; } = new List<CompanySettingModel>();
 
-    CompanyRepository _companyRepo = null;
+    private List<Region> _listRegions { get; set; } = null;
 
-    List<Region> _listRegions { get; set; } = null;
-    Dictionary<int, List<District>> _dicDistrict { get; set; } = null;
+    private  Dictionary<int, List<District>> _dicDistrict { get; set; } = null;
 
-    bool WasFirstStartUp = false;
+    System.Timers.Timer TimerSliderStoreDistance = null;
 
-    public FirstStartUpView(CompanyRepository companyRepository, ISettingsService settingsService, IConnectivity connectivityService)
-    {
+    double SliderValue = 0;
+
+    bool WasRegionPickerLoaded = false;
+    int FirstLoadedRegionPickerIndex = 0;
+
+    public SettingsContentView()
+	{
         InitializeComponent();
 
-        this.Title = "Prvotné nastavenie";
+        TimerSliderStoreDistance = new System.Timers.Timer();
+        TimerSliderStoreDistance.Elapsed += new System.Timers.ElapsedEventHandler(OnTimerSliderStoreDistance);
+        TimerSliderStoreDistance.Interval = 3000;
+        TimerSliderStoreDistance.Enabled = false;
+    }
 
+    public async Task InitContentView(CompanyRepository companyRepository, ISettingsService settingsService)
+    {
         _companyRepo = companyRepository;
         _settingsService = settingsService;
-        _connectivityService = connectivityService;
 
         SetRegionList();
         this.RegionPicker.ItemsSource = _listRegions;
@@ -54,140 +54,124 @@ public partial class FirstStartUpView : ContentPage
         this.DistrictPicker.ItemsSource = _dicDistrict[1];
         this.DistrictPicker.ItemDisplayBinding = new Binding("Name");
 
-        this.Disappearing += async (s, e) => { await FirstStartUp_OnDisappearing(); };
+        await LoadCompaniesSettings();
+        await LoadDistanceSetting();
+        await LoadRegionSetting();
+        await LoadDistrictSetting();
     }
 
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    private async Task LoadCompaniesSettings()
     {
-        base.OnNavigatedTo(args);
+        List<CompanySettingModel> listStored = new List<CompanySettingModel>();
+        _listCompany = await _companyRepo.GetAllCompaniesAsync();
 
-        if (_connectivityService.NetworkAccess == NetworkAccess.Internet)
+        foreach (CompanyDTO comp in _listCompany)
         {
-            if (await ISettingsService.ContainsStatic("SettingsAtLeastOnceSaved"))
-            {
-                await Shell.Current.GoToAsync("//CategoryPickerView");
-            }
-            else
-            {
-                await LoadData();
-            }
-        }
-        else
-        {
-            if (await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné načítať položky.\r\nZopakovať načítanie položiek ?", "Zopakovať", "Zavrieť"))
-            {
-                await LoadData();
-            }
-        }
-    }
+            // if Company was not before saved than it will be automatically checked ( used in compare )
+            bool isChecked = await _settingsService.Get<bool>($"{comp.Name}_SettingsChkBox_Id_{comp.Id}", true);
 
-    private async Task LoadData()
-    {
-        if (_connectivityService.NetworkAccess == NetworkAccess.Internet)
-        {
-            _listCompany = await _companyRepo.GetAllCompaniesAsync();
-            _listCompany.ForEach(comp => _listCompanySettings.Add
+            _listCompanySettings.Add
             (
-                new CompanySettingModel { CompanyName = comp.Name, Id = comp.Id, ImageUrl = comp.Url, IsChecked = true }
-            ));
+                new CompanySettingModel { CompanyName = comp.Name, Id = comp.Id, ImageUrl = comp.Url, IsChecked = isChecked }
+            );
+        }
 
-            this.listCompanySetting.ItemsSource = _listCompanySettings;
-        }
-        else
-        {
-            if (await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné načítať položky.\r\nZopakovať načítanie položiek ?", "Zopakovať", "Zavrieť"))
-            {
-                await LoadData();
-            }
-        }
+        this.listCompanySetting.ItemsSource = _listCompanySettings;
     }
 
-    private async void BtnConfirmed_Clicked(object sender, EventArgs e)
+    private async Task LoadDistanceSetting()
     {
-        bool badEnty = false;
+        this.Slider.Value = await _settingsService.Get<double>(nameof(Slider), 10.0d);
+    }
 
-        if (RegionPicker.SelectedIndex == -1)
-        {
-            RegionPicker.Title = "Zvoľte kraj kvôli presným cenám";
-            RegionPicker.TitleColor = Colors.OrangeRed;
-            badEnty = true;
-        }
+    private async void OnTimerSliderStoreDistance(object source, ElapsedEventArgs e)
+    {
+        await _settingsService.Save(nameof(Slider), Slider.Value);
+        TimerSliderStoreDistance.Enabled = false;
+    }
 
-        if (DistrictPicker.SelectedIndex == -1)
-        {
-            DistrictPicker.Title = "Zvoľte okres kvôli presným cenám";
-            DistrictPicker.TitleColor = Colors.OrangeRed;
-            badEnty = true;
-        }
+    private async Task LoadRegionSetting()
+    {
+        string strChoosenRegion = await _settingsService.Get<string>(nameof(Region), "Bratislavský");
 
-        await Task.Run(async () =>
-        {
-            if (!badEnty)
-            {
-                WasFirstStartUp = true;
-                await Shell.Current.GoToAsync("//CategoryPickerView");
-            }
-        });
+        int indexRegion = this.RegionPicker.Items.IndexOf(strChoosenRegion);
+        this.RegionPicker.SelectedIndex = indexRegion;
+        FirstLoadedRegionPickerIndex = indexRegion;
+        WasRegionPickerLoaded = true;
+    }
+
+    private async Task LoadDistrictSetting()
+    {
+        string strChoosenDistrict = await _settingsService.Get<string>(nameof(District), "Bratislava I");
+
+        int indexDistrict = this.DistrictPicker.Items.IndexOf(strChoosenDistrict);
+        this.DistrictPicker.SelectedIndex = indexDistrict;
     }
 
     private void Slider_ValueChanged(object sender, ValueChangedEventArgs e)
     {
-        double value = (double)e.NewValue;
-
-        if (value.ToString().Contains("."))
-            LabelKm.Text = value.ToString().Substring(0, value.ToString().IndexOf(".") + 2);
-
-        if (value.ToString().Contains(","))
-            LabelKm.Text = value.ToString().Substring(0, value.ToString().IndexOf(",") + 2);
+        if (!TimerSliderStoreDistance.Enabled)
+            TimerSliderStoreDistance.Enabled = true;
     }
 
     private void RegionPicker_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Picker picker = (Picker)sender;
+        Picker regionPicker = (Picker)sender;
 
-        int selectedIndex = picker.SelectedIndex;
+        int selectedIndex = regionPicker.SelectedIndex;
 
         if (selectedIndex != -1)
         {
             this.DistrictPicker.ItemsSource = _dicDistrict[selectedIndex];
+
+            // Workaround with dealing not selected District
+            // 1. Do not override user already stored District
+            // 2. After choosing region set first possible District
+            if (FirstLoadedRegionPickerIndex != selectedIndex && WasRegionPickerLoaded)
+            {
+                this.DistrictPicker.SelectedIndex = 0;
+            }
         }
     }
 
-    private void DistrictPicker_SelectedIndexChanged(object sender, EventArgs e)
+    private async void DistrictPicker_SelectedIndexChanged(object sender, EventArgs e)
     {
-        // Nothing
+        Picker districtPicker = (Picker)sender;
+
+        int selectedIndex = districtPicker.SelectedIndex;
+
+        if (selectedIndex != -1)
+        {
+            // Region Index Save
+            if ((Region)this.RegionPicker.SelectedItem != null)
+            {
+                await _settingsService.Save(nameof(Region), ((Region)this.RegionPicker.SelectedItem).Name); 
+            }
+
+            District choosenDistrict = (District)this.DistrictPicker.SelectedItem;
+
+            // District Index Save
+            await _settingsService.Save(nameof(District), choosenDistrict.Name);
+        }
     }
 
-    private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    private async void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
         CheckBox checkBox = sender as CheckBox;
 
         if (checkBox.AutomationId != null)
         {
             CompanySettingModel compSetModel = _listCompanySettings.Where(compSet => compSet.Id == int.Parse(checkBox.AutomationId)).First();
-        }
-    }
+            await _settingsService.Save($"{compSetModel.CompanyName}_SettingsChkBox_Id_{compSetModel.Id}", compSetModel.IsChecked);
 
-    private async Task FirstStartUp_OnDisappearing()
-    {
-        if (WasFirstStartUp)
-        {
-            await _settingsService.Save(nameof(Slider), Slider.Value);
-
-            foreach (CompanySettingModel compSetModel in _listCompanySettings)
+            // Make sure someone is listening to event
+            if (OnCheckBoxCompanyContentView_Changed != null)
             {
-                await _settingsService.Save($"{compSetModel.CompanyName}_SettingsChkBox_Id_{compSetModel.Id}", compSetModel.IsChecked);
+                CompanyCheckBoxChanged_EventArgs args = new CompanyCheckBoxChanged_EventArgs(compSetModel.Id, compSetModel.CompanyName);
+                OnCheckBoxCompanyContentView_Changed(this, args);
             }
-
-            if (!await ISettingsService.ContainsStatic("SettingsAtLeastOnceSaved"))
-                await _settingsService.Save("SettingsAtLeastOnceSaved", true);
-
-            District choosenDistrict = (District)this.DistrictPicker.SelectedItem;
-
-            await _settingsService.Save(nameof(District), choosenDistrict.Id);
         }
     }
-
 
     private void SetRegionList()
     {

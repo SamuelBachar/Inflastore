@@ -13,6 +13,7 @@ using BarcodeScanner.Mobile;
 
 using ZXing.Net.Maui.Controls;
 using CommunityToolkit.Maui.Maps;
+using Neminaj.ContentViews;
 
 
 namespace Neminaj;
@@ -141,7 +142,6 @@ public static class MauiProgram
         builder.Services.AddTransient<SavedCardDetailView>(); // Car-D-
         builder.Services.AddTransient<CartViewSaveCart>();
         builder.Services.AddTransient<CartView>();
-
 
         return builder.Build();
 	}
