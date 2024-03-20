@@ -100,6 +100,11 @@ public partial class FirstStartUpView : ContentPage
         {
             if (!await ISettingsService.ContainsStatic("SettingsAtLeastOnceSaved"))
                 await _settingsService.Save<bool>("SettingsAtLeastOnceSaved", true);
+
+            foreach (CompanySettingModel comp in SettingsContentView.ListCompanySettings)
+            {
+                await _settingsService.Save<bool>($"{comp.CompanyName}_SettingsChkBox_Id_{comp.Id}", comp.IsChecked);
+            }
         }
     }
 

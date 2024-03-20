@@ -22,7 +22,7 @@ public partial class SettingsContentView : ContentView
 
     private List<Region> _listRegions { get; set; } = null;
 
-    private  Dictionary<int, List<District>> _dicDistrict { get; set; } = null;
+    private Dictionary<int, List<District>> _dicDistrict { get; set; } = null;
 
     System.Timers.Timer TimerSliderStoreDistance = null;
 
@@ -30,6 +30,12 @@ public partial class SettingsContentView : ContentView
 
     bool WasRegionPickerLoaded = false;
     int FirstLoadedRegionPickerIndex = 0;
+
+    public List<CompanySettingModel> ListCompanySettings
+    {
+        get { return _listCompanySettings; }
+        set { }
+    }
 
     public SettingsContentView()
 	{

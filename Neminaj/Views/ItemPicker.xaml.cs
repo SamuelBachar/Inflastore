@@ -22,7 +22,7 @@ public class PricesPerCompany
 
 public class ItemPickerModel : Item
 {
-    public List<bool> ListVisibleRows { get; set; } = new List<bool>() { false, false, false, false };
+    public List<bool> ListVisibleComp { get; set; } = new List<bool>() { false, false, false, false };
     public List<PricesPerCompany> ListPricesPerCompanies { get; set; } = new List<PricesPerCompany>();
 }
 
@@ -127,10 +127,9 @@ public partial class ItemPicker : ContentPage
                     }
 
                     // Set rows visibility
-                    int cntRows = (itemPickerModel.ListPricesPerCompanies.Count / 2) + (itemPickerModel.ListPricesPerCompanies.Count % 2);
-                    for (int i = 0; (i < cntRows && i < itemPickerModel.ListVisibleRows.Count); i++)
+                    for (int i = 0; (i < _listIdsSavedAndChoosedCompanies.Count); i++)
                     {
-                        itemPickerModel.ListVisibleRows[i] = true;
+                        itemPickerModel.ListVisibleComp[i] = true;
                     }
 
                     _listItemPickerModel.Add(itemPickerModel);
