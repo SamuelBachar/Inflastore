@@ -253,7 +253,7 @@ public partial class PriceComparerView : ContentPage
     private event EventHandler ViewsBuilded;
 
     // Views objects
-    private ItemPicker MainPage { get; set; } = null;
+    private ItemPicker ItemPicker { get; set; } = null;
     private SettingsView SettingsView { get; set; } = null;
 
     private PageLayoutInfo PageLayoutInfo { get; set; } = null;
@@ -293,11 +293,11 @@ public partial class PriceComparerView : ContentPage
     SemaphoreSlim semaphoreFillPrices = new SemaphoreSlim(1, 1);
     SemaphoreSlim semaphoreItemAdded = new SemaphoreSlim(1, 1);
 
-    public PriceComparerView(ItemPicker mainPage, SettingsView settingsPage, CompanyRepository companyRepo, ItemPriceRepository itemPriceRepo, NavigationShopRepository navigationShopRepository, IGeolocation geoLocation)
+    public PriceComparerView(ItemPicker itemPicker, SettingsView settingsPage, CompanyRepository companyRepo, ItemPriceRepository itemPriceRepo, NavigationShopRepository navigationShopRepository, IGeolocation geoLocation)
     {
         InitializeComponent();
 
-        MainPage = mainPage;
+        ItemPicker = itemPicker;
         SettingsView = settingsPage;
         CompanyRepository = companyRepo;
         ItemPriceRepo = itemPriceRepo;
@@ -307,9 +307,9 @@ public partial class PriceComparerView : ContentPage
         CreateActivityIndicator();
         TurnOnActivityIndicator();
 
-        ItemsChoosed = MainPage.GetChoosenItems();
+        ItemsChoosed = ItemPicker.GetChoosenItems();
         ItemsChoosed.CollectionChanged += async (s, e) => { await ChoosenItems_Changed(s, e); };
-        MainPage.OnObservableItemsChoosed_Swaped += OnObservableItemsChoosed_Swaped;
+        ItemPicker.OnObservableItemsChoosed_Swaped += OnObservableItemsChoosed_Swaped;
 
         CartView.OnItemCountOf_Changed += OnItemCountOf_Changed_Event;
         SettingsView.OnCheckBoxCompany_Changed += async (s, e) => { await OnCheckBoxCompany_Changed_Event(s, e); };
@@ -420,7 +420,7 @@ public partial class PriceComparerView : ContentPage
     private async void OnObservableItemsChoosed_Swaped(object sender, EventArgs args)
     {
         ItemsChoosed.CollectionChanged -= async (s, e) => { await ChoosenItems_Changed(s, e); };
-        ItemsChoosed = MainPage.GetChoosenItems();
+        ItemsChoosed = ItemPicker.GetChoosenItems();
         ItemsChoosedModified = ItemsChoosed.ToList();
 
         for (int i = 0; i < PageLayoutInfo.CntOfViewsInPage; i++)

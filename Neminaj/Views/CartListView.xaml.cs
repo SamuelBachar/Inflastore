@@ -21,7 +21,7 @@ public partial class CartListView : ContentPage
 
     PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam nákupné zoznamy ...");
 
-    ItemPicker MainPage;
+    ItemPicker ItemPicker;
 
 #if WINDOWS
     int _lastCheckedCardId = -1;
@@ -34,7 +34,7 @@ public partial class CartListView : ContentPage
 
         SavedCartRepo = savedCartRepository;
         ItemRepo = itemRepository;
-        MainPage = mainPage;
+        ItemPicker = mainPage;
         UnitRepo = unitRepository;
         this.Appearing += (s, e) => { this.Content = _popUpIndic; };
     }
@@ -180,7 +180,7 @@ public partial class CartListView : ContentPage
                         idInListHelp++;
                     }
 
-                    MainPage.SetChoosenItems(listItemsFromSavedCart);
+                    ItemPicker.SetChoosenItems(listItemsFromSavedCart);
                     this.Content = MainScrollView;
                 }
             }

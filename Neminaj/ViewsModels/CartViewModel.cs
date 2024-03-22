@@ -41,6 +41,11 @@ public partial class CartViewModel : ObservableObject
         return ObservableItemsChoosed;
     }
 
+    public void SetItemChoosen(ObservableCollection<ItemChoosen> observableItemsChoosed)
+    {
+        ObservableItemsChoosed = observableItemsChoosed;
+    }
+
     public async Task<bool> InsertNewCart(SavedCart savedCart)
     {
         return await SavedCartRepository.InsertNewCart(savedCart);

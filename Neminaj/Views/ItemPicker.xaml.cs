@@ -22,7 +22,7 @@ public class PricesPerCompany
 
 public class ItemPickerModel : Item
 {
-    public List<bool> ListVisibleComp { get; set; } = new List<bool>() { false, false, false, false };
+    public List<bool> ListVisibleComp { get; set; } = new List<bool>() { false, false, false, false, false, false };
     public List<PricesPerCompany> ListPricesPerCompanies { get; set; } = new List<PricesPerCompany>();
 }
 
@@ -160,7 +160,7 @@ public partial class ItemPicker : ContentPage
     {
         string text = ((SearchBar)sender).Text;
 
-        if (text.Length >= 2)
+        if (text.Length >= 1)
         {
             List<Item> listItems = await _itemRepo.SearchItems(text); // todo tu sa selektuju udaje namiesto tahania od repository
             List<int> listItemsIds = listItems.Select(item => item.Id).ToList();

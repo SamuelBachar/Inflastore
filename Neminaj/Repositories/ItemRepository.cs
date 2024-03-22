@@ -116,7 +116,7 @@ public class ItemRepository : ParentRepository<Item>
         {
             string strWithoutDiac = await base.RemoveDiacritics(item.Name);
 
-            if (strWithoutDiac.StartsWith(filterText, StringComparison.OrdinalIgnoreCase))
+            if (strWithoutDiac.Contains(filterText, StringComparison.OrdinalIgnoreCase))
                 FilteredItems.Add(item);
         });
 
