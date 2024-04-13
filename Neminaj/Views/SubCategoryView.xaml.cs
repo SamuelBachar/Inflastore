@@ -1,18 +1,17 @@
 ﻿using Neminaj.ContentViews;
 using Neminaj.Repositories;
 using SharedTypesLibrary.DTOs.API;
-using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Collections.ObjectModel;
 
 namespace Neminaj.Views;
 
-public partial class CategoryPickerView : ContentPage
+public partial class SubCategoryView : ContentPage
 {
-    private readonly CategoryRepository _categoryRepo;
     public ObservableCollection<CategoryDTO> _categories { get; set; } = new();
 
     List<CategoryDTO> _listAllCategories { get; set; } = new();
 
+    private readonly CategoryRepository _categoryRepo;
     ItemRepository _itemRepo { get; set; } = null;
 
     UnitRepository _unitRepo { get; set; } = null;
@@ -25,9 +24,13 @@ public partial class CategoryPickerView : ContentPage
 
     bool AppDataLoaded { get; set; } = false;
 
+    CategoryDTO _choosenCategory { get; set; }
+
+
     PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam polôžky, ceny a obchody ...");
 
-    public CategoryPickerView(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo, CategoryRepository categoryRepository, CompanyRepository companyRepository, ItemPriceRepository itemPriceRepository)
+    public SubCategoryView(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo, CategoryRepository categoryRepository,
+                           CompanyRepository companyRepository, ItemPriceRepository itemPriceRepository, CategoryDTO choosenCategory)
     {
         InitializeComponent();
 
@@ -39,6 +42,7 @@ public partial class CategoryPickerView : ContentPage
         _savedCartRepo = cartRepo;
         _companyRepo = companyRepository;
         _itemPriceRepo = itemPriceRepository;
+        _choosenCategory = choosenCategory;
 
         this.Appearing += (s, e) => { this.Content = _popUpIndic; };
     }
@@ -51,26 +55,20 @@ public partial class CategoryPickerView : ContentPage
         {
             _listAllCategories = await _categoryRepo.GetAllCategories();
 
-
-            if (this.CategoriesCollectionView.SelectedItems.Count != 0)
-                this.CategoriesCollectionView.SelectedItems.Clear();
+            if (this.SubCategoriesCollectionView.SelectedItems.Count != 0)
+                this.SubCategoriesCollectionView.SelectedItems.Clear();
         }
 
-        CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
+        //CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
 
         if (!AppDataLoaded)
         {
-            await _itemRepo.GetAllItemsAsync();
-            await _itemPriceRepo.GetAllItemPricesAsync();
-            await _unitRepo.GetAllUnitsAsync();
-            await _companyRepo.GetAllCompaniesAsync();
-
             AppDataLoaded = true;
             _popUpIndic.SetLblPopUp("Načítavam dáta");
         }
 
-        _categories = new ObservableCollection<CategoryDTO>(_listAllCategories.Where(cat => cat.ParentId == null).ToList());
-        this.CategoriesCollectionView.ItemsSource = _categories;
+        _categories = new ObservableCollection<CategoryDTO>(_listAllCategories.Where(cat => cat.ParentId == _choosenCategory).ToList());
+        this.SubCategoriesCollectionView.ItemsSource = _categories;
 
         this.Content = this.MainControlWrapper;
     }

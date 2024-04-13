@@ -56,9 +56,9 @@ public partial class CartView : ContentPage
 
     public class SavedCartItemLoadedModel : Item
     {
-        int CntOfItems { get; set; }
-        int Unit_Id { get; set; }
-        int Category_Id { get; set; }
+        public int CntOfItems { get; set; }
+        public int Unit_Id { get; set; }
+        public int Category_Id { get; set; }
 
         public List<bool> ListVisibleComp { get; set; } = new List<bool>() { false, false, false, false, false, false };
         public List<PricesPerCompany> ListPricesPerCompanies { get; set; } = new List<PricesPerCompany>();

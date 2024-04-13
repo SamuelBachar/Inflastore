@@ -23,6 +23,7 @@ public class CategoryService : ICategoryService
                 Id = category.Id,
                 Name = category.Name,
                 ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Categories/{category.Path}",
+                ParentId = category.ParentId
                 //ImageUrl = @$"https://localhost:7279/StaticFile/Categories/{category.Path}"
             });
         }
@@ -42,6 +43,7 @@ public class CategoryService : ICategoryService
                 Id = category.Id,
                 Name = category.Name,
                 ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Categories/{category.Path}",
+                ParentId = category.ParentId
             });
         }
 

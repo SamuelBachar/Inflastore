@@ -179,6 +179,9 @@
 	  <Compile Update="Views\SavedCartViewDetail.xaml.cs">
 	    <DependentUpon>SavedCartViewDetail.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\SubCategoryView.xaml.cs">
+	    <DependentUpon>SubCategoryView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -255,6 +258,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SettingsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SubCategoryView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

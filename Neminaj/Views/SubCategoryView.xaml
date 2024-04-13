@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:SharedTypesLibrary.DTOs.API;assembly=SharedTypesLibrary"
+             xmlns:views="clr-namespace:Neminaj.Views"
+             x:Class="Neminaj.Views.SubCategoryView"
+             x:DataType="views:SubCategoryView"
+             xmlns:controls="clr-namespace:Neminaj.ContentViews"
+             Title="Výber položiek">
+
+    <Grid x:Name="MainControlWrapper" RowDefinitions="*, Auto" ColumnDefinitions="*">
+        <ScrollView Grid.Row="0" Grid.Column="0">
+            <Grid RowDefinitions="*, Auto" ColumnDefinitions="*">
+                <CollectionView x:Name="SubCategoriesCollectionView"
+                        Grid.Row="0"
+                        ItemsSource="{Binding _categories}"
+                        ItemsLayout="{OnIdiom Phone='VerticalGrid, 3', Tablet='VerticalGrid, 3', Desktop='VerticalGrid, 4'}"
+                        SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:CategoryDTO">
+                            <Border BackgroundColor="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 5"
+                            Margin="5">
+                                <Grid RowDefinitions="{OnIdiom Phone='100, 40', Tablet='100, 40', Desktop='256, 80'}">
+                                    <Image Grid.Row="0"
+                                     Source="{Binding ImageUrl}"
+                                     BackgroundColor="White"
+                                     Aspect="AspectFit"/>
+
+                                    <Label Grid.Row="1"
+                                   Text="{Binding Name}"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap"
+                                   TextColor="White"/>
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"  CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </ScrollView>
+        <controls:CartCounterControlView x:Name="CartCounterControlView" Grid.Row="1" Grid.Column="0" />
+    </Grid>
+</ContentPage>

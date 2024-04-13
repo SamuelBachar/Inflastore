@@ -131,6 +131,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<PriceComparerDetailViewModel>();
         builder.Services.AddSingleton<ItemPickerViewModel>();
         builder.Services.AddSingleton<CartViewModel>();
+        builder.Services.AddSingleton<SubCategoryViewModel>(); // maybe when nesting needs to be transient ?
 
         // Transients views
         builder.Services.AddTransient<RegisterView>();
@@ -141,6 +142,8 @@ public static class MauiProgram
         builder.Services.AddTransient<SavedCartDetailView>(); // Car-T-
         builder.Services.AddTransient<SavedCardDetailView>(); // Car-D-
         builder.Services.AddTransient<CartViewSaveCart>();
+        builder.Services.AddTransient<SubCategoryView>();
+
 
         // Test
         builder.Services.AddSingleton<CartView>();
