@@ -1,5 +1,6 @@
 ﻿using Neminaj.ContentViews;
 using Neminaj.Repositories;
+using Neminaj.ViewsModels;
 using SharedTypesLibrary.DTOs.API;
 using SharedTypesLibrary.Models.API.DatabaseModels;
 using System.Collections.ObjectModel;
@@ -26,6 +27,8 @@ public partial class CategoryPickerView : ContentPage
     bool AppDataLoaded { get; set; } = false;
 
     PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam polôžky, ceny a obchody ...");
+
+    List<SubCategoryView> _subCategoryViews { get; set; } = new();
 
     public CategoryPickerView(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo, CategoryRepository categoryRepository, CompanyRepository companyRepository, ItemPriceRepository itemPriceRepository)
     {
@@ -79,7 +82,6 @@ public partial class CategoryPickerView : ContentPage
     {
         if (e.Parameter is CategoryDTO category)
         {
-
             if (category.ParentId != null && _listAllCategories.All(cat => cat.ParentId != category.Id))
             {
                 await Shell.Current.GoToAsync(nameof(ItemPicker),

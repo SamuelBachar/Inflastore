@@ -18,7 +18,7 @@
 
     <TabBar x:Name="MenuTapBar">
         <Tab Title="Nákup" Icon="cart.png">
-            <ShellContent ContentTemplate="{DataTemplate localViews:CategoryPickerView}" Route="CategoryPickerView"/>
+            <ShellContent ContentTemplate="{DataTemplate localViews:CategoryPickerView}" Route="CategoryPickerView"/> 
         </Tab>
         <Tab Title="Porovnávač" Icon="calculator.png">
             <ShellContent ContentTemplate="{DataTemplate localViews:PriceComparerView}" Route="PriceComparerView"/>

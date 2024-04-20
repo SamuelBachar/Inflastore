@@ -23,7 +23,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(ItemPicker), typeof(ItemPicker));
         Routing.RegisterRoute(nameof(LogOutView), typeof(LogOutView));
         Routing.RegisterRoute(nameof(CartViewSaveCart), typeof(CartViewSaveCart));
-        Routing.RegisterRoute(nameof(CategoryPickerView), typeof(CategoryPickerView));
+        //Routing.RegisterRoute(nameof(CategoryPickerView), typeof(CategoryPickerView));
         Routing.RegisterRoute(nameof(SubCategoryView), typeof(SubCategoryView));
     }
 

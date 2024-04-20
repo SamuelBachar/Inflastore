@@ -5,6 +5,10 @@
              x:Class="Neminaj.Views.ItemPicker"
              xmlns:controls="clr-namespace:Neminaj.ContentViews">
 
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="NavBackBtn" Text="Späť" Clicked="NavBackBtn_Clicked" />
+    </ContentPage.ToolbarItems>-->
+    
     <ContentPage.Content>
         <Grid RowDefinitions="Auto, *, Auto" ColumnDefinitions="*" x:Name="MainControlWrapper">
             <Border Grid.Row="0" Grid.Column="0" HorizontalOptions="Fill">

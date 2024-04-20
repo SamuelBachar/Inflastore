@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.Input;
 using Neminaj.ContentViews;
 using Neminaj.Models;
 using Neminaj.Repositories;
@@ -64,7 +65,7 @@ public partial class ItemPicker : ContentPage
         InitializeComponent();
         _itemPickerViewModel = itemPickerViewModel;
         this.BindingContext = _itemPickerViewModel;
-
+        
         this.Appearing += (s, e) => { this.Content = _popUpIndic; };
         CartView.On_CartView_ItemRemovedFromList += async (s, e) => { await CartCounterControlView.DecreaseShoppingCartCounter(); };
         ObservableItemsChoosed.CollectionChanged += ItemsChoosedCollection_Changed;
@@ -239,4 +240,9 @@ public partial class ItemPicker : ContentPage
             await this.DisplayAlert("Chyba", "Zariadenie nemá pripojenie k internetu\r\nNie je možné pridať položku", "Zavrieť");
         }
     }
+
+    //private async void NavBackBtn_Clicked(object sender, EventArgs e)
+    //{
+    //    await Navigation.PopAsync(true);
+    //}
 }

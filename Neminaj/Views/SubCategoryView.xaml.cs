@@ -1,5 +1,7 @@
-﻿using Neminaj.ContentViews;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Neminaj.ContentViews;
 using Neminaj.Repositories;
+using Neminaj.ViewsModels;
 using SharedTypesLibrary.DTOs.API;
 using System.Collections.ObjectModel;
 
@@ -11,7 +13,7 @@ public partial class SubCategoryView : ContentPage
 
     List<CategoryDTO> _listAllCategories { get; set; } = new();
 
-    private readonly CategoryRepository _categoryRepo;
+    CategoryRepository _categoryRepo;
     ItemRepository _itemRepo { get; set; } = null;
 
     UnitRepository _unitRepo { get; set; } = null;
@@ -29,20 +31,14 @@ public partial class SubCategoryView : ContentPage
 
     PopUpActivityIndicator _popUpIndic = new PopUpActivityIndicator("Načítavam polôžky, ceny a obchody ...");
 
-    public SubCategoryView(ItemRepository itemRepo, UnitRepository unitRepo, SavedCartRepository cartRepo, CategoryRepository categoryRepository,
-                           CompanyRepository companyRepository, ItemPriceRepository itemPriceRepository, CategoryDTO choosenCategory)
+    SubCategoryViewModel _subCategoryViewModel { get; set; } = null;
+
+    public SubCategoryView(SubCategoryViewModel subCategoryViewModel)
     {
         InitializeComponent();
 
-        _categoryRepo = categoryRepository;
-        this.BindingContext = this;
-
-        _itemRepo = itemRepo;
-        _unitRepo = unitRepo;
-        _savedCartRepo = cartRepo;
-        _companyRepo = companyRepository;
-        _itemPriceRepo = itemPriceRepository;
-        _choosenCategory = choosenCategory;
+        _subCategoryViewModel = subCategoryViewModel;
+        this.BindingContext = _subCategoryViewModel;
 
         this.Appearing += (s, e) => { this.Content = _popUpIndic; };
     }
@@ -50,6 +46,20 @@ public partial class SubCategoryView : ContentPage
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
+
+        if (!AppDataLoaded)
+        {
+            _itemRepo = _subCategoryViewModel.itemRepo;
+            _unitRepo = _subCategoryViewModel.unitRepo;
+            _savedCartRepo = _subCategoryViewModel.cartRepo;
+            _categoryRepo = _subCategoryViewModel.categoryRepo;
+            _companyRepo = _subCategoryViewModel.companyRepo;
+            _itemPriceRepo = _subCategoryViewModel.itemPriceRepo;
+            _choosenCategory = _subCategoryViewModel.choosenCategory;
+
+            AppDataLoaded = true;
+            _popUpIndic.SetLblPopUp("Načítavam dáta");
+        }
 
         if (_categories.Count == 0)
         {
@@ -61,13 +71,7 @@ public partial class SubCategoryView : ContentPage
 
         //CartCounterControlView.Init(_savedCartRepo, ItemPicker.ObservableItemsChoosed);
 
-        if (!AppDataLoaded)
-        {
-            AppDataLoaded = true;
-            _popUpIndic.SetLblPopUp("Načítavam dáta");
-        }
-
-        _categories = new ObservableCollection<CategoryDTO>(_listAllCategories.Where(cat => cat.ParentId == _choosenCategory).ToList());
+        _categories = new ObservableCollection<CategoryDTO>(_listAllCategories.Where(cat => cat.ParentId == _choosenCategory.Id).ToList());
         this.SubCategoriesCollectionView.ItemsSource = _categories;
 
         this.Content = this.MainControlWrapper;
@@ -77,7 +81,6 @@ public partial class SubCategoryView : ContentPage
     {
         if (e.Parameter is CategoryDTO category)
         {
-
             if (category.ParentId != null && _listAllCategories.All(cat => cat.ParentId != category.Id))
             {
                 await Shell.Current.GoToAsync(nameof(ItemPicker),
