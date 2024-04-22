@@ -20,7 +20,8 @@ namespace InflaStoreWebAPI.Services.ItemsService
 
             foreach (Item item in listItems)
             {
-                item.ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Items/{item.Category_Id}/{item.Path}";
+                //item.ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Items/{item.Category_Id}/{item.Path}";
+                item.ImageUrl = @$"https://inflastoreapi.azurewebsites.net/StaticFile/Items/{item.Path}";
             }
 
             return listItems;
